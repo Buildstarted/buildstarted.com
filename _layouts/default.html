@@ -74,11 +74,19 @@
                 </aside>
                 <aside id="archives-4" class="widget widget_archive">
                     <h1 class="widget-title">Archive</h1>
-                    <ul>
-                        {% for month in site.posts.months %}
-                            <li>{{ month | date:"%B" }} <small>{{ month | date:"%Y" }}</small></li>
+                    {% assign year = '2015' %}
+                    {% assign month = 'December' %}
+
+                      <ul class="posts">
+                        {% for post in site.posts %}
+                          {% capture postmonth %}{{ post.date | date: "%B" }}{% endcapture %}
+                          <!-- {{ postmonth }} {{ month }} -->
+                          {% if postmonth != month %}
+                            {% assign month = postmonth %}
+                            <li>{{ month }} {{ post.date | date: "%Y" }}</li>
+                          {% endif %}
                         {% endfor %}
-<!--                        <li><a href='http://buildstarted.com/2012/11/' title='November 2012'>November 2012</a></li>
+                      </ul><!--                        <li><a href='http://buildstarted.com/2012/11/' title='November 2012'>November 2012</a></li>
                         <li><a href='http://buildstarted.com/2012/09/' title='September 2012'>September 2012</a></li>
                         <li><a href='http://buildstarted.com/2012/08/' title='August 2012'>August 2012</a></li>
                         <li><a href='http://buildstarted.com/2012/07/' title='July 2012'>July 2012</a></li>
@@ -98,7 +106,6 @@
                         <li><a href='http://buildstarted.com/2010/10/' title='October 2010'>October 2010</a></li>
                         <li><a href='http://buildstarted.com/2010/09/' title='September 2010'>September 2010</a></li>
                         <li><a href='http://buildstarted.com/2010/08/' title='August 2010'>August 2010</a></li>-->
-                    </ul>
                 </aside>
             </div>
             <!-- #secondary .widget-area -->
