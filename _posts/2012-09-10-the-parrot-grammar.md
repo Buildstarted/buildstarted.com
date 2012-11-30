@@ -16,10 +16,10 @@ Creating an html element is really simple - just type a word.
 
 These will create an html element (using the default html renderer) with the word as the tag.
 
-    &lt;div&gt;&lt;/div&gt;
-    &lt;a&gt;&lt;/a&gt;
-    &lt;ul&gt;&lt;/ul&gt;
-    &lt;some-random-name&gt;&lt;/some-random-name&gt;
+    <div></div>
+    <a></a>
+    <ul></ul>
+    <some-random-name></some-random-name>
 
 #Adding an id or class to your new element
 
@@ -29,18 +29,18 @@ There are two ways to add an id or class declaration to your elements. We'll foc
 
 This will simply create an html element with the id tag set to "sample-id".
 
-    &lt;div id="sample-id"&gt;&lt;/div&gt;
+    <div id="sample-id"></div>
 
 
 The same method is used for classes but with a . instead.
 
     div.sample-class
-    &lt;div class="sample-class"&gt;&lt;/div&gt;
+    <div class="sample-class"></div>
 
-You may combine these two in one declaration. An element may only have &lt;em&gt;one&lt;/em&gt; id tag but can have as many class declarations you'd like.
+You may combine these two in one declaration. An element may only have <em>one</em> id tag but can have as many class declarations you'd like.
 
     div#sample-id.sample-class.other.info
-    &lt;div class="sample-class other info" id="sample-id"&gt;&lt;/div&gt;
+    <div class="sample-class other info" id="sample-id"></div>
 
 #Adding other attributes
 
@@ -49,12 +49,12 @@ Ids and classes aren't the only attributes you'll want to add. Adding additional
     div[name="value"]
     div[name="firstname" data-val-id="something"]
 
-    &lt;div name="value"&gt;&lt;/div&gt;
-    &lt;div name="firstname" data-val-id="something"&gt;&lt;/div&gt;
+    <div name="value"></div>
+    <div name="firstname" data-val-id="something"></div>
 
 #Adding children
 
-There are two ways to add children. To add multiple children you'll usually want to wrap them in a parent using curly braces. To add a single child you can append it using the &lt;code style="display:inline;"&gt;&gt;&lt;/code&gt; syntax.
+There are two ways to add children. To add multiple children you'll usually want to wrap them in a parent using curly braces. To add a single child you can append it using the <code style="display:inline;">></code> syntax.
 
     ul {
         li
@@ -63,45 +63,45 @@ There are two ways to add children. To add multiple children you'll usually want
         li
     }
 
-    div &gt; a &gt; span
+    div > a > span
 
-    &lt;ul&gt;
-        &lt;li&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;/li&gt;
-    &lt;/ul&gt;
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
 
-    &lt;div&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;
+    <div><a><span></span></a></div>
 
 #Adding siblings
 
-Sometimes you don't need or want to wrap multiple children in curly braces. You can add siblings to an element by using the &lt;code style="display:inline;"&gt;+&lt;/code&gt; selector syntax.
+Sometimes you don't need or want to wrap multiple children in curly braces. You can add siblings to an element by using the <code style="display:inline;">+</code> selector syntax.
 
-    ul &gt; li + li + li + li
+    ul > li + li + li + li
 
-    &lt;ul&gt;
-        &lt;li&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;/li&gt;
-    &lt;/ul&gt;
+    <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
 
 #Model parameters
 
-To bind an element to a model you just add it to the element declaration surrounded by parenthesis &lt;code style="display:inline;"&gt;()&lt;/code&gt;.
+To bind an element to a model you just add it to the element declaration surrounded by parenthesis <code style="display:inline;">()</code>.
 
     div(User)
 
 This element is now bound to the User property of your model. This affects children properties as well and allows for simplified nesting.
 
-    div(User) &gt; span(FirstName) + span(LastName)
+    div(User) > span(FirstName) + span(LastName)
 
 #String literals
 
 There are several ways to output a string literal.
 
-    span &gt; | String that reads until newline character
+    span > | String that reads until newline character
     
     "String wrapped in quotes"
     
@@ -116,33 +116,33 @@ There are several ways to output a string literal.
 
 #Variable outputs
 
-There are two shortcuts to output a variable. If you pass in a variable to a block element and do not provide any children the variable with be added to the dom as with &lt;code style="display:inline;"&gt;ToString()&lt;/code&gt; applied and added as the first child to that element. You can also encode output using &lt;code style="display:inline;"&gt;:&lt;/code&gt; or raw output using &lt;code style="display:inline;"&gt;=&lt;/code&gt;. (PageTitle = "Parrot")
+There are two shortcuts to output a variable. If you pass in a variable to a block element and do not provide any children the variable with be added to the dom as with <code style="display:inline;">ToString()</code> applied and added as the first child to that element. You can also encode output using <code style="display:inline;">:</code> or raw output using <code style="display:inline;">=</code>. (PageTitle = "Parrot")
 
     title(PageTitle)
-    title &gt; :PageTitle
-    title &gt; =PageTitle
+    title > :PageTitle
+    title > =PageTitle
 
-    &lt;title&gt;Parrot&lt;/title&gt;
+    <title>Parrot</title>
 
 #Shortcuts
 
 You can shortcut divs by leaving div out when using #sample-id or .sample-class. 
 
     #sample-id
-    &lt;div id="sample-id"&gt;&lt;/div&gt;
+    <div id="sample-id"></div>
 
 Some elements can override the default tag name such as a ul or ol. The default for these elements (as children) are li.
 
-    ul &gt; #sample-id
-    &lt;ul&gt;&lt;li id="sample-id"&gt;&lt;/li&gt;&lt;/ul&gt;
+    ul > #sample-id
+    <ul><li id="sample-id"></li></ul>
 
-You can shortcut common attributes such as &lt;code style="display:inline;"&gt;type&lt;/code&gt; as well. For instance when adding an input element you can specify it's type by adding a &lt;code style="display:inline;"&gt;:&lt;/code&gt; followed by type.
+You can shortcut common attributes such as <code style="display:inline;">type</code> as well. For instance when adding an input element you can specify it's type by adding a <code style="display:inline;">:</code> followed by type.
 
     input:text
     input:radio
     
-	&lt;input type="text" /&gt;
-    &lt;input type="radio" /&gt;
+	<input type="text" />
+    <input type="radio" />
 
 #Parser
 
