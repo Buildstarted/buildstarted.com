@@ -27,12 +27,11 @@ some-random-name
 
 <p>There are two ways to add an id or class declaration to your elements. We'll focus on the simple way in this example.</p>
 
-<pre><code>div#sample-id
-</code></pre>
+<pre><code>div#sample-id</code></pre>
 
 <p>This will simply create an html element with the id tag set to "sample-id".</p>
 
-<pre><code><div id="sample-id"></div>
+<pre><code>&lt;div id="sample-id"&gt;&lt;/div&gt;
 </code></pre>
 
 <p>The same method is used for classes but with a . instead.</p>
@@ -44,7 +43,7 @@ some-random-name
 <p>You may combine these two in one declaration. An element may only have <em>one</em> id tag but can have as many class declarations you'd like.</p>
 
 <pre><code>div#sample-id.sample-class.other.info
-<div class="sample-class other info" id="sample-id"></div>
+&lt;div class="sample-class other info" id="sample-id"&gt;&lt;/div&gt;
 </code></pre>
 
 <h1>Adding other attributes</h1>
