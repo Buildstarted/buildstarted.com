@@ -13,6 +13,7 @@ title: Buildstarted.com
         {% assign month = postmonth %}
     </ul>
     <h2>{{ month }}</h2>
+    <a name="{{ post.date | date: "%Y" }}{{ month }}" />
     <ul>
     {% endif %}
 

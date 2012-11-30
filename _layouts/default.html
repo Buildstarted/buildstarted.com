@@ -83,7 +83,7 @@
                           <!-- {{ postmonth }} {{ month }} -->
                           {% if postmonth != month %}
                             {% assign month = postmonth %}
-                            <li>{{ month }} {{ post.date | date: "%Y" }}</li>
+                            <li><a href='/archive#{{ post.date | date: "%Y" }}{{ month }}'>{{ month }} {{ post.date | date: "%Y" }}</a></li>
                           {% endif %}
                         {% endfor %}
                       </ul><!--                        <li><a href='http://buildstarted.com/2012/11/' title='November 2012'>November 2012</a></li>
