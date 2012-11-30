@@ -1,3 +1,10 @@
+---
+layout: post
+title: The Parrot Grammar
+---
+
+#{{ page.title }}
+
 <h1>Creating an element</h1>
 
 <p>Creating an html element is really simple - just type a word. </p>
