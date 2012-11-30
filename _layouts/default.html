@@ -75,7 +75,7 @@
                 <aside id="archives-4" class="widget widget_archive">
                     <h1 class="widget-title">Archive</h1>
                     <ul>
-                        {% for month in page.months %}
+                        {% for month in site.posts.months %}
                             <li>{{ month | date:"%B" }} <small>{{ month | date:"%Y" }}</small></li>
                         {% endfor %}
 <!--                        <li><a href='http://buildstarted.com/2012/11/' title='November 2012'>November 2012</a></li>
