@@ -5,112 +5,112 @@ title: The Parrot Grammar
 
 #{{ page.title }}
 
-<h1>Creating an element</h1>
+#Creating an element
 
-<p>Creating an html element is really simple - just type a word. </p>
+Creating an html element is really simple - just type a word. 
 
-<pre><code>div
+````div
 a
 ul
 some-random-name
-</code></pre>
+````
 
-<p>These will create an html element (using the default html renderer) with the word as the tag.</p>
+These will create an html element (using the default html renderer) with the word as the tag.
 
-<pre><code><div></div>
-<a></a>
-<ul></ul>
-<some-random-name></some-random-name>
-</code></pre>
+````&lt;div&gt;&lt;/div&gt;
+&lt;a&gt;&lt;/a&gt;
+&lt;ul&gt;&lt;/ul&gt;
+&lt;some-random-name&gt;&lt;/some-random-name&gt;
+````
 
-<h1>Adding an id or class to your new element</h1>
+#Adding an id or class to your new element
 
-<p>There are two ways to add an id or class declaration to your elements. We'll focus on the simple way in this example.</p>
+There are two ways to add an id or class declaration to your elements. We'll focus on the simple way in this example.
 
-<pre><code>div#sample-id</code></pre>
+````div#sample-id````
 
-<p>This will simply create an html element with the id tag set to "sample-id".</p>
+This will simply create an html element with the id tag set to "sample-id".
 
-<pre><code>&lt;div id="sample-id"&gt;&lt;/div&gt;
-</code></pre>
+`&lt;div id="sample-id"&gt;&lt;/div&gt;`
 
-<p>The same method is used for classes but with a . instead.</p>
 
-<pre><code>div.sample-class
-<div class="sample-class"></div>
-</code></pre>
+The same method is used for classes but with a . instead.
 
-<p>You may combine these two in one declaration. An element may only have <em>one</em> id tag but can have as many class declarations you'd like.</p>
+````div.sample-class
+&lt;div class="sample-class"&gt;&lt;/div&gt;
+````
 
-<pre><code>div#sample-id.sample-class.other.info
+You may combine these two in one declaration. An element may only have &lt;em&gt;one&lt;/em&gt; id tag but can have as many class declarations you'd like.
+
+````div#sample-id.sample-class.other.info
 &lt;div class="sample-class other info" id="sample-id"&gt;&lt;/div&gt;
-</code></pre>
+````
 
-<h1>Adding other attributes</h1>
+#Adding other attributes
 
-<p>Ids and classes aren't the only attributes you'll want to add. Adding additional attributes is simple. wrap a simple key/value pair with brackets. Multiple attributes can be added with a space in between. You can also add the id/class attributes here as well but it's not recommended.</p>
+Ids and classes aren't the only attributes you'll want to add. Adding additional attributes is simple. wrap a simple key/value pair with brackets. Multiple attributes can be added with a space in between. You can also add the id/class attributes here as well but it's not recommended.
 
-<pre><code>div[name="value"]
+````div[name="value"]
 div[name="firstname" data-val-id="something"]
 
-<div name="value"></div>
-<div name="firstname" data-val-id="something"></div>
-</code></pre>
+&lt;div name="value"&gt;&lt;/div&gt;
+&lt;div name="firstname" data-val-id="something"&gt;&lt;/div&gt;
+````
 
-<h1>Adding children</h1>
+#Adding children
 
-<p>There are two ways to add children. To add multiple children you'll usually want to wrap them in a parent using curly braces. To add a single child you can append it using the <code style="display:inline;">></code> syntax.</p>
+There are two ways to add children. To add multiple children you'll usually want to wrap them in a parent using curly braces. To add a single child you can append it using the &lt;code style="display:inline;"&gt;&gt;&lt;/code&gt; syntax.
 
-<pre><code>ul {
+````ul {
    li
    li
    li
    li
 }
 
-div > a > span
+div &gt; a &gt; span
 
-<ul>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-</ul>
+&lt;ul&gt;
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-<div><a><span></span></a></div>
-</code></pre>
+&lt;div&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;
+````
 
-<h1>Adding siblings</h1>
+#Adding siblings
 
-<p>Sometimes you don't need or want to wrap multiple children in curly braces. You can add siblings to an element by using the <code style="display:inline;">+</code> selector syntax.</p>
+Sometimes you don't need or want to wrap multiple children in curly braces. You can add siblings to an element by using the &lt;code style="display:inline;"&gt;+&lt;/code&gt; selector syntax.
 
-<pre><code>ul > li + li + li + li
+````ul &gt; li + li + li + li
 
-<ul>
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-</ul>
-</code></pre>
+&lt;ul&gt;
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;
+````
 
-<h1>Model parameters</h1>
+#Model parameters
 
-<p>To bind an element to a model you just add it to the element declaration surrounded by parenthesis <code style="display:inline;">()</code>.</p>
+To bind an element to a model you just add it to the element declaration surrounded by parenthesis &lt;code style="display:inline;"&gt;()&lt;/code&gt;.
 
-<pre><code>div(User)
-</code></pre>
+````div(User)
+````
 
-<p>This element is now bound to the User property of your model. This affects children properties as well and allows for simplified nesting.</p>
+This element is now bound to the User property of your model. This affects children properties as well and allows for simplified nesting.
 
-<pre><code>div(User) > span(FirstName) + span(LastName)
-</code></pre>
+````div(User) &gt; span(FirstName) + span(LastName)
+````
 
-<h1>String literals</h1>
+#String literals
 
-<p>There are several ways to output a string literal.</p>
+There are several ways to output a string literal.
 
-<pre><code>span > | String that reads until newline character
+````span &gt; | String that reads until newline character
 
 "String wrapped in quotes"
 
@@ -121,44 +121,44 @@ div > a > span
 
 @'Multiline string wrapped
   in single quotes'
-</code></pre>
+````
 
-<h1>Variable outputs</h1>
+#Variable outputs
 
-<p>There are two shortcuts to output a variable. If you pass in a variable to a block element and do not provide any children the variable with be added to the dom as with <code style="display:inline;">ToString()</code> applied and added as the first child to that element. You can also encode output using <code style="display:inline;">:</code> or raw output using <code style="display:inline;">=</code>. (PageTitle = "Parrot")</p>
+There are two shortcuts to output a variable. If you pass in a variable to a block element and do not provide any children the variable with be added to the dom as with &lt;code style="display:inline;"&gt;ToString()&lt;/code&gt; applied and added as the first child to that element. You can also encode output using &lt;code style="display:inline;"&gt;:&lt;/code&gt; or raw output using &lt;code style="display:inline;"&gt;=&lt;/code&gt;. (PageTitle = "Parrot")
 
-<pre><code>title(PageTitle)
-title > :PageTitle
-title > =PageTitle
+````title(PageTitle)
+title &gt; :PageTitle
+title &gt; =PageTitle
 
-<title>Parrot</title>
-</code></pre>
+&lt;title&gt;Parrot&lt;/title&gt;
+````
 
-<h1>Shortcuts</h1>
+#Shortcuts
 
-<p>You can shortcut divs by leaving div out when using #sample-id or .sample-class. </p>
+You can shortcut divs by leaving div out when using #sample-id or .sample-class. 
 
-<pre><code>#sample-id
-<div id="sample-id"></div>
-</code></pre>
+````#sample-id
+&lt;div id="sample-id"&gt;&lt;/div&gt;
+````
 
-<p>Some elements can override the default tag name such as a ul or ol. The default for these elements (as children) are li.</p>
+Some elements can override the default tag name such as a ul or ol. The default for these elements (as children) are li.
 
-<pre><code>ul > #sample-id
-<ul><li id="sample-id"></li></ul>
-</code></pre>
+````ul &gt; #sample-id
+&lt;ul&gt;&lt;li id="sample-id"&gt;&lt;/li&gt;&lt;/ul&gt;
+````
 
-<p>You can shortcut common attributes such as <code style="display:inline;">type</code> as well. For instance when adding an input element you can specify it's type by adding a <code style="display:inline;">:</code> followed by type.</p>
+You can shortcut common attributes such as &lt;code style="display:inline;"&gt;type&lt;/code&gt; as well. For instance when adding an input element you can specify it's type by adding a &lt;code style="display:inline;"&gt;:&lt;/code&gt; followed by type.
 
-<pre><code>input:text
+````input:text
 input:radio
 
-<input type="text" />
-<input type="radio" />
-</code></pre>
+&lt;input type="text" /&gt;
+&lt;input type="radio" /&gt;
+````
 
-<h1>Parser</h1>
+#Parser
 
-<p>This is a very brief overview of the grammar for parrot. I don't anticipate any near-future changes. I am currently working on an alternative parser for the language to avoid a reference to GoldParser. I hope to have it released in the next couple weeks.</p>
+This is a very brief overview of the grammar for parrot. I don't anticipate any near-future changes. I am currently working on an alternative parser for the language to avoid a reference to GoldParser. I hope to have it released in the next couple weeks.
 
-<p><strong>-Ben Dornis</strong></p>
+**-Ben Dornis**
