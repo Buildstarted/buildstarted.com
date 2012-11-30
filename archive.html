@@ -5,16 +5,17 @@ title: Buildstarted.com
 {% assign year = '2015' %}
 {% assign month = 'December' %}
 
-<ul class="posts">
 {% for post in site.posts %}
     {% capture postmonth %}{{ post.date | date: "%B" }}{% endcapture %}
     <!-- {{ postmonth }} {{ month }} -->
     {% if postmonth != month %}
         {% assign month = postmonth %}
+        {% if !forloop.first %}
         </ul>
-        <h2>{{ month }}</h2>
+        {% endif %}
         <a name="{{ post.date | date: "%Y" }}{{ month }}"></a>
-        <ul>
+        <h2>{{ month }}</h2>
+        <ul class="posts">
     {% endif %}
 
     <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url | remove:'.html' }}">{{ post.title }}</a></li>
