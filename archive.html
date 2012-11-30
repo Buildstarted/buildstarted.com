@@ -10,8 +10,9 @@ title: Buildstarted.com
     <!-- {{ postmonth }} {{ month }} -->
     {% if postmonth != month %}
         {% assign month = postmonth %}
-        {% if !forloop.first %}
-        </ul>
+        {% if forloop.first %}
+        {% else %}
+            </ul>
         {% endif %}
         <a name="{{ post.date | date: "%Y" }}{{ month }}"></a>
         <h2>{{ month }}</h2>
