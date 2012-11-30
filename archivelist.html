@@ -8,8 +8,9 @@ title: Buildstarted.com
 
   <ul class="posts">
     {% for post in site.posts %}
-      {% if '{{ post.date | date: %B }}' != month %}
-        {% assign month = '{{ post.date | date: %B }}' %}
+      {% capture postmonth %}{{ post.date | date: %B }}{% endcapture %}
+      {% if postmonth != month %}
+        {% assign month = postmonth %}
         <li>{{ month }}</li>
       {% endif %}
     {% endfor %}
