@@ -1,2 +1,5 @@
-markdown: maruku
+markdown: rdiscount
 pygments: true
+auto: true
+rdiscount:
+  extensions: [smart]
