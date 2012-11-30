@@ -1,0 +1,21 @@
+---
+layout: default
+title: Buildstarted.com
+---
+
+{% assign year = '2015' %}
+{% assign month = '12' %}
+
+  <ul class="posts">
+    {% for post in site.posts %}
+      {% if post.date%Month != month %}
+        {% assign month = post.date%Month %}
+        <li>{{ post.date%Month }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+
+
+<!--{% if user.name == 'bob' and user.age > 45 %}
+  Hello old bob
+{% endif %}-->
