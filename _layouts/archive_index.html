@@ -1,14 +1,21 @@
 ---
 layout: default
-meta-robots: "noodp, noydir, noindex, noarchive, follow"
+title: Buildstarted.com
 ---
+{% assign year = '2015' %}
+{% assign month = 'December' %}
 
-<h1> Posts archive: {{ page.period["month"] }} - {{page.period["year"]}} </h1><br>
-<ul>
-{% for post in page.period_posts %}
-<li> 
-    <a href="">{{ post.title }}</a><br>
-    <span class="entry-meta">Published: {{ post.date | date: "%B %d, %Y" }}</span>
-</li>
+<ul class="posts">
+{% for post in site.posts %}
+    {% capture postmonth %}{{ post.date | date: "%B" }}{% endcapture %}
+    <!-- {{ postmonth }} {{ month }} -->
+    {% if postmonth != month %}
+        {% assign month = postmonth %}
+    </ul>
+    <h2>{{ month }}</h2>
+    <ul>
+    {% endif %}
+
+    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url | remove:'.html' }}">{{ post.title }}</a></li>
 {% endfor %}
 </ul>
