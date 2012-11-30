@@ -12,7 +12,7 @@ title: Buildstarted.com
       <!-- {{ postmonth }} {{ month }} -->
       {% if postmonth != month %}
         {% assign month = postmonth %}
-        <li>{{ month }}</li>
+        <li>{{ month }} {{ post.date | date: "%Y" }}</li>
       {% endif %}
     {% endfor %}
   </ul>
