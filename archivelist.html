@@ -4,13 +4,13 @@ title: Buildstarted.com
 ---
 
 {% assign year = '2015' %}
-{% assign month = '12' %}
+{% assign month = 'December' %}
 
   <ul class="posts">
     {% for post in site.posts %}
-      {% if post.date%Month != month %}
-        {% assign month = post.date%Month %}
-        <li>{{ post.date%Month }}</li>
+      {% if {{ post.date | date: %B }} != month %}
+        {% assign month = {{ post.date | date: %B }} %}
+        <li>{{ post.date | date: %B }}</li>
       {% endif %}
     {% endfor %}
   </ul>
