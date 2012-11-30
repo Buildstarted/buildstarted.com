@@ -2,6 +2,9 @@
 layout: default
 title: Buildstarted.com
 ---
+
+#Archives
+
 {% assign year = '2015' %}
 {% assign month = 'December' %}
 
@@ -19,6 +22,6 @@ title: Buildstarted.com
         <ul class="posts">
     {% endif %}
 
-    <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url | remove:'.html' }}">{{ post.title }}</a></li>
+    <li><a href="{{ post.url | remove:'.html' }}">{{ post.title }}</a> (<span>{{ post.date | date_to_string }}</span>)</li>
 {% endfor %}
 </ul>
