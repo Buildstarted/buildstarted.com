@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Why you should care about parrot a new asp net mvc view engine
+title: Why you should care about Parrot a new Asp.net mvc view engine
 ---
 
 <p>This post highlights some of the main features of what Parrot is with a little detail thrown in.</p>

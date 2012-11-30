@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Introducing nugit
+title: Introducing Nugit
 ---
 
 <h1>Introducing Nugit</h1>

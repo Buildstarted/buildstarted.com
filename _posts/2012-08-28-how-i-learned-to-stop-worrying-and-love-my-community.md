@@ -1,6 +1,6 @@
 ---
 layout: default
-title: How i learned to stop worrying and love my community
+title: How I learned to stop worrying and love my community
 ---
 
 <style type="text/css">

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: This is parrot
+title: This is Parrot
 ---
 
 For the past week and a half I've been working on a new view engine for Asp.Net MVC called <a href="https://github.com/Buildstarted/Parrot">Parrot</a>. (I chose the name because there were only 2 nuget packages that showed up with that name - and it sort of fit with what a view engine is. It repeats something but different.)

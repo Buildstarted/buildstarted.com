@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Entity framework primary key issues
+title: Entity Framework primary key issues
 ---
 
 <h2>Entity Framework Primary key but not auto-increment</h2>

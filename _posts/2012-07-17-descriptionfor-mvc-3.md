@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Descriptionfor mvc 3
+title: DescriptionFor mvc 3
 ---
 
 <p>I'm surprised this particular feature doesn't exist for MVC - it's such a simple function.</p>

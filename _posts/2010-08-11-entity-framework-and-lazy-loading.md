@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Entity framework and lazy loading
+title: Entity Framework and lazy loading
 ---
 
 <h2>Entity Framework and virtual properties</h2>

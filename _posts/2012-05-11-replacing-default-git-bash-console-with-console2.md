@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Replacing default git bash console with console2
+title: Replacing default git bash console with Console2
 ---
 
 I really like git. I use it for every project I create. Sometimes even for random stuff unrelated to programming at all when I want to have versioning. One thing that always bugged me was the shell that msysgit comes with. I decided to replace it with Console2. 

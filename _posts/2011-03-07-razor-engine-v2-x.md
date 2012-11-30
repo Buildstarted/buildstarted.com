@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Razor engine v2 x
+title: Razor engine v2.x
 ---
 
 <h2>The RazorEngine</h2>

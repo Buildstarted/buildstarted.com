@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Socal code camp post mortem
+title: Socal Code Camp post mortem
 ---
 
 Code Camp is over. I went to a lot of wonderful sessions. A couple of timing issues hit me with the schedule because there were definitely sessions I wanted to attend at the same time as another session I wanted to attend. c'est la vie.
