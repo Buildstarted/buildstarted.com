@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Dependency injection with ninject moq and unit testing
+title: Dependency Injection with Ninject, Moq and unit testing
 ---
 
 <h2>An Existing DataContext Dependency</h2>
