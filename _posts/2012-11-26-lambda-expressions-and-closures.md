@@ -3,8 +3,6 @@ layout: post
 title: Lambda expressions and closures
 ---
 
-#{{ page.title }}
-
 I've been dealing a lot with anonymous methods lately I started getting interested in how they work, especially when dealing with closures. I was curious how these variables worked.
 
     for(int i = 0; i < 10; i++) 
