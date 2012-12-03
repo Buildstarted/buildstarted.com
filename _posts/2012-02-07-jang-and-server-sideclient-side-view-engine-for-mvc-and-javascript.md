@@ -16,7 +16,7 @@ on the client and render the same view with new data.
 Here is a sample view that generates a list of users from a model.
     //userlist.jazz
     <ul>
-        @for(var i in model.Model) {
+        @for(var i in model.Model) &#123;
             @jang.renderView("user", model.Model[i])
         }
     </ul>
@@ -43,9 +43,9 @@ This will return the html of the rendered view which you can then use to insert 
 
 Making an ajax call with jang.ajax will automatically render the view for you and return the resulting html.
 
-    jang.ajax({
+    jang.ajax(&#123;
         url: '/home/user',
-        success: function (result) {
+        success: function (result) &#123;
             $("ul#users").append($(result));
         }
     });
@@ -54,8 +54,8 @@ Making an ajax call with jang.ajax will automatically render the view for you an
 On the server side you need to return a proper response for the view to be rendered. A "JangResult" object has been provided to make this easy.
 
     public ActionResult User()
-    {
-        return new JangResult(new User {Name = "this is a new user "});
+    &#123;
+        return new JangResult(new User &#123;Name = "this is a new user "});
     }
 
 
@@ -67,12 +67,12 @@ The goal was to make this seamless and invisible to the consumer.
 Jang was designed to support additional view engines. Support exists for jsRender, Underscore, Mustache and Jazz. (Jazz is currently still in alpha)
 
 The above sample can be translated:
-{% raw %}
+
 ###Underscore
     
     //userlist.underscore
     <ul>
-	<% for(var index = 0; index <Model.length; index++) {%>
+	<% for(var index = 0; index <Model.length; index++) &#123;%>
 		<%= jang.renderView("user", Model[index]) %>
 	<%}%>
     </ul>
@@ -83,20 +83,20 @@ The above sample can be translated:
 
     //userlist.jsrender
 	<ul>
-		{{#each Model}}
-			<li>{{=Name}}</li>
-		{{/each}}
+		&#123;&#123;#each Model}}
+			<li>&#123;&#123;=Name}}</li>
+		&#123;&#123;/each}}
 	</ul>
 
 ###Mustache
 
     //userlist.mustache
 	<ul>
-		{{#Model}}
-			<li>{{Name}}</li>
-		{{/Model}}
+		&#123;&#123;#Model}}
+			<li>&#123;&#123;Name}}</li>
+		&#123;&#123;/Model}}
 	</ul>
-{% endraw %}
+
 The source for this project is hosted on Github at <a href="https://github.com/Buildstarted/Jang" title="https://github.com/Buildstarted/Jang">https://github.com/Buildstarted/Jang</a> please fork it and add support for more view engines :)
 
 I'll have a future post detailing how it all works.
