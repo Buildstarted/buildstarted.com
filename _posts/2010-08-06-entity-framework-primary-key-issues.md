@@ -2,7 +2,6 @@
 layout: default
 title: Entity Framework primary key issues
 ---
-#{{ page.title }}
 
 ##Entity Framework Primary key but not auto-increment
 

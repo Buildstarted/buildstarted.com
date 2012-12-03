@@ -2,7 +2,6 @@
 layout: default
 title: Razor without mvc part ii
 ---
-#{{ page.title }}
 
 After the wonderful blog post by Matt at <a href='http://www.fidelitydesign.net/'>http://www.fidelitydesign.net/</a> (which is based on my previous post <a href='http://buildstarted.com/2010/09/29/razor-view-engine-without-mvc-at-all/'>here</a>.) I looked into adding anonymous types to the compiler. Rather than start with my version of the compiler I've used his version. It was written much better than my thrown together example. (You can download the original <a href='http://www.fidelitydesign.net/?p=208'>here</a>.)
 

@@ -2,7 +2,6 @@
 layout: default
 title: Overriding displayfor and editorfor to create custom outputs for mvc
 ---
-#{{ page.title }}
 
 At the <a href='http://www.webcamps.ms'>Webcamp</a> in Los Angeles, <a href='http://www.haacked.com'>Phil Haack</a> showed off a feature that I wasn't presently aware of and I thought I'd share it with you. I've created a sample model that will be used to show off both a Display Template and Editor Template. You'll notice I added a UIHint to the EmailAddress property. By default the DisplayFor would use the property type, in this case a string, however we want to override that and there are two ways to do it. One is to add a DataType attribute and the other is a UIHint. UIHint overrides the other attributes.
 

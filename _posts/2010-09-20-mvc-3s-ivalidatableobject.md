@@ -2,7 +2,6 @@
 layout: default
 title: Mvc 3s ivalidatableobject
 ---
-#{{ page.title }}
 
 I've come across a couple ways to do validation in MVC. My favorite is the IValidatableObject method. It's fairly simple to setup.
 

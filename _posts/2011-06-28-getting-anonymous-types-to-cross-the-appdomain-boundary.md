@@ -2,7 +2,6 @@
 layout: default
 title: Getting anonymous types to cross the appdomain boundary
 ---
-#{{ page.title }}
 
 Matthew Abbott asked <a href='http://stackoverflow.com/q/6452034/365526'>this</a> question on <a href='http://stackoverflow.com/'>StackOverflow.com</a> and it's an interesting challenge that I wanted to solve. The question basically wanted to know how to pass an Anonymous type from one AppDomain to another.
 

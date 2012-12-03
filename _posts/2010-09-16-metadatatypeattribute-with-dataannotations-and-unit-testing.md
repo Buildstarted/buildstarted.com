@@ -2,7 +2,6 @@
 layout: default
 title: Metadatatypeattribute with dataannotations and unit testing
 ---
-#{{ page.title }}
 
 Ok, this has been causing me to pull my hair out. Consider the following setup and unit test.
 

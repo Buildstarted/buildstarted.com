@@ -2,7 +2,6 @@
 layout: default
 title: Building a photo uploading website
 ---
-#{{ page.title }}
 
 ##Starting it off
 

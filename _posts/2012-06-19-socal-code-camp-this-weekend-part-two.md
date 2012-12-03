@@ -2,7 +2,6 @@
 layout: default
 title: Socal code camp this weekend part two
 ---
-#{{ page.title }}
 
 After the very first public speaking engagement at the last Code Camp I've decided to try again. I didn't get any feedback last time but I hope I've noticed enough that went wrong that this time there will be fewer mistakes. No promises though. I'll be speaking at <a href='http://www.socalcodecamp.com/'>Socal Code Camp</a> at UC San Diego about Routing in Asp.Net on Saturday, the 23rd, at 2:45. 
 

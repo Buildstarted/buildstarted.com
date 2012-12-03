@@ -2,7 +2,6 @@
 layout: default
 title: Openid login database schema
 ---
-#{{ page.title }}
 
 I've been working on a photo uploading website off and on for the past month or so - just a few hours a week (if that) and I was working on the Login portion and decided now would be a good time to get into <a href="http://www.dotnetopenauth.net/" title="Dot Net Open Auth" target="&#95;new">OpenId</a>. However, it's not the most user friendly method of logging in. I wanted a way to use OpenId <strong>or</strong> a local login. In case people don't want to use OpenId or just simply don't know what it is. I plan on looking into <a href="http://developers.facebook.com/docs/guides/web" target="&#95;new">Facebook Connect</a> or <a href="http://apiwiki.twitter.com/OAuth-FAQ" target="&#95;new">Twitter auth</a>, as well, and may post that how to integrate it in a future article.
 

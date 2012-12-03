@@ -2,7 +2,6 @@
 layout: default
 title: Routing problems by not providing default route values
 ---
-#{{ page.title }}
 
 While working on a new site that uses <a href='http://haacked.com/'>Phil Haack</a>'s <a href='http://routemagic.codeplex.com/'>RouteMagic</a> I came across a curious thing. All my <strong>Html.ActionLink</strong> calls were routing to a controller/action that they shouldn't route to. I fired up <a href='http://getglimpse.com/'>Glimpse</a> to see what routes were possible matches to try and find the culprit. (The route exists in an external library) Here's an example: 
 

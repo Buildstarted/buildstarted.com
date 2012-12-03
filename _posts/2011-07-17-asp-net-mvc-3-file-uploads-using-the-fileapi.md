@@ -2,7 +2,6 @@
 layout: default
 title: Asp.net mvc 3 file uploads using the fileapi
 ---
-#{{ page.title }}
 
 I was recently given the task of adding upload progress bars to some internal applications. A quick search of the internet yielded <a href='http://swfupload.org/'>SwfUpload</a>. Which worked...but not in the way that I wanted. So I went the route of using the new <a href='http://www.w3.org/TR/FileAPI/'>FileApi</a>. It didn't function the way that I've been used to standard file uploads. This is how I made it work in <a href='http://www.asp.net/mvc/mvc3'>MVC3</a>.
 

@@ -2,7 +2,6 @@
 layout: default
 title: Fun with dynamicobject dynamic and the settings table
 ---
-#{{ page.title }}
 
 ##What came before
 

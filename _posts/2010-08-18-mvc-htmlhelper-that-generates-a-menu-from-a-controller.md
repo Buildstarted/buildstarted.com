@@ -2,7 +2,6 @@
 layout: default
 title: Mvc htmlhelper that generates a menu from a controller
 ---
-#{{ page.title }}
 
 Simple menu system that grabs a list of actions from a single controller and creates an unordered list of links. To accomplish this I've created an attribute that will be applied to the action methods we want to see in the menu
 

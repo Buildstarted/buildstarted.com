@@ -3,7 +3,6 @@ layout: post
 title: The Parrot Grammar
 ---
 
-#{{ page.title }}
 
 #Creating an element
 

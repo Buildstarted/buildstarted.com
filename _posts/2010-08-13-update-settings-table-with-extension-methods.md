@@ -2,7 +2,6 @@
 layout: default
 title: Update settings table with extension methods
 ---
-#{{ page.title }}
 
 So after working with the <a href='http://buildstarted.com/2010/08/09/creating-a-settings-table-that-can-handle-almost-any-type-of-value/'>Settings table</a> from my previous post a bit, it's clear to me that creating some extension methods would make working with settings easier. To do this though we have to modify the Model a bit first and rename "Value" to lowercase "value". The summary xml documentation is there to inform the user there's an Extension method
 

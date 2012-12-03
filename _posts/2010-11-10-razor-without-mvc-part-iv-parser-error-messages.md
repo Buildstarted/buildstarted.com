@@ -2,7 +2,6 @@
 layout: default
 title: Razor without mvc part iv parser error messages
 ---
-#{{ page.title }}
 
 I'm sensing a theme here...
 

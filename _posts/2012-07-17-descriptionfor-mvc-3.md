@@ -2,7 +2,6 @@
 layout: default
 title: DescriptionFor mvc 3
 ---
-#{{ page.title }}
 
 I'm surprised this particular feature doesn't exist for MVC - it's such a simple function.
 

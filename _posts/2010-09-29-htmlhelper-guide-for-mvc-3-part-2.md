@@ -2,7 +2,6 @@
 layout: default
 title: Htmlhelper guide for mvc 3 part 2
 ---
-#{{ page.title }}
 
 ##Action
 

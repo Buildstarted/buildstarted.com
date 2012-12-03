@@ -2,7 +2,6 @@
 layout: default
 title: Amazons s3 and cloudfront services
 ---
-#{{ page.title }}
 
 This is my company's busy season and the sudden outage of one of our T1 lines resulted in us scrambling for a solution to give our clients access to their downloads at a reasonable speed. 15Kbps is <em>not</em> acceptable! I happen to just start using Amazon's EC2 for personal reasons and was thus becoming familiar with the system. We needed to setup a remote host right away. Including our webserver. (Not just files) So, after a brief discussion, I offered to use my account for hosting so that we can get up and running right away. This was going to be my first Windows machine setup.
 

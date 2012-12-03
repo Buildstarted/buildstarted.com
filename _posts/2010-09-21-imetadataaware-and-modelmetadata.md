@@ -2,7 +2,6 @@
 layout: default
 title: Imetadataaware and modelmetadata
 ---
-#{{ page.title }}
 
 A week or so ago I posted an <a href='http://buildstarted.com/2010/09/14/creating-your-own-modelmetadataprovider-to-handle-custom-attributes/'>article</a> on writing your own <strong>ModelMetadataProvider</strong>. That particular method was a bit overkill for the sample and I wanted to get back to this particular example and provide a much easier method using the <strong>IMetadataAware</strong> attribute. Using the same example I'm going to add the IMetadataAware interface to my TooltipAttribute.
 

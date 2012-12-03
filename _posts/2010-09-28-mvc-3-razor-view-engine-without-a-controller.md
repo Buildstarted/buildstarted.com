@@ -2,7 +2,6 @@
 layout: default
 title: Mvc 3 razor view engine without a controller
 ---
-#{{ page.title }}
 
 A question posted on stackoverflow caught my attention the other day that asked about using the Razor View Engine outside of MVC that would return a string value from a string template rather than a view...The code example was provided.
 

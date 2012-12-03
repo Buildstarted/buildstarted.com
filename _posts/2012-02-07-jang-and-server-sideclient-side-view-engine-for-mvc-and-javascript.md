@@ -2,7 +2,6 @@
 layout: default
 title: Jang and server sideclient side view engine for mvc and javascript
 ---
-#{{ page.title }}
 
 <div style="background-color: #202020; border: 4px solid #C0C0C0;border-radius: 5px 5px 5px 5px;box-shadow: 2px 2px 3px #6E6E6E;color: #E2E2E2;display: block;font: 1.5em 'andale mono','lucida console',monospace; overflow: auto; padding:15px; margin-bottom: 1.5em;"><p style="margin-bottom:0;">PM&gt; Install-Package Jang</p></div>
 

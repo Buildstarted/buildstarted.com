@@ -2,7 +2,6 @@
 layout: default
 title: Introducing signalr eventstream
 ---
-#{{ page.title }}
 
 ##SignalR.EventStream
 

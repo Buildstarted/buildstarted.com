@@ -2,7 +2,6 @@
 layout: default
 title: Creating a settings table that can handle almost any type of value
 ---
-#{{ page.title }}
 
 ###Update: <a href='http://buildstarted.com/2010/08/13/update-settings-table-with-extension-methods/'>Updated article here</a>.
 

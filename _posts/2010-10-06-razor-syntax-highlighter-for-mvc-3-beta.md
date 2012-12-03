@@ -2,7 +2,6 @@
 layout: default
 title: Razor syntax highlighter for mvc 3 beta
 ---
-#{{ page.title }}
 
 ##Razor Syntax Highlighter
 

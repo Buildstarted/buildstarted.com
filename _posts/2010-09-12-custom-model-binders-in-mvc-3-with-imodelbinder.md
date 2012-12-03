@@ -2,7 +2,6 @@
 layout: default
 title: Custom model binders in mvc 3 with imodelbinder
 ---
-#{{ page.title }}
 
 ####Update: Apparently this works in MVC 1 and 2 - Thanks, Mike!
 

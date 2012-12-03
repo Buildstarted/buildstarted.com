@@ -2,7 +2,6 @@
 layout: default
 title: Managed extensibility framework and visual studio 2010 editor classifiers
 ---
-#{{ page.title }}
 
 ##Few things first
 

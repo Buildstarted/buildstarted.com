@@ -2,7 +2,6 @@
 layout: default
 title: Razor view engine for TinyWeb
 ---
-#{{ page.title }}
 
 If you haven't heard of Tinyweb I suggest you check out out at Martin Rue's series of blog posts. (<a href='http://invalidcast.com/2011/05/tinyweb-series-1-getting-started'>Tinyweb series</a>)
 

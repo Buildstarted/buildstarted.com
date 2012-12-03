@@ -2,7 +2,6 @@
 layout: default
 title: Htmlhelper guide for mvc 3 part 1
 ---
-#{{ page.title }}
 
 When you spend a lot of time, like I do, using the Razor View Engine in MVC 3 you'll find yourself constantly looking up helper parameters. I've decided to put together this guide to help me, and others, to code more quickly and efficiently. This is part one of an n-part series involving all html helpers contained in MVC 3.
 

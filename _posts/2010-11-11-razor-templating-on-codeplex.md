@@ -2,7 +2,6 @@
 layout: default
 title: Razor templating on codeplex
 ---
-#{{ page.title }}
 
 Good news everyone! The Razor Templating project <a href='http://fidelitydesign.net'>Matthew Abbott</a> &amp; I have been working on is available on <a href='http://razorengine.codeplex.com/'>Codeplex.com</a>! 
 

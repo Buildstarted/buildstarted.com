@@ -2,7 +2,6 @@
 layout: default
 title: Socal Code Camp this weekend
 ---
-#{{ page.title }}
 
 Sunday, January 29th 2012 will be my first foray into public speaking. I'll be speaking at <a href='http://www.socalcodecamp.com/'>Socal Code Camp</a> at Cal State Fullerton about Routing in Asp.Net.
 

@@ -2,7 +2,6 @@
 layout: default
 title: Entity framework with many to many one to many and one to one relationships
 ---
-#{{ page.title }}
 
 ##Child/Parent object assignments
 

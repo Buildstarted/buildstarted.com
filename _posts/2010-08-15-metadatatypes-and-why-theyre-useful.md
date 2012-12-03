@@ -2,7 +2,6 @@
 layout: default
 title: Metadatatypes and why theyre useful
 ---
-#{{ page.title }}
 
 ##MetadataType
 

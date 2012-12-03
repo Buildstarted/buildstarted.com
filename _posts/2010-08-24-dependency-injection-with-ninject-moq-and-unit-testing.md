@@ -2,7 +2,6 @@
 layout: default
 title: Dependency Injection with Ninject, Moq and unit testing
 ---
-#{{ page.title }}
 
 ##An Existing DataContext Dependency
 

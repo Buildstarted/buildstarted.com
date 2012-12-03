@@ -2,7 +2,6 @@
 layout: default
 title: Making your own viewengine with markdown
 ---
-#{{ page.title }}
 
 Recently I was thinking about integrating the new <a href='http://buildstarted.com/2010/11/11/razor-templating-on-codeplex/'>Razor Templating Engine</a> into MVC so that I could learn how to create my own ViewEngine for MVC. However, I couldn't quite figure out exactly how to use it in anyway that would make it different from Razor itself. Instead I decided to use Markdown as I frequent <a href='http://stackoverflow.com'>Stackoverflow.com</a> quite a bit to try and help with questions related to Razor. (And get some answers for myself) It seemed like a good direction to go. Markdown is probably not a good idea though to use as a view in general.
 

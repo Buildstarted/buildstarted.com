@@ -2,7 +2,6 @@
 layout: default
 title: Entity Framework and lazy loading
 ---
-#{{ page.title }}
 
 ##Entity Framework and virtual properties
 

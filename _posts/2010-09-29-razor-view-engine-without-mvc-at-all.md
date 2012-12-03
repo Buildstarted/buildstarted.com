@@ -2,7 +2,6 @@
 layout: default
 title: Razor view engine without mvc at all
 ---
-#{{ page.title }}
 
 Update: <a href='http://buildstarted.com/2010/11/02/razor-without-mvc-part-ii/'>Razor without MVC part II</a> contains anonymous types
 

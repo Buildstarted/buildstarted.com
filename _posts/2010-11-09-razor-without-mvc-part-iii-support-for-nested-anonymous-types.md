@@ -2,7 +2,6 @@
 layout: default
 title: Razor without mvc part iii support for nested anonymous types
 ---
-#{{ page.title }}
 
 One of the problems with my previous post was you couldn't have an object definition like:
 

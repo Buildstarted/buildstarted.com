@@ -2,7 +2,6 @@
 layout: default
 title: Modelbinderproviders automatic binding your models is easy as pie
 ---
-#{{ page.title }}
 
 One of the things I really like about MVC is it's ability to know things. You don't have to tell it anything, it just <strong>knows</strong>. How does it do this? How can MVC automagically know that a request for <strong>/home/index</strong> should go to the <strong>HomeController.Index</strong>? It's magic. No, really, it's magic!
 

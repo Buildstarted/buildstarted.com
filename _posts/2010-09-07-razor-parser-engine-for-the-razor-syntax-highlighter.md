@@ -2,7 +2,6 @@
 layout: default
 title: Razor parser engine for the razor syntax highlighter
 ---
-#{{ page.title }}
 
 Here's my Razor Parser class that I use in my <a href='/razor-syntax-highlighter'>Razor Syntax Highlighter</a>. I'm going to post later about how I integrate this into Visual Studio using the <a href='http://www.microsoft.com/downloads/details.aspx?FamilyID=47305cf4-2bea-43c0-91cd-1b853602dcc5&displaylang=en' target='&#95;new'>Visual Studio SDK</a>.
 

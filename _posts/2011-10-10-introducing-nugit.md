@@ -2,7 +2,6 @@
 layout: default
 title: Introducing Nugit
 ---
-#{{ page.title }}
 
 #Introducing Nugit
 

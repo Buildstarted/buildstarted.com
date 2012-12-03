@@ -2,7 +2,6 @@
 layout: default
 title: Mvc 3 release candidate out so much for my razor syntax highlighter
 ---
-#{{ page.title }}
 
 Well, the time has come for me to bow down to those who truly rock. The wonderful team at Microsoft has finally released their <a href='http://haacked.com/archive/2010/11/09/asp-net-mvc-3-release-candidate.aspx'>official version</a> of the Syntax Highlighter (with Intellisense) for MVC's Razor. There isn't much I can do to improve upon their version.
 

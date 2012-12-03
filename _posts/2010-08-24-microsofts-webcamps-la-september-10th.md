@@ -2,7 +2,6 @@
 layout: default
 title: Microsofts webcamps la september 10th
 ---
-#{{ page.title }}
 
 <img src="http://www.webcamps.ms/media/358/webcampbadge100.png" style="float:right" alt="Microsoft Web Camp" title="" />Web Ninjas <strong><a href='http://www.haacked.com' target='&#95;new'>Phil Haack</a></strong> and <strong><a href='http://www.jamessenior.com/' target='&#95;new'>James Senior</a></strong> are flying in from Seattle to deliver a Web Camp in the city of angels.  This is an intermediate to advanced level event where we'll go into the nuts and bolts of ASP.NET MVC and other parts of the Microsoft Web Platform.
 

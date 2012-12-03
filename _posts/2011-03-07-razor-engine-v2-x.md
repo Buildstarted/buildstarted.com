@@ -2,7 +2,6 @@
 layout: default
 title: Razor engine v2.x
 ---
-#{{ page.title }}
 
 ##The RazorEngine
 
