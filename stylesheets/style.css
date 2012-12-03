@@ -1048,3 +1048,7 @@ pre {
 .fun {
     color: #2b91af;
 }
+
+ul.posts {
+    list-style: none;
+}
