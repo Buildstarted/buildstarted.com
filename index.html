@@ -5,7 +5,7 @@ title: Buildstarted.com
 <ul class="posts">
   {% for post in site.posts  limit:10 %}
 <li>
-    <h2><a href="{{ post.url | remove:'.html' }}">{{ post.title }}</a><span style='font-size:small;'>{{ post.date | date_to_string }}</span></h2> 
+    <h2><a href="{{ post.url | remove:'.html' }}">{{ post.title }}</a> <span style='font-size:8pt; font-weight:normal;'>({{ post.date | date_to_string }})</span></h2> 
     {{ post.content | }}
 </li>
   {% endfor %}
