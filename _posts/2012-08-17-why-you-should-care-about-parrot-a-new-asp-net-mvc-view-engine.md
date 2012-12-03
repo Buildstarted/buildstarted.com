@@ -2,6 +2,7 @@
 layout: default
 title: Why you should care about Parrot a new Asp.net mvc view engine
 ---
+#{{ page.title }}
 
 This post highlights some of the main features of what Parrot is with a little detail thrown in.
 
@@ -15,11 +16,11 @@ I have a <a href="http://testdrive.thisisparrot.com/">test drive</a> page that a
 
 Creating a clean view is very simple. Much of the fluff has been removed and you're left with only what you need to define the document. Html can be verbose and an attempt has been made to minimize the amount of text needed to define a document to what is necessary. To that end I've decided to use the css selector syntaxes. I'm going to show you a sample of html then Parrot and then a short-hand Parrot (that works only for divs)
 
-<pre><code><div id="some-id"></div>
+    <div id="some-id"></div>
 
-div#some-id
+    div#some-id
 
-#some-id</code></pre>
+    #some-id
 
 They all produce the same output. Notice the cleaner syntax of Parrot. I think it allows more of a focus on the structure of the html and how models interact.
 
@@ -31,58 +32,55 @@ The default html renderers that ship with Parrot.Mvc have great model support. A
 
 By default variables are scoped based on their nearest parent with a parameter (defaults to the passed in model). As you traverse down the children the model values are automatically mapped to a property of the parent model parameter
 
-<pre><code>var model = new 
-{
-    User = new 
+    var model = new 
     {
-        Name = "Buildstarted",
-        Location = "Los Angeles"
+        User = new 
+        {
+            Name = "Buildstarted",
+            Location = "Los Angeles"
+        }
+    };
+
+    div(User)
+    {
+        label> "Name"
+        span(Name)
+        label > "Location"
+        span(Location)
     }
-};
 
-div(User)
-{
-    label> "Name"
-    span(Name)
-    label > "Location"
-    span(Location)
-}
-</code></pre>
-
-You can see in the above code that we didn't have to tell the span <code style="display:inline;">Model.User.Name</code> when we wanted to output the value. We just had to tell it name. When a model value is resolved it looks for a property on the parent that matches and will output that. Likewise the default model for all elements is <code style="display:inline;">this</code> which is the same as <code style="display:inline;">Model</code>
+You can see in the above code that we didn't have to tell the span <code style="display:inline;">Model.User.Name when we wanted to output the value. We just had to tell it name. When a model value is resolved it looks for a property on the parent that matches and will output that. Likewise the default model for all elements is <code style="display:inline;">this which is the same as <code style="display:inline;">Model
 
 ###IEnumerable support
 
-IEnumerable support was something I wanted to include as a default thing in Parrot. Any time an element definition includes an IEnumerable as the first parameter and has children it will automatically loop over the parameter and create the child definition passing current element as a parameter to it. This is great for <code style="display:inline;">ul</code>, <code style="display:inline;">ol</code>, <code style="display:inline;">tbody</code> and so forth. To illustrate this let's take a <code style="display:inline;">List<string></code> and pass it into a ul element.
+IEnumerable support was something I wanted to include as a default thing in Parrot. Any time an element definition includes an IEnumerable as the first parameter and has children it will automatically loop over the parameter and create the child definition passing current element as a parameter to it. This is great for <code style="display:inline;">ul, <code style="display:inline;">ol, <code style="display:inline;">tbody and so forth. To illustrate this let's take a <code style="display:inline;">List<string> and pass it into a ul element.
 
-<pre><code>var model = new 
-{
-    Authors = new List<string>
+    var model = new 
     {
-        "Ray Bradbury", 
-        "Harry Harrison", 
-        "Douglas Adams",
-        "Isaac Asimov", 
-        "Arthur C. Clarke" 
-    }
-};
-</code></pre>
-<pre><code>
-ul(Authors) {
-    li(this)
-}
-</code></pre>
-<pre><code>
-<ul>
-    <li>Ray Bradbury</li>
-    <li>Harry Harrison</li>
-    <li>Douglas Adams</li>
-    <li>Isaac Asimov</li>
-    <li>Arthur C. Clarke</li>
-</ul>
-</code></pre>
+        Authors = new List<string>
+        {
+            "Ray Bradbury", 
+            "Harry Harrison", 
+            "Douglas Adams",
+            "Isaac Asimov", 
+            "Arthur C. Clarke" 
+        }
+    };
 
-Note the parameter for <code style="display:inline;">li</code> is <code style="display:inline;">this</code> because the element we want to output is the current item in the list. If this were a property we wanted to output like <code style="display:inline;">Name</code> we would just use <code style="display:inline;">li(Name)</code> or <code style="display:inline;">li > :Name</code>. By default all html elements support IEnumerable parameters. Some, such as any self closing element, will ignore the parameter.
+    ul(Authors) {
+        li(this)
+    }
+
+    <ul>
+        <li>Ray Bradbury</li>
+        <li>Harry Harrison</li>
+        <li>Douglas Adams</li>
+        <li>Isaac Asimov</li>
+        <li>Arthur C. Clarke</li>
+    </ul>
+
+
+Note the parameter for <code style="display:inline;">li is <code style="display:inline;">this because the element we want to output is the current item in the list. If this were a property we wanted to output like <code style="display:inline;">Name we would just use <code style="display:inline;">li(Name) or <code style="display:inline;">li > :Name. By default all html elements support IEnumerable parameters. Some, such as any self closing element, will ignore the parameter.
 
 ##Renderers
 
@@ -90,29 +88,27 @@ Renderers are the heart and soul of Parrot. The grammar is just a vehicle to the
 
 Bottom line: Parrot view engine is built from renderers, and you can easily write your own renderers to add keywords that extend the language however you'd like.
 
-Creating a new renderer is as easy as implementing an interface and adding your new class to a <code style="display:inline;">RendererFactory</code>. Any time the renderer comes across an element it will query the RenderFactory for it's renderer and use it to parse the block.
+Creating a new renderer is as easy as implementing an interface and adding your new class to a <code style="display:inline;">RendererFactory. Any time the renderer comes across an element it will query the RenderFactory for it's renderer and use it to parse the block.
 
-There are currently several custom renderers including a renderer that supports a <code style="display:inline;">layout</code> view, <code style="display:inline;">foreach</code> and <code style="display:inline;">doctype</code>.
+There are currently several custom renderers including a renderer that supports a <code style="display:inline;">layout view, <code style="display:inline;">foreach and <code style="display:inline;">doctype.
 
-<pre><code>//child view
-layout("viewname") {
-    ...content goes here...
-}
+    //child view
+    layout("viewname") {
+        ...content goes here...
+    }
 
-//layout view
-html > body {
-    content
-}
-</code></pre>
+    //layout view
+    html > body {
+        content
+    }
 
-Renderers can also override the default element for short-cut statements. For instance the following will not output the <code style="display:inline;">div</code> but will instead output <code style="display:inline;">li</code>
+Renderers can also override the default element for short-cut statements. For instance the following will not output the <code style="display:inline;">div but will instead output <code style="display:inline;">li
 
-<pre><code>ul(Authors) > .item(this)
-<ul>
-    <li class="item">Ray Bradbury</li>
-    ...
-</ul>
-</code></pre>
+    ul(Authors) > .item(this)
+    <ul>
+        <li class="item">Ray Bradbury</li>
+        ...
+    </ul>
 
 ###Future posts
 

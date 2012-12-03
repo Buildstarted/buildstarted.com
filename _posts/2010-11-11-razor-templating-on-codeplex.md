@@ -2,6 +2,7 @@
 layout: default
 title: Razor templating on codeplex
 ---
+#{{ page.title }}
 
 Good news everyone! The Razor Templating project <a href='http://fidelitydesign.net'>Matthew Abbott</a> &amp; I have been working on is available on <a href='http://razorengine.codeplex.com/'>Codeplex.com</a>! 
 
@@ -11,27 +12,27 @@ A templating engine built upon Microsoft's Razor parsing technology. The Razor T
 
 Using the templating engine couldn't be easier, using a simple synax, we can do the following:
 
-<pre><code>string template = "Hello @Model.Name! Welcome to Razor!"
-string result = Razor.Parse(template, new { Name = "World" });
-</code></pre>
+    string template = "Hello @Model.Name! Welcome to Razor!"
+    string result = Razor.Parse(template, new { Name = "World" });
+
 
 The templating engine supports strict and anonymous types, as well as customized base templates, for instance:
 
-<pre><code>Razor.SetBaseTemplate(typeof(HtmlTemplateBase<>));
+    Razor.SetBaseTemplate(typeof(HtmlTemplateBase<>));
 
-string template = 
-@"<html>
-    <head>
-      <title>Hello @Model.Name</title>
-    </head>
-    <body>
-      Email: @Html.TextBoxFor(m => m.Email)
-    </body>
-  </html>";
+    string template = 
+    @"<html>
+        <head>
+          <title>Hello @Model.Name</title>
+        </head>
+        <body>
+          Email: @Html.TextBoxFor(m => m.Email)
+        </body>
+      </html>";
 
-var model = new PageModel { Name = "World", Email = "someone@somewhere.com" };
-string result = Razor.Parse(template, model);
-</code></pre>
+    var model = new PageModel { Name = "World", Email = "someone@somewhere.com" };
+    string result = Razor.Parse(template, model);
+
 
 I hope everyone enjoys this!
 

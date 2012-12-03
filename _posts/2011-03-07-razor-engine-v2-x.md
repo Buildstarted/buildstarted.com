@@ -2,6 +2,7 @@
 layout: default
 title: Razor engine v2.x
 ---
+#{{ page.title }}
 
 ##The RazorEngine
 
@@ -15,22 +16,22 @@ The Razor Engine is available from <a href='http://razorengine.codeplex.com/'>co
 
 For those of you unfamiliar with razor here's a quick sample that will hopefully help you to understand why it rocks. 
 
-<pre><code><ul>
-    @foreach(Author author in Model.CoolAuthors) {
-        <li>@author.Name</li>
-    }
-</ul>
-</code></pre>
+    <ul>
+        @foreach(Author author in Model.CoolAuthors) {
+            <li>@author.Name</li>
+        }
+    </ul>
+
 
 The output generated would be simply
 
-<pre><code><ul>
-    <li>David Brin</li>
-    <li>William Gibson</li>
-    <li>Gene Wolfe</li>
-    <li>C. J. Cherryh</li>
-</ul>
-</code></pre>
+    <ul>
+        <li>David Brin</li>
+        <li>William Gibson</li>
+        <li>Gene Wolfe</li>
+        <li>C. J. Cherryh</li>
+    </ul>
+
 
 This makes authoring xml/html a million times cleaner than the old <span style='background-color:yellow; font-weight:bold;'>&lt;% %&gt;</span> method. You'll notice that the parser figured out that the <strong>@</strong> symbol was a transition between html and c#. You'll notice I don't have an <strong>@</strong> symbol in front of my last } there. Since the parser knows c# pretty well it's able to figure out when the code ends and html begins again. 
 
@@ -40,28 +41,28 @@ This makes authoring xml/html a million times cleaner than the old <span style='
 
 The Razor Engine was designed to be as simple as can be to call in your application. One call and the base template can handle most of your needs.
 
-<pre><code>string template = "Hello @Model.Name! Welcome to Razor!"
-string result = Razor.Parse(template, new { Name = "World" });
-</code></pre>
+    string template = "Hello @Model.Name! Welcome to Razor!"
+    string result = Razor.Parse(template, new { Name = "World" });
+
 
 In the above template you're passing in your template - which can be pulled from anywhere - and an object that will represent your model. In this case, an anonymous type with the Name property.
 
 All RazorEngine derived objects inherit from <strong>TemplateBase</strong>. This class has only one property that you need to worry about and that is <strong>Model</strong>. This is the object that will contain the object you pass in to the template. As in the above example it was the Anonymous type. You may, however, wish to add your own methods. One example provided by the codeplex documentation is a <strong>ToUpperCase</strong> function. To implement this you would inherit <strong>TemplateBase&lt;T&t;</strong>
 
-<pre><code>public abstract class MyCustomTemplateBase<T> : TemplateBase<T> {
-    public string ToUpperCase(string name) {
-        return name.ToUpperCase();
+    public abstract class MyCustomTemplateBase<T> : TemplateBase<T> {
+        public string ToUpperCase(string name) {
+            return name.ToUpperCase();
+        }
     }
-}
-</code></pre>
 
-To utilize your new TemplateBase you must initialize it within the RazorEngine. <code>Razor.SetTemplateBase(typeof(MyCustomTemplateBase<>));</code> This <strong>must</strong> be the first call you make. Usually within <strong>Application_Start</strong> or <strong>main</strong> or some other initialization method. This is a static method and as such this affects <strong>all</strong> calls to the RazorEngine.
+
+To utilize your new TemplateBase you must initialize it within the RazorEngine. <code>Razor.SetTemplateBase(typeof(MyCustomTemplateBase<>)); This <strong>must</strong> be the first call you make. Usually within <strong>Application_Start</strong> or <strong>main</strong> or some other initialization method. This is a static method and as such this affects <strong>all</strong> calls to the RazorEngine.
 
 To call your new method within your razor files: 
 
-<pre><code>string template = "My name in UPPER CASE is: @ToUpperCase(Model.Name)";
-string result = Razor.Parse(template, new { Name = "Ben" });
-</code></pre>
+    string template = "My name in UPPER CASE is: @ToUpperCase(Model.Name)";
+    string result = Razor.Parse(template, new { Name = "Ben" });
+
 
 ##Configuration
 
@@ -77,8 +78,8 @@ The Razor Engine is the same parser technology used with the MVC Razor Parser, h
 
 Currently the Razor Engine does not support inline delegates such as
 
-<pre><code>@List.ForEach(i => { @* Some Complex stuff *@ });
-</code></pre>
+    @List.ForEach(i => { @* Some Complex stuff *@ });
+
 
 Which is a shame, but I've been told by Andrew Nurse that it's in the works.
 

@@ -2,19 +2,20 @@
 layout: default
 title: Overriding displayfor and editorfor to create custom outputs for mvc
 ---
+#{{ page.title }}
 
 At the <a href='http://www.webcamps.ms'>Webcamp</a> in Los Angeles, <a href='http://www.haacked.com'>Phil Haack</a> showed off a feature that I wasn't presently aware of and I thought I'd share it with you. I've created a sample model that will be used to show off both a Display Template and Editor Template. You'll notice I added a UIHint to the EmailAddress property. By default the DisplayFor would use the property type, in this case a string, however we want to override that and there are two ways to do it. One is to add a DataType attribute and the other is a UIHint. UIHint overrides the other attributes.
 
-<pre><code>public class User {
-    public string Username { get; set; }
+    public class User {
+        public string Username { get; set; }
 
-    //[UIHint("EmailAddress")]
-    [DataType(DataType.EmailAddress)]
-    public string EmailAddress { get; set; }
+        //[UIHint("EmailAddress")]
+        [DataType(DataType.EmailAddress)]
+        public string EmailAddress { get; set; }
 
-    public DateTime DOB { get; set; }
-}
-</code></pre>
+        public DateTime DOB { get; set; }
+    }
+
 
 Now that we have our simple object let's create a Display Template for the EmailAddress property.
 
@@ -26,23 +27,22 @@ Display templates are cshtml partials that have the same name as the type they'r
 
 I've created an EmailAddress.cshtml template that will format an email address with a mailto: link
 
-<pre><code>@inherits System.Web.Mvc.WebViewPage<string>
-< a href='mailto:@Model'>@Html.DisplayTextFor(m => m)</ a >
-</code></pre>
+    @inherits System.Web.Mvc.WebViewPage<string>
+    <a href='mailto:@Model'>@Html.DisplayTextFor(m => m)</a>
+
 
 I used both methods, @Model and an Html helper to display the actual value of the model. The call is easy enough in code. By default, when you create a Detail strongly typed view it outputs @Model.PropertyName. In this case we want to use the DisplayFor html helper.
 
-<pre><code><fieldset>
-    <legend>Fields</legend>
+    <fieldset>
+        <legend>Fields</legend>
 
-    <div class="display-label">Username</div>
-    <div class="display-field">@Model.Username</div>
+        <div class="display-label">Username</div>
+        <div class="display-field">@Model.Username</div>
 
-    <div class="display-label">EmailAddress</div>
-    <div class="display-field">@Html.DisplayFor( m => m.EmailAddress)</div>
+        <div class="display-label">EmailAddress</div>
+        <div class="display-field">@Html.DisplayFor( m => m.EmailAddress)</div>
+    </fieldset>
 
-</fieldset>
-</code></pre>
 
 <img src="http://buildstarted.com/wp-content/uploads/2010/09/displaytemplatemailtoemail.png" alt="Display For Email Address Link" title="Display For Email Address Link" />
 
@@ -56,18 +56,17 @@ Editor Templates are the same as display templates. To create an Editor Template
 
 In this case I've created a DateTime editor to show you a sample of the power of editor templates. I've imported the jquery ui library to add a datepicker to our editor.
 
-<pre><code>@inherits System.Web.Mvc.WebViewPage<System.DateTime>
-@Html.TextBox("", (Model.ToShortDateString()), new { @class = "datePicker" })
-</code></pre>
+    @inherits System.Web.Mvc.WebViewPage<System.DateTime>
+    @Html.TextBox("", (Model.ToShortDateString()), new { @class = "datePicker" })
+
 
 the @class is the html attribute we're using to assign the datePicker to textbox. Below is the jquery to add the datepicker to our new Textbox with the added class attribute.
 
-<pre><code><script type='text/javascript'>
-    $(document).ready(function() {
-        $(".datePicker").datepicker({buttonImage: "/content/images/calendar.gif", showOn: "both"});
-    });
-</script>
-</code></pre>
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            $(".datePicker").datepicker({buttonImage: "/content/images/calendar.gif", showOn: "both"});
+        });
+    </script>
 
 And here are the results
 

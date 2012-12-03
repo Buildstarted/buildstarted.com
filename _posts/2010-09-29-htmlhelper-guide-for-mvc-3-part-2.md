@@ -2,6 +2,7 @@
 layout: default
 title: Htmlhelper guide for mvc 3 part 2
 ---
+#{{ page.title }}
 
 ##Action
 
@@ -9,13 +10,13 @@ This method calls an action method and returns the result as a string.
 
 ###Usage
 
-<pre><code>@Html.Action("actionName")
-@Html.Action("actionName", new { controller = "Home", id="value" })
-@Html.Action("actionName", "controllerName")
-@Html.Action("actionName", new RouteValueDictionary(new { controller="Home", id="value"}))
-@Html.Action("actionName", "controllerName", new { id= "value" })
-@Html.Action("actionName", "controllerName", new RouteValueDictionary(new {id="value"}))
-</code></pre>
+    @Html.Action("actionName")
+    @Html.Action("actionName", new { controller = "Home", id="value" })
+    @Html.Action("actionName", "controllerName")
+    @Html.Action("actionName", new RouteValueDictionary(new { controller="Home", id="value"}))
+    @Html.Action("actionName", "controllerName", new { id= "value" })
+    @Html.Action("actionName", "controllerName", new RouteValueDictionary(new {id="value"}))
+
 
 Each Action call executes the appropriate action and returns a string. The actual output is dependent on the view.
 
@@ -23,13 +24,13 @@ Each Action call executes the appropriate action and returns a string. The actua
 
 This method calls an action method and outputs the result inline with the parent
 
-<pre><code>@{ Html.RenderAction("actionName"); }
-@{ Html.RenderAction("actionName", new { controller = "Home", id="value" }); }
-@{ Html.RenderAction("actionName", "controllerName"); }
-@{ Html.RenderAction("actionName", new RouteValueDictionary(new { controller="Home", id="value"})); }
-@{ Html.RenderAction("actionName", "controllerName", new { id= "value" }); }
-@{ Html.RenderAction("actionName", "controllerName", new RouteValueDictionary(new {id="value"})); }
-</code></pre>
+    @{ Html.RenderAction("actionName"); }
+    @{ Html.RenderAction("actionName", new { controller = "Home", id="value" }); }
+    @{ Html.RenderAction("actionName", "controllerName"); }
+    @{ Html.RenderAction("actionName", new RouteValueDictionary(new { controller="Home", id="value"})); }
+    @{ Html.RenderAction("actionName", "controllerName", new { id= "value" }); }
+    @{ Html.RenderAction("actionName", "controllerName", new RouteValueDictionary(new {id="value"})); }
+
 
 Each RenderAction call executes the appropriate action and outputs the resulting view directly to the response inline with the existing view. As these are void methods you must put the calls within a @{ } codeblock rather than just @.
 
@@ -39,9 +40,9 @@ This method returns and html representation of an object value.
 
 ###Usage
 
-<pre><code>@Html.Display("ModelObject")
-@Html.Display("ModelObject", new { Value="Test" })
-</code></pre>
+    @Html.Display("ModelObject")
+    @Html.Display("ModelObject", new { Value="Test" })
+
 
 ##DisplayFor
 
@@ -49,14 +50,14 @@ Renders objects as html. This is overridable by providing your own templates.
 
 ###Usage
 
-<pre><code>@Html.DisplayFor(model => model)
-@Html.DisplayFor(model => model.property)
-@Html.DisplayFor(model => model.property, new { id = "some value" })
-@Html.DisplayFor(model => model.property, "AlternateTemplateName")
-@Html.DisplayFor(model => model.property, "AlternateTemplateName", new { id = "some value" })
-@Html.DisplayFor(model => model.property, "AlternateTemplateName", "htmlFieldName")
-@Html.DisplayFor(model => model.property, "AlternateTemplateName", "htmlFieldName", new { id = "some value" })
-</code></pre>
+    @Html.DisplayFor(model => model)
+    @Html.DisplayFor(model => model.property)
+    @Html.DisplayFor(model => model.property, new { id = "some value" })
+    @Html.DisplayFor(model => model.property, "AlternateTemplateName")
+    @Html.DisplayFor(model => model.property, "AlternateTemplateName", new { id = "some value" })
+    @Html.DisplayFor(model => model.property, "AlternateTemplateName", "htmlFieldName")
+    @Html.DisplayFor(model => model.property, "AlternateTemplateName", "htmlFieldName", new { id = "some value" })
+
 
 ###Results
 
@@ -70,12 +71,12 @@ Same as DisplayFor but focuses on the model itself and does not accept any param
 
 ###Usage
 
-<pre><code>@Html.DisplayForModel()
-@Html.DisplayForModel(new { id = "some value" })
-@Html.DisplayForModel("AlternateTemplateName", new { id = "some value" })
-@Html.DisplayForModel("AlternateTemplateName", "htmlFieldName")
-@Html.DisplayForModel("AlternateTemplateName", "htmlFieldName", new { id = "some value" }))
-</code></pre>
+    @Html.DisplayForModel()
+    @Html.DisplayForModel(new { id = "some value" })
+    @Html.DisplayForModel("AlternateTemplateName", new { id = "some value" })
+    @Html.DisplayForModel("AlternateTemplateName", "htmlFieldName")
+    @Html.DisplayForModel("AlternateTemplateName", "htmlFieldName", new { id = "some value" }))
+
 
 ###Results
 
@@ -89,8 +90,7 @@ DisplayText outputs the property name of a particular property.
 
 ###Usage
 
-<pre><code>@Html.DisplayText("Title")
-</code></pre>
+    @Html.DisplayText("Title")
 
 ###Results
 
@@ -102,16 +102,14 @@ DisplayTextFor will output the title of a model property. This particular method
 
 ###Usage
 
-<pre><code>public class SomeModel {
+    public class SomeModel {
+        [DisplayName("First name")]
+        [Display("First name")]
+        public string FirstName { get; set; }
+    }
 
-    [DisplayName("First name")]
-    [Display("First name")]
-    public string FirstName { get; set; }
+    @Html.DisplayTextFor(model => model.FirstName)
 
-}
-
-@Html.DisplayTextFor(model => model.FirstName)
-</code></pre>
 
 ###Results
 
@@ -125,9 +123,9 @@ This method returns and html input element representation of an object value.
 
 ###Usage
 
-<pre><code>@Html.Editor("ModelObject")
-@Html.Display("ModelObject", new { Value="Test" })
-</code></pre>
+    @Html.Editor("ModelObject")
+    @Html.Display("ModelObject", new { Value="Test" })
+
 
 ##EditorFor
 
@@ -135,14 +133,14 @@ Renders objects as input elements. This is overridable by providing your own tem
 
 ###Usage
 
-<pre><code>@Html.EditorFor(model => model)
-@Html.EditorFor(model => model.property)
-@Html.EditorFor(model => model.property, new { id = "some value" })
-@Html.EditorFor(model => model.property, "AlternateTemplateName")
-@Html.EditorFor(model => model.property, "AlternateTemplateName", new { id = "some value" })
-@Html.EditorFor(model => model.property, "AlternateTemplateName", "htmlFieldName")
-@Html.EditorFor(model => model.property, "AlternateTemplateName", "htmlFieldName", new { id = "some value" })
-</code></pre>
+    @Html.EditorFor(model => model)
+    @Html.EditorFor(model => model.property)
+    @Html.EditorFor(model => model.property, new { id = "some value" })
+    @Html.EditorFor(model => model.property, "AlternateTemplateName")
+    @Html.EditorFor(model => model.property, "AlternateTemplateName", new { id = "some value" })
+    @Html.EditorFor(model => model.property, "AlternateTemplateName", "htmlFieldName")
+    @Html.EditorFor(model => model.property, "AlternateTemplateName", "htmlFieldName", new { id = "some value" })
+
 
 ###Results
 
@@ -156,12 +154,12 @@ Same as EditorFor but focuses on the model itself and does not accept any parame
 
 ###Usage
 
-<pre><code>@Html.EditorForModel()
-@Html.EditorForModel(new { id = "some value" })
-@Html.EditorForModel("AlternateTemplateName", new { id = "some value" })
-@Html.EditorForModel("AlternateTemplateName", "htmlFieldName")
-@Html.EditorForModel("AlternateTemplateName", "htmlFieldName", new { id = "some value" }))
-</code></pre>
+    @Html.EditorForModel()
+    @Html.EditorForModel(new { id = "some value" })
+    @Html.EditorForModel("AlternateTemplateName", new { id = "some value" })
+    @Html.EditorForModel("AlternateTemplateName", "htmlFieldName")
+    @Html.EditorForModel("AlternateTemplateName", "htmlFieldName", new { id = "some value" }))
+
 
 ###Results
 

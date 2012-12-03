@@ -2,6 +2,7 @@
 layout: default
 title: Offline programming
 ---
+#{{ page.title }}
 
 This is the first in an n-series of posts about programming while offline. I'll be posting about issues and solutions to these issues that I come across.
 

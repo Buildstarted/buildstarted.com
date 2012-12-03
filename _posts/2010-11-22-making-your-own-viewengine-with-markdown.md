@@ -2,6 +2,7 @@
 layout: default
 title: Making your own viewengine with markdown
 ---
+#{{ page.title }}
 
 Recently I was thinking about integrating the new <a href='http://buildstarted.com/2010/11/11/razor-templating-on-codeplex/'>Razor Templating Engine</a> into MVC so that I could learn how to create my own ViewEngine for MVC. However, I couldn't quite figure out exactly how to use it in anyway that would make it different from Razor itself. Instead I decided to use Markdown as I frequent <a href='http://stackoverflow.com'>Stackoverflow.com</a> quite a bit to try and help with questions related to Razor. (And get some answers for myself) It seemed like a good direction to go. Markdown is probably not a good idea though to use as a view in general.
 
@@ -13,30 +14,30 @@ Markdown, somewhat, makes sense as a good sample as it's intended to take text, 
 
 ##The ViewEngine
 
-<pre><code>public class MarkdownViewEngine : IViewEngine {
-    #region IViewEngine Members
+    public class MarkdownViewEngine : IViewEngine {
+        #region IViewEngine Members
 
-    string[] SearchLocations;
+        string[] SearchLocations;
 
-    ViewEngineResult FindPartialView(
-        ControllerContext controllerContext, 
-        string partialViewName, 
-        bool useCache) {
+        ViewEngineResult FindPartialView(
+            ControllerContext controllerContext, 
+            string partialViewName, 
+            bool useCache) {
+        }
+
+        ViewEngineResult FindView(
+            ControllerContext controllerContext, 
+            string viewName, 
+            string masterName, 
+            bool useCache) {
+        }
+
+        void ReleaseView(ControllerContext controllerContext, IView view) {
+        }
+
+        #endregion
     }
 
-    ViewEngineResult FindView(
-        ControllerContext controllerContext, 
-        string viewName, 
-        string masterName, 
-        bool useCache) {
-    }
-
-    void ReleaseView(ControllerContext controllerContext, IView view) {
-    }
-
-    #endregion
-}
-</code></pre>
 
 Above is the basic layout for all ViewEngines. Right now, we're only concerned with <strong>FindView</strong> as we can't implement PartialViews just yet without creating a real Markup parser to look for those. However, since it's easy enough to refactor these we're going to create a single <strong>CreateView</strong> method that handles both. 
 
@@ -44,7 +45,7 @@ Above is the basic layout for all ViewEngines. Right now, we're only concerned w
 
 The CreateView method is simple enough. We're going to return our MarkdownView in the ViewEngineResult. First, you need to find out what controllerName is being called in this request. The routeData in the controller context will contain that information so we can pull it out of there. Next we need to actually find our view. To do this I've created a GetViewPath method. Which in-turn calls <strong>FindPath</strong>. The FindPath method looks through our SearchLocations and attempts to find the file that contains our markdown. If I can't find the file I return a null which we then check for. If the path isn't null we return a new <strong>MarkdownView</strong> based on this file. Otherwise we return a ViewEngineResult that contains a list of the files we searched for.
 
-<pre><code>    /// <summary>
+    /// <summary>
     /// Meat of the FindView methods.
     /// </summary>
     /// <param name="controllerContext">The current controller context for this request.</param>
@@ -114,11 +115,11 @@ The CreateView method is simple enough. We're going to return our MarkdownView i
 
         return null;
     }
-</code></pre>
+
 
 FindView just calls our CreateView method and passes in a function you'll see called <strong>GetLayoutPath</strong>. This function just calls FindPath method but only requires the ControllerContext as we've hard coded "Layout" as the view name.
 
-<pre><code>    public ViewEngineResult FindView(
+    public ViewEngineResult FindView(
         ControllerContext controllerContext, 
         string viewName, 
         string masterName, 
@@ -143,7 +144,7 @@ FindView just calls our CreateView method and passes in a function you'll see ca
 
         return FindPath("Layout", controllerName, out locations);
     }
-</code></pre>
+
 
 There we have the basics of our ViewEngine. It looks for a file based on the View and Controller name and returns a MarkdownView result that will then be rendered to the writer.
 
@@ -151,76 +152,76 @@ There we have the basics of our ViewEngine. It looks for a file based on the Vie
 
 The MarkdownView class only contains one interface method called <strong>Render</strong> which accepts a ViewContext and the writer we're going to render our html to. The MarkdownView requires just a few pieces of information the View and Layout partial paths. The render method is simple enough where we load the contents of the file, convert it and write it to the writer...can't go into too much detail with that one.
 
-<pre><code>/// <summary>
-/// Implements IView and renders a Markdown
-/// </summary>
-public class MarkdownView : IView {
-
-    string ViewPath;
-    string LayoutPath;
-
-    public MarkdownView(string viewPath, string layoutPath) {
-        this.ViewPath = viewPath;
-        this.LayoutPath = layoutPath;
-    }
-
-    #region IView Members
-
     /// <summary>
-    /// Converts markdown to html and writes it to the passed in writer
+    /// Implements IView and renders a Markdown
     /// </summary>
-    /// <param name="viewContext"></param>
-    /// <param name="writer"></param>
-    public void Render(ViewContext viewContext, System.IO.TextWriter writer) {
-        //View contents
-        string contents = new StreamReader(VirtualPathProvider.OpenFile(ViewPath)).ReadToEnd();
-        string layoutContents = LayoutPath == null 
-        ? null 
-        : new StreamReader(VirtualPathProvider.OpenFile(LayoutPath)).ReadToEnd();
+    public class MarkdownView : IView {
 
-        contents = Parse(contents);
+        string ViewPath;
+        string LayoutPath;
 
-        string output;
-        output = layoutContents == null 
-        ? contents 
-        : layoutContents.Replace("__content__", contents);
+        public MarkdownView(string viewPath, string layoutPath) {
+            this.ViewPath = viewPath;
+            this.LayoutPath = layoutPath;
+        }
 
-        writer.Write(output);
+        #region IView Members
+
+        /// <summary>
+        /// Converts markdown to html and writes it to the passed in writer
+        /// </summary>
+        /// <param name="viewContext"></param>
+        /// <param name="writer"></param>
+        public void Render(ViewContext viewContext, System.IO.TextWriter writer) {
+            //View contents
+            string contents = new StreamReader(VirtualPathProvider.OpenFile(ViewPath)).ReadToEnd();
+            string layoutContents = LayoutPath == null 
+            ? null 
+            : new StreamReader(VirtualPathProvider.OpenFile(LayoutPath)).ReadToEnd();
+
+            contents = Parse(contents);
+
+            string output;
+            output = layoutContents == null 
+            ? contents 
+            : layoutContents.Replace("__content__", contents);
+
+            writer.Write(output);
+        }
+
+        /// <summary>
+        /// Converts markdown to html
+        /// </summary>
+        /// <param name="markdown">Markdown text</param>
+        /// <returns>Html formatted markdown text</returns>
+        string Parse(string markdown) {
+
+            MarkdownSharp.Markdown markdownSharp = new MarkdownSharp.Markdown(
+                new MarkdownSharp.MarkdownOptions() {
+                    AutoHyperlink = true,
+                    AutoNewlines = true,
+                    StrictBoldItalic = true
+                });
+
+            return markdownSharp.Transform(markdown);
+        }
+
+        #endregion
     }
 
-    /// <summary>
-    /// Converts markdown to html
-    /// </summary>
-    /// <param name="markdown">Markdown text</param>
-    /// <returns>Html formatted markdown text</returns>
-    string Parse(string markdown) {
-
-        MarkdownSharp.Markdown markdownSharp = new MarkdownSharp.Markdown(
-            new MarkdownSharp.MarkdownOptions() {
-                AutoHyperlink = true,
-                AutoNewlines = true,
-                StrictBoldItalic = true
-            });
-
-        return markdownSharp.Transform(markdown);
-    }
-
-    #endregion
-}
-</code></pre>
 
 ##Layout.md
 
 Since markdown, by default, doesn't render the opening and closing html tags and just renders what would essentially be the body, we have to wrap our markdown files in html. I've decided to go the simplistic route for now and just use the following
 
-<pre><code><html>
-    <head>
-    </head>
-    <body>
-        __content__
-    </body>
-</html>
-</code></pre>
+    <html>
+        <head>
+        </head>
+        <body>
+            __content__
+        </body>
+    </html>
+
 
 <strong><em>_content</em>_</strong> will then be replaced with the rendered markdown.
 
@@ -228,8 +229,8 @@ Since markdown, by default, doesn't render the opening and closing html tags and
 
 All that's necessary now is to register our new ViewEngine with MVC. This can be accomplished by adding the following lines to our Global.asax.
 
-<pre><code>ViewEngines.Engines.Add(new MarkdownViewEngine());
-</code></pre>
+    ViewEngines.Engines.Add(new MarkdownViewEngine());
+
 
 This will tell MVC that we have an additional view engine to parse the request. Currently other ViewEngines will be checked first such as the razor or webforms view engines. If a handler can't be found it will then look at our new MarkdownViewEngine.
 

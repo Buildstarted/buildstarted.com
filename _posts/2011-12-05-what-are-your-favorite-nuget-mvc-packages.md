@@ -2,6 +2,7 @@
 layout: default
 title: What are your favorite nuget mvc packages
 ---
+#{{ page.title }}
 
 What are your favorite MVC packages available on <a href="http://nuget.org">Nuget</a>? Why?
 

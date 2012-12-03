@@ -2,6 +2,7 @@
 layout: default
 title: Razor without mvc part iv parser error messages
 ---
+#{{ page.title }}
 
 I'm sensing a theme here...
 
@@ -13,58 +14,58 @@ Continuing the progress of the Razor Compiler being written by <a href='http://w
 
 By default, the <strong>RazorCodeGenerator</strong> seems to suppress error messages. It's up to us to capture them by overriding the VisitError method. In order to do that I've had to override the RazorCodeGenerator class. (Which resulted in the overriding of several other classes)
 
-<pre><code>public class CSharpRazorCodeGenerator : RazorCodeGenerator {
-    public CSharpRazorCodeGenerator(string className, 
-                         string rootNamespaceName, 
-                         string sourceFileName, 
-                         RazorEngineHost host)
-        : base(className, rootNamespaceName, sourceFileName, host) {
+    public class CSharpRazorCodeGenerator : RazorCodeGenerator {
+        public CSharpRazorCodeGenerator(string className, 
+                             string rootNamespaceName, 
+                             string sourceFileName, 
+                             RazorEngineHost host)
+            : base(className, rootNamespaceName, sourceFileName, host) {
 
+        }
+
+        protected override CodeWriter CreateCodeWriter() {
+            return new CSharpCodeWriter();
+        }
+
+        public override void VisitError(RazorError err) {
+            throw new RazorParserException(err);
+        }
     }
 
-    protected override CodeWriter CreateCodeWriter() {
-        return new CSharpCodeWriter();
-    }
-
-    public override void VisitError(RazorError err) {
-        throw new RazorParserException(err);
-    }
-}
-</code></pre>
 
 All of the above is the minimum needed. The key here is the override for VisitError which we then throw our ParserException.
 
 The next step was to override <strong>RazorCodeLanguage</strong> to return our new <strong>RazorCodeGenerator</strong> from above.
 
-<pre><code>public class CSharpRazorCodeGeneratorLanguage : RazorCodeLanugage {
+    public class CSharpRazorCodeGeneratorLanguage : RazorCodeLanugage {
 
-    public override Type CodeDomProviderType {
-        get {
-            return typeof(CSharpCodeProvider); ;
+        public override Type CodeDomProviderType {
+            get {
+                return typeof(CSharpCodeProvider); ;
+            }
         }
-    }
 
-    public override ParserBase CreateCodeParser() {
-        return new CSharpCodeParser();
-    }
-
-    public override string LanguageName {
-        get {
-            return "csharp";
+        public override ParserBase CreateCodeParser() {
+            return new CSharpCodeParser();
         }
+
+        public override string LanguageName {
+            get {
+                return "csharp";
+            }
+        }
+
+        public override RazorCodeGenerator CreateCodeGenerator(string className,
+                                string rootNamespaceName, 
+                                string sourceFileName, 
+                                RazorEngineHost host) {
+            return new CSharpRazorCodeGenerator(className, 
+                                            rootNamespaceName, 
+                                            sourceFileName, host);
+        }
+
     }
 
-    public override RazorCodeGenerator CreateCodeGenerator(string className,
-                            string rootNamespaceName, 
-                            string sourceFileName, 
-                            RazorEngineHost host) {
-        return new CSharpRazorCodeGenerator(className, 
-                                        rootNamespaceName, 
-                                        sourceFileName, host);
-    }
-
-}
-</code></pre>
 
 The only thing in this override we really needed to do was override <strong>CreateCodeGenerator</strong> to return our new <strong>CSharpRazorCodeGenerator</strong>. The rest were just required overrides and I use the default returns for those.
 

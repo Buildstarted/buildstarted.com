@@ -2,6 +2,7 @@
 layout: default
 title: How I learned to stop worrying and love my community
 ---
+#{{ page.title }}
 
 <style type="text/css">
     article a {

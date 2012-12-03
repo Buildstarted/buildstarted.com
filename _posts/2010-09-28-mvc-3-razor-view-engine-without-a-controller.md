@@ -2,13 +2,14 @@
 layout: default
 title: Mvc 3 razor view engine without a controller
 ---
+#{{ page.title }}
 
 A question posted on stackoverflow caught my attention the other day that asked about using the Razor View Engine outside of MVC that would return a string value from a string template rather than a view...The code example was provided.
 
-<pre><code>string  myTemplate = "Hello @Name,  How are you today?";
-ViewModel.Name = "Billy Boy";
-string output = RazorViewEngineRender( myTemplate, ViewModel );
-</code></pre>
+    string  myTemplate = "Hello @Name,  How are you today?";
+    ViewModel.Name = "Billy Boy";
+    string output = RazorViewEngineRender( myTemplate, ViewModel );
+
 
 This particular solution didn't require the engine to exist outside of MVC so I relied on MVC to do a lot of the dirty work.
 
@@ -18,104 +19,104 @@ This particular solution didn't require the engine to exist outside of MVC so I 
 
 Since we're not dealing with actual views on the server we have to add our own path provider to tell MVC where to get our dynamically generated templates. There should be more tests like checking the strings Dictionary to see if the view has been added.
 
-<pre><code>public class StringPathProvider : VirtualPathProvider {
-    public StringPathProvider()
-        : base() {
-    }
-
-    public override CacheDependency GetCacheDependency(string virtualPath, IEnumerable     virtualPathDependencies, DateTime utcStart) {
-        return null;
-    }
-
-    public override bool FileExists(string virtualPath) {
-        if (virtualPath.StartsWith("/stringviews") || virtualPath.StartsWith("~/stringviews"))
-            return true;
-
-        return base.FileExists(virtualPath);
-    }
-
-    public override VirtualFile GetFile(string virtualPath) {
-        if (virtualPath.StartsWith("/stringviews") || virtualPath.StartsWith("~/stringviews"))
-            return new StringVirtualFile(virtualPath);
-
-        return base.GetFile(virtualPath);
-    }
-
-    public class StringVirtualFile : System.Web.Hosting.VirtualFile {
-        string path;
-        public StringVirtualFile(string path)
-            : base(path) {
-            //deal with this later
-                this.path = path;
+    public class StringPathProvider : VirtualPathProvider {
+        public StringPathProvider()
+            : base() {
         }
 
-        public override System.IO.Stream Open() {
-            return new System.IO.MemoryStream(System.Text.ASCIIEncoding.ASCII.GetBytes(RazorViewEngineRender.strings[System.IO.Path.GetFileName(path)]));
+        public override CacheDependency GetCacheDependency(string virtualPath, IEnumerable     virtualPathDependencies, DateTime utcStart) {
+            return null;
+        }
+
+        public override bool FileExists(string virtualPath) {
+            if (virtualPath.StartsWith("/stringviews") || virtualPath.StartsWith("~/stringviews"))
+                return true;
+
+            return base.FileExists(virtualPath);
+        }
+
+        public override VirtualFile GetFile(string virtualPath) {
+            if (virtualPath.StartsWith("/stringviews") || virtualPath.StartsWith("~/stringviews"))
+                return new StringVirtualFile(virtualPath);
+
+            return base.GetFile(virtualPath);
+        }
+
+        public class StringVirtualFile : System.Web.Hosting.VirtualFile {
+            string path;
+            public StringVirtualFile(string path)
+                : base(path) {
+                //deal with this later
+                    this.path = path;
+            }
+
+            public override System.IO.Stream Open() {
+                return new System.IO.MemoryStream(System.Text.ASCIIEncoding.ASCII.GetBytes(RazorViewEngineRender.strings[System.IO.Path.GetFileName(path)]));
+            }
         }
     }
-}
-</code></pre>
+
 
 ##Render Class
 
 This class takes your template as a constructor parameter and adds it to a static Dictionary that is then read by the VirtualPathProvider above. You then call Render and you can optionally pass in a model. This will add the fully qualified model type to the @inherits and prepend that to the file contents.
 
-<pre><code>public class RazorViewEngineRender {
-    internal static Dictionary&lt;string, string&gt; strings { get; set; }
+    public class RazorViewEngineRender {
+        internal static Dictionary&lt;string, string&gt; strings { get; set; }
 
-    string guid;
+        string guid;
 
-    static RazorViewEngineRender() {
-        strings = new Dictionary&lt;string, string&gt;();
-    }
-
-    public RazorViewEngineRender(string Template) {
-        guid = Guid.NewGuid().ToString() + ".cshtml";
-        strings.Add(guid, Template);
-    }
-
-    public string Render(object ViewModel) {
-        //Register model type
-        if (ViewModel == null) {
-            strings[guid] = "@inherits System.Web.Mvc.WebViewPage\r\n" + strings[guid];
-        } else {
-            strings[guid] = "@inherits System.Web.Mvc.WebViewPage&lt;" + ViewModel.GetType().FullName + "&gt;\r\n" + strings[guid];
+        static RazorViewEngineRender() {
+            strings = new Dictionary&lt;string, string&gt;();
         }
 
-        CshtmlView view = new CshtmlView("/stringviews/" + guid);
+        public RazorViewEngineRender(string Template) {
+            guid = Guid.NewGuid().ToString() + ".cshtml";
+            strings.Add(guid, Template);
+        }
 
-        System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        System.IO.TextWriter tw = new System.IO.StringWriter(sb);
+        public string Render(object ViewModel) {
+            //Register model type
+            if (ViewModel == null) {
+                strings[guid] = "@inherits System.Web.Mvc.WebViewPage\r\n" + strings[guid];
+            } else {
+                strings[guid] = "@inherits System.Web.Mvc.WebViewPage&lt;" + ViewModel.GetType().FullName + "&gt;\r\n" + strings[guid];
+            }
 
-        ControllerContext controller = new ControllerContext();
+            CshtmlView view = new CshtmlView("/stringviews/" + guid);
 
-        ViewDataDictionary ViewData = new ViewDataDictionary();
-        ViewData.Model = ViewModel;
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            System.IO.TextWriter tw = new System.IO.StringWriter(sb);
 
-        view.Render(new ViewContext(controller, view, ViewData, new TempDataDictionary(), tw), tw);
-        //view.ExecutePageHierarchy();
+            ControllerContext controller = new ControllerContext();
 
-        strings.Remove(guid);
+            ViewDataDictionary ViewData = new ViewDataDictionary();
+            ViewData.Model = ViewModel;
 
-        return sb.ToString();
+            view.Render(new ViewContext(controller, view, ViewData, new TempDataDictionary(), tw), tw);
+            //view.ExecutePageHierarchy();
 
+            strings.Remove(guid);
+
+            return sb.ToString();
+
+        }
     }
-}
-</code></pre>
+
 
 ##Global.asax
 
-<pre><code>System.Web.Hosting.HostingEnvironment.RegisterVirtualPathProvider(
-    new Controllers.StringPathProvider());
-</code></pre>
+    System.Web.Hosting.HostingEnvironment.RegisterVirtualPathProvider(
+        new Controllers.StringPathProvider());
+
 
 ##Calling the code
 
-<pre><code>string Template = "Hello, @Model.Name";
-Models.User user = new Models.User() { Name = "Billy Boy" };
-RazorViewEngineRender view = new RazorViewEngineRender(Template);
-string Results = view.Render(user); //pass in your model
-</code></pre>
+    string Template = "Hello, @Model.Name";
+    Models.User user = new Models.User() { Name = "Billy Boy" };
+    RazorViewEngineRender view = new RazorViewEngineRender(Template);
+    string Results = view.Render(user); //pass in your model
+
 
 ##Notes
 

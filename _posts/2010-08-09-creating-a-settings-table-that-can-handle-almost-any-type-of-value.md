@@ -2,6 +2,7 @@
 layout: default
 title: Creating a settings table that can handle almost any type of value
 ---
+#{{ page.title }}
 
 ###Update: <a href='http://buildstarted.com/2010/08/13/update-settings-table-with-extension-methods/'>Updated article here</a>.
 
@@ -12,103 +13,96 @@ I designed the object using a code-first approach
 
 ##Initial Idea
 
-<pre><code>
     public class Setting {
         [Key]
         public string Name { get; set; }
         public object Value { get; set; }
         public string Type { get; set; }
     }
-</code></pre>
+
 
 Simple and to the point.
 
 Here is a snippet from my DataContext
 
-<pre><code>
-public class DataContext : DbContext, IDataContext {
+    public class DataContext : DbContext, IDataContext {
         public DbSet<Setting> Settings { get; set; }
-}
-</code></pre>
+    }
+
 
 To access the data I would simply cast Value to whatever type I expected it to be.
 
-<code>var x = (string)Settings.Single(
-    s => s.Name == "sitename").Value;</code>
+    var x = (string)Settings.Single(s => s.Name == "sitename").Value;
 
 ##Problems
 
 However, with EF and probably Linq (I didn't test that) the Value was <em>always</em> null after I called <em>SaveChanges</em>.
 At first I couldn't understand why but then it hit me. There's no direct relationship between object and SQL. So I switched the Value to a byte[]. Here is my new class.
 
-<pre><code>
     public class Setting {
         [Key]
         public string Name { get; set; }
         public byte[] Value { get; set; }
         public string Type { get; set; }
     }
-</code></pre>
+
 
 This caused a few problems with the first method since it's not possible to typecast from a byte[] to a DateTime, int, string...and so on. So I added a few helper methods to my DataContext.
 
 ##Solution
 
-<pre><code>
-        public T Setting<T>(string Name) {
-            //grab the the setting if it exists otherwise
-            var value = Settings.SingleOrDefault(s => s.Name == Name);
+	public T Setting<T>(string Name) {
+		//grab the the setting if it exists otherwise
+		var value = Settings.SingleOrDefault(s => s.Name == Name);
 
-            //return the default value for typeof(T)
-            if (value == null) return default(T);
+		//return the default value for typeof(T)
+		if (value == null) return default(T);
 
-            //If they're trying to cast to a different type we should throw an error
-            //They can to another type conversion after grabbing the value
-            if (Type != typeof(T).FullName)
-                throw new InvalidCastException(
-                    string.Format("Unable to cast: {0} to {1}",
-                        typeof(T).FullName, Type));
+		//If they're trying to cast to a different type we should throw an error
+		//They can to another type conversion after grabbing the value
+		if (Type != typeof(T).FullName)
+			throw new InvalidCastException(
+				string.Format("Unable to cast: {0} to {1}",
+					typeof(T).FullName, Type));
 
-            //Using the BinaryFormatter, return a typecast value
-            return (T)(
-                new BinaryFormatter()
-                    .Deserialize(
-                        new System.IO.MemoryStream(value.Value)));
-        }
+		//Using the BinaryFormatter, return a typecast value
+		return (T)(
+			new BinaryFormatter()
+				.Deserialize(
+					new System.IO.MemoryStream(value.Value)));
+	}
 
-        public void Setting<T>(string Name, T Value) {
-            //check for an existing value
-            var setting = Settings.SingleOrDefault(s => s.Name == Name);
+	public void Setting<T>(string Name, T Value) {
+		//check for an existing value
+		var setting = Settings.SingleOrDefault(s => s.Name == Name);
 
-            //serialize the new value
-            System.IO.MemoryStream ms = new System.IO.MemoryStream();
-            new BinaryFormatter().Serialize(ms, Value);
+		//serialize the new value
+		System.IO.MemoryStream ms = new System.IO.MemoryStream();
+		new BinaryFormatter().Serialize(ms, Value);
 
-            if (setting != null) {
-                //for consistency let's make sure we're assigning the same type
-                if (Type != typeof(T).FullName)
-                    throw new InvalidCastException(
-                    string.Format("Unable to cast: {0} to {1}", 
-                        typeof(T).FullName, Type));
-                setting.Value = ms.ToArray();
-            } else {
-                //add a new value to the database
-                value = new Models.Setting() {
-                    Name = Name,
-                    Type = typeof(T).Fullname,
-                    Value = ms.ToArray()
-                };
-                Settings.Add(value);
-            }
-        }
-</code></pre>
+		if (setting != null) {
+			//for consistency let's make sure we're assigning the same type
+			if (Type != typeof(T).FullName)
+				throw new InvalidCastException(
+				string.Format("Unable to cast: {0} to {1}", 
+					typeof(T).FullName, Type));
+			setting.Value = ms.ToArray();
+		} else {
+			//add a new value to the database
+			value = new Models.Setting() {
+				Name = Name,
+				Type = typeof(T).Fullname,
+				Value = ms.ToArray()
+			};
+			Settings.Add(value);
+		}
+	}
+
 
 Now instead of calling the above cast we can now use the following
 
-<pre><code>
     var x = DataContext.Setting<string>("sitename"); //get
     DataContext.Setting<string>("sitename", "buildstarted.com"); //set
-</code></pre>
 
 Hope this is helpful and inspires someone. Please comment if you have a better method. I'm not too keen on serializing all the time but it's the best method I've come up with so far.
 

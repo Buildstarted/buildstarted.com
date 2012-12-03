@@ -2,10 +2,11 @@
 layout: default
 title: Razor parser engine for the razor syntax highlighter
 ---
+#{{ page.title }}
 
 Here's my Razor Parser class that I use in my <a href='/razor-syntax-highlighter'>Razor Syntax Highlighter</a>. I'm going to post later about how I integrate this into Visual Studio using the <a href='http://www.microsoft.com/downloads/details.aspx?FamilyID=47305cf4-2bea-43c0-91cd-1b853602dcc5&displaylang=en' target='&#95;new'>Visual Studio SDK</a>.
 
-<pre><code>    public IList<Token> Parse(ITextBuffer buffer) {
+    public IList<Token> Parse(ITextBuffer buffer) {
         List<Token> tokens = new List<Token>();
         CodeLanguageService languageService = CodeLanguageService.GetServiceByExtension(".cshtml");
 
@@ -38,7 +39,7 @@ Here's my Razor Parser class that I use in my <a href='/razor-syntax-highlighter
 
         return tokens;
     }
-</code></pre>
+
 
 The ITextBuffer parameter of the Parse() method is pass from Visual Studio using the EditorClassifier project. This gives us access to the text content within the editor.
 
@@ -52,15 +53,15 @@ Simply escaping from html into the code world. In the case of razor that's one o
 
 These are characters that define a block of code. These include () and {}. for example
 
-<pre><code>@{
-    View.Title = "Your Title Here";
-    LayoutPage = "~/Views/Shared/&amp;#95;Layout.cshtml";
-}
-</code></pre>
+    @{
+        View.Title = "Your Title Here";
+        LayoutPage = "~/Views/Shared/&amp;#95;Layout.cshtml";
+    }
+
 
 or
 
-<pre><code>@("The title of this page is " + View.Title)</code></pre>
+    @("The title of this page is " + View.Title)
 
 ##Code
 
@@ -74,7 +75,7 @@ We don't care about markup here in that we're letting the Visual Studio default 
 
 We're only interested in a few token types to highlight cshtml to the point where it's basically usable.
 
-<pre><code>    public enum TokenType {
+    public enum TokenType {
         CodeBlock,
         CodeStart,
         Unknown,
@@ -84,7 +85,7 @@ We're only interested in a few token types to highlight cshtml to the point wher
         CSharpString,
         CSharpComment
     }
-</code></pre>
+
 
 This gives us our basic Content Types.
 1. CodeBlock gives us the background color for the code.

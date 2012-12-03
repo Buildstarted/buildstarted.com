@@ -2,21 +2,22 @@
 layout: default
 title: Razor without mvc part iii support for nested anonymous types
 ---
+#{{ page.title }}
 
 One of the problems with my previous post was you couldn't have an object definition like:
 
-<pre><code>var nestedType = new {
-    Name = "Ben",
-    Accounts = new {
-        Twitter = "BuildStarted",
-        StackOverflow = "BuildStarted"
-    }
-};
-</code></pre>
+    var nestedType = new {
+        Name = "Ben",
+        Accounts = new {
+            Twitter = "BuildStarted",
+            StackOverflow = "BuildStarted"
+        }
+    };
+
 
 I've updated the RazorDynamicObject to compensate. 
 
-<pre><code>    /// <summary>
+    /// <summary>
     /// Dynamic object that we'll utilize to return anonymous type parameters
     /// </summary>
     class RazorDynamicObject : DynamicObject {
@@ -43,7 +44,7 @@ I've updated the RazorDynamicObject to compensate.
             return true;
         }
     }
-</code></pre>
+
 
 Now, we're checking to see if the object we're pulling out of our model is another anonymous type and returning a new RazorDynamicObject to handle subsequent anonymous type calls.
 

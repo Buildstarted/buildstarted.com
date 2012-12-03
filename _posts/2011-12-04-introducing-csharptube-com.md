@@ -2,6 +2,7 @@
 layout: default
 title: Introducing csharptube.com
 ---
+#{{ page.title }}
 
 While introducing a friend of mine to c# I realized that it's hard to find good (free) videos online. I thought that there could be a single place to go and harvest all these videos from across the web. Categorize them, rank them, and display them with a common interface. The site should have a nice clean and simple site for finding and viewing c# and related videos. 
 

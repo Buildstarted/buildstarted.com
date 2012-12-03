@@ -2,67 +2,66 @@
 layout: default
 title: Metadatatypeattribute with dataannotations and unit testing
 ---
+#{{ page.title }}
 
 Ok, this has been causing me to pull my hair out. Consider the following setup and unit test.
 
-<pre><code>//Metadata class
-public class Signup {
-    [Required]
-    [EmailAddress(ErrorMessage="Email address appears to be invalid")]
-    public string Email { get; set; }
-}
+    //Metadata class
+    public class Signup {
+        [Required]
+        [EmailAddress(ErrorMessage="Email address appears to be invalid")]
+        public string Email { get; set; }
+    }
 
-//class to validate
-[MetadataType(typeof(Metadata.Signup))]
-public partial class Signup {
-    public string Email { get; set; }
-}
+    //class to validate
+    [MetadataType(typeof(Metadata.Signup))]
+    public partial class Signup {
+        public string Email { get; set; }
+    }
 
-public void SignupModelTestValidationSucceedsWithValidEmailAddress() {
-    var signup = new Signup();
-    signup.Email = "test@test.com";
+    public void SignupModelTestValidationSucceedsWithValidEmailAddress() {
+        var signup = new Signup();
+        signup.Email = "test@test.com";
 
-    var context = new ValidationContext(signup, null, null);
-    var results = new List<ValidationResult>();
+        var context = new ValidationContext(signup, null, null);
+        var results = new List<ValidationResult>();
 
-    var validated = Validator.TryValidateObject(signup, context, results, true);
+        var validated = Validator.TryValidateObject(signup, context, results, true);
 
-    Assert.IsFalse(validated);
-}
-</code></pre>
+        Assert.IsFalse(validated);
+    }
+
 
 This should work just fine and seems to do in code but not in the unit test. If I move the DataAnnotations (of which EmailAddress isn't one of them) to the class itself then it works just fine. So there seems to be a disconnect between MVC and the Test Project. It turns out that MVC wires up all the necessary mappings and what not for the DataAnnotations validations to work. To test the model validator I had to provide the Metadata from DataAnnotations to the TypeDescriptor for that type.
 
-<pre><code>TypeDescriptor.AddProviderTransparent(
-    new AssociatedMetadataTypeTypeDescriptionProvider(
-            typeof(Signup),
-            typeof(Metadata.Signup)),
-        typeof(Signup));
-</code></pre>
-
-The above tells the TypeDescriptor that we have a MetadataAttribute and registers it using the DataAnnotations AssociatedMetadataTypeTypeDescriptionProvider.
-
-The final test method looks like this:
-
-<pre><code>public void SignupModelTestValidationSucceedsWithValidEmailAddress() {
     TypeDescriptor.AddProviderTransparent(
         new AssociatedMetadataTypeTypeDescriptionProvider(
                 typeof(Signup),
                 typeof(Metadata.Signup)),
             typeof(Signup));
 
-    var signup = new Signup();
-    signup.Email = "test@test.com";
+The above tells the TypeDescriptor that we have a MetadataAttribute and registers it using the DataAnnotations AssociatedMetadataTypeTypeDescriptionProvider.
 
-    var context = new ValidationContext(signup, null, null);
-    var results = new List<ValidationResult>();
+The final test method looks like this:
 
-    var validated = Validator.TryValidateObject(signup, context, results, true);
+    public void SignupModelTestValidationSucceedsWithValidEmailAddress() {
+        TypeDescriptor.AddProviderTransparent(
+            new AssociatedMetadataTypeTypeDescriptionProvider(
+                    typeof(Signup),
+                    typeof(Metadata.Signup)),
+                typeof(Signup));
 
-    Assert.IsFalse(validated);
+        var signup = new Signup();
+        signup.Email = "test@test.com";
 
-}
-</code></pre>
+        var context = new ValidationContext(signup, null, null);
+        var results = new List<ValidationResult>();
+
+        var validated = Validator.TryValidateObject(signup, context, results, true);
+
+        Assert.IsFalse(validated);
+    }
+
 
 I hope this saves someone some grief out there.
 

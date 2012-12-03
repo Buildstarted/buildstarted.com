@@ -2,6 +2,7 @@
 layout: default
 title: Using amazons elastic compute cloud for buildstarted com
 ---
+#{{ page.title }}
 
 
 <style type='text/css'>

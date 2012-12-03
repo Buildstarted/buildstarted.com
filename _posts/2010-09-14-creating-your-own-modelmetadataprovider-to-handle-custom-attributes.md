@@ -2,6 +2,7 @@
 layout: default
 title: Creating your own modelmetadataprovider to handle custom attributes
 ---
+#{{ page.title }}
 
 I've answered a couple questions recently about using the DescriptionAttribute from the System.ComponentModel namespace, as well as creating your own Attributes and using them in HtmlHelpers. I've answered each one individually to answer the specific questions with very specific answers to each one. But it got me thinking that MVC has a way to override just about everything and doubtless the MetadataProvider was one of them. A quick search of the code available at <a href='http://aspnet.codeplex.com/'>codeplex</a> lead me to the <strong>ModelMetadataProviders</strong>.
 
