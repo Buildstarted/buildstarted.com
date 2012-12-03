@@ -10,7 +10,7 @@ I've had such little experience with AppDomains. This was definitely going to be
 
 The first thing I did was find out what error would occur when I attempted to use an <strong>Anonymous Type</strong> and here's the result.
 
-<div style='text-align:center;'><a href="http://buildstarted.com/wp-content/uploads/2011/06/proxywithanonymoustype.png"><img src="http://buildstarted.com/wp-content/uploads/2011/06/proxywithanonymoustype.png" alt="" title="proxywithanonymoustype" width="634" height="309" class="alignnone size-full wp-image-599" /></a></div>
+<div style='text-align:center;'><a href="http://aws.buildstarted.com/proxywithanonymoustype.png"><img src="http://aws.buildstarted.com/proxywithanonymoustype.png" alt="" title="proxywithanonymoustype" width="634" height="309" class="alignnone size-full wp-image-599" /></a></div>
 
 As you can see, anonymous types are not Serializable. This leads me to believe that I need to make the anonymous type serialized and if I could do that then all will be well.
 

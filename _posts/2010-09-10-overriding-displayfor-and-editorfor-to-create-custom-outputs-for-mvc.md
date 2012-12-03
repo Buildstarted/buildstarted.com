@@ -23,7 +23,7 @@ Now that we have our simple object let's create a Display Template for the Email
 
 Display templates are cshtml partials that have the same name as the type they're going to override the default templates provided by MVC. To create a Display Template you just create a Folder named "DisplayTemplates" within one of your controller views (or the shared folder) like so:
 
-<img src="http://buildstarted.com/wp-content/uploads/2010/09/displaytemplatesfolders.png" alt="Display Template Folder Structure" title="Display Templates Folder Structure" />
+<img src="http://aws.buildstarted.com/displaytemplatesfolders.png" alt="Display Template Folder Structure" title="Display Templates Folder Structure" />
 
 I've created an EmailAddress.cshtml template that will format an email address with a mailto: link
 
@@ -44,7 +44,7 @@ I used both methods, @Model and an Html helper to display the actual value of th
     </fieldset>
 
 
-<img src="http://buildstarted.com/wp-content/uploads/2010/09/displaytemplatemailtoemail.png" alt="Display For Email Address Link" title="Display For Email Address Link" />
+<img src="http://aws.buildstarted.com/displaytemplatemailtoemail.png" alt="Display For Email Address Link" title="Display For Email Address Link" />
 
 Easy enough. We can modify the templates to our hearts content. 
 
@@ -52,7 +52,7 @@ Easy enough. We can modify the templates to our hearts content.
 
 Editor Templates are the same as display templates. To create an Editor Template you just create a folder named "EditorTemplates" within one of your controller views (or the shared folder) like so:
 
-<img src="http://buildstarted.com/wp-content/uploads/2010/09/editortemplatefolders.png" alt="Editor Templates Folder Example" title="Editor Templates Folder Example" />
+<img src="http://aws.buildstarted.com/editortemplatefolders.png" alt="Editor Templates Folder Example" title="Editor Templates Folder Example" />
 
 In this case I've created a DateTime editor to show you a sample of the power of editor templates. I've imported the jquery ui library to add a datepicker to our editor.
 
@@ -70,7 +70,7 @@ the @class is the html attribute we're using to assign the datePicker to textbox
 
 And here are the results
 
-<img src="http://buildstarted.com/wp-content/uploads/2010/09/editortemplatedatetimeeditor.png" alt="Editor DateTime Sample" title="Editor DateTime Template Example" />
+<img src="http://aws.buildstarted.com/editortemplatedatetimeeditor.png" alt="Editor DateTime Sample" title="Editor DateTime Template Example" />
 
 ##Conclusion
 

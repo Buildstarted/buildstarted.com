@@ -37,7 +37,7 @@ Some events you might be interested in viewing live.
 
 SignalR is a library developed by <a href="http://weblogs.asp.net/davidfowler/">David Fowler</a> and <a href="http://damianedwards.wordpress.com/">Damian Edwards</a> that allows asynchronous connections in ASP.Net that allows you to build real-time multi-user web applications. This basically means that you can <strong>execute server-side code directly from a client or execute javascript on the client directly from the server</strong>. It uses the best connection your browser can support. <a href='http://en.wikipedia.org/wiki/WebSocket'>WebSockets</a> and <a href='http://en.wikipedia.org/wiki/Push_technology#Long_polling'>LongPolling</a> with support for more coming soon.
 
-<img src="http://buildstarted.com/wp-content/uploads/2011/12/signalr-traffic.png" alt="Firebug showing the long polling requests" title="Firefox with long polling in firebug" />
+<img src="http://aws.buildstarted.com/signalr-traffic.png" alt="Firebug showing the long polling requests" title="Firefox with long polling in firebug" />
 
 ##Authorize users to view events
 

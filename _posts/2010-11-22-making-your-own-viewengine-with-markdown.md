@@ -236,7 +236,7 @@ This will tell MVC that we have an additional view engine to parse the request. 
 
 Our folder structure for the Markdown files is the same as any other view engine. The only difference is that we have a new <strong>.md</strong> file instead of <strong>.cshtml</strong> or <strong>.aspx</strong>.
 
-<img src="http://buildstarted.com/wp-content/uploads/2010/11/markdownviewengine.png" alt="The MarkdownViewEngine folder structure" title="The MardownViewEngine folder structure" />
+<img src="http://aws.buildstarted.com/markdownviewengine.png" alt="The MarkdownViewEngine folder structure" title="The MardownViewEngine folder structure" />
 
 ##Final
 

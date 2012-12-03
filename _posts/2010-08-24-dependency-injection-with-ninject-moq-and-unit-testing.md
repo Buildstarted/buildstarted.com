@@ -34,7 +34,7 @@ However, we're very tightly coupled to our DataContext() that we've defined. Thi
 
 We now implement the Interface in our DataContext, which should be done automatically if you use the built in Visual Studio 2010 <strong>Extract Interface</strong>.
 
-<img src="http://buildstarted.com/wp-content/uploads/2010/08/extractinterface.png" alt="Extract Interface" title="" />
+<img src="http://aws.buildstarted.com/extractinterface.png" alt="Extract Interface" title="" />
 
 Now we rewrite our UserController to something similar to the following
 

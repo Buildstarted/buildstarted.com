@@ -44,7 +44,7 @@ I've decided to go with the <strong>Micro</strong> server. It's cheap (currently
 
 ##AMI's
 
-<div style='text-align:center;'><a href='/images/ec2/instancelist.png'><img src='/images/ec2/instancelist.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancelist.png'><img src='http://aws.buildstarted.com/instancelist.png' style='width:100%;' /></a></div>
 
 
 AMI's or Amazon Instance Machines are the bases for any system you wish to start up on EC2. There are a wide range of over 6000 different systems available on the Community AMI list from Windows to Linux and even OpenSolaris to custom server types like a default wordpress and joomla setups. I chose a blank Ubuntu setup as that is what I'm familiar with and I know what I'm getting since I'll be forced to install everything myself.
@@ -53,37 +53,37 @@ AMI's or Amazon Instance Machines are the bases for any system you wish to start
 
 The first step in setting up your new machine is to choose what type of instance you want.
 
-<div style='text-align:center;'><a href='/images/ec2/instancetype.png'><img src='/images/ec2/instancetype.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancetype.png'><img src='http://aws.buildstarted.com/instancetype.png' style='width:100%;' /></a></div>
 
 You have a selection, based on your chosen ami, of what type of machine you want. This is really powerful as a single AMI can be any type of system you want. So if your site is small - like this one - but it gets really popular you can either add new instances of the same type for load balancing <em>or</em> you can just change the type of machine your instance runs on. I can't figure out how the hell they do this but it's damn awesome.
 
 ####Kernel/Ram
 
-<div style='text-align:center;'><a href='/images/ec2/instancedetails.png'><img src='/images/ec2/instancedetails.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancedetails.png'><img src='http://aws.buildstarted.com/instancedetails.png' style='width:100%;' /></a></div>
 
 I have no clue exactly what this is. I just use the default Kernel and RAM Disks. Here you can enable CloudWatch which allows you to see detailed information on disk/ram/network usage while your machine is running.
 
 ####Machine Tags
 
-<div style='text-align:center;'><a href='/images/ec2/instancekeys.png'><img src='/images/ec2/instancekeys.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancekeys.png'><img src='http://aws.buildstarted.com/instancekeys.png' style='width:100%;' /></a></div>
 
 Here you can add some tags. The default one of Name always works well. Tags are really only useful if you have a lot of different instances in your list and you want to quickly find instances based on a particular attribute.
 
 ####Key pairs
 
-<div style='text-align:center;'><a href='/images/ec2/instancekeypair.png'><img src='/images/ec2/instancekeypair.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancekeypair.png'><img src='http://aws.buildstarted.com/instancekeypair.png' style='width:100%;' /></a></div>
 
 Here you can create a key pair for remote access to your system. This doesn't require you to remember a username or password - which, as we've seen with the recent <a href='http://www.codinghorror.com/blog/2010/12/the-dirty-truth-about-web-passwords.html'>Gawker incident</a>, is never a good idea. Store your keypairs in a safe place. When you ssh with a client such as PuTTY you'll set your auth to your keypair you've created here.
 
 ####Firewall
 
-<div style='text-align:center;'><a href='/images/ec2/instancefirewall.png'><img src='/images/ec2/instancefirewall.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancefirewall.png'><img src='http://aws.buildstarted.com/instancefirewall.png' style='width:100%;' /></a></div>
 
 Setting up your instance firewall allows you to open ports to your instance and make it available to the internet or a select ip range. I've opened up HTTP and SSH here as all I would need is a cheap web server and nothing more. Though I've selected <strong>All Internet</strong> for both options I would recommend you only use a port range for something like SSH. But for testing, who cares? :)
 
 ####Launch
 
-<div style='text-align:center;'><a href='/images/ec2/instancereview.png'><img src='/images/ec2/instancereview.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancereview.png'><img src='http://aws.buildstarted.com/instancereview.png' style='width:100%;' /></a></div>
 
 This page is just a review of what you've selected on the previous pages with the option to go back and make changes if you screwed up somehow. If everything is good you just need to click <strong>Launch</strong>.
 

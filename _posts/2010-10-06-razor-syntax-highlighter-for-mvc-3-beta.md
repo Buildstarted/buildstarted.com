@@ -16,7 +16,7 @@ The razor syntax has changed. Comments no longer work the same way and must be c
 
 As a result of this new parser I've been able to tap into the awesomeness that is syntax errors. We now support basic syntax errors for the razor engine. This, however, does not include c# errors.
 
-<a href="http://buildstarted.com/wp-content/uploads/2010/10/razorsyntaxerror.png"><img src="http://buildstarted.com/wp-content/uploads/2010/10/razorsyntaxerror.png" alt="" title="Razor Syntax Error Example" width="543" height="158" class="size-full wp-image-428" /></a>
+<a href="http://aws.buildstarted.com/razorsyntaxerror.png"><img src="http://aws.buildstarted.com/razorsyntaxerror.png" alt="" title="Razor Syntax Error Example" width="543" height="158" class="size-full wp-image-428" /></a>
 
 I had attempted to get some basic intellisense for this version but the breaking changes of Beta 3 forced me to put that on hold. (sorry...)
 
