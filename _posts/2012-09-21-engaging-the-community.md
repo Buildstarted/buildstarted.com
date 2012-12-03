@@ -2,8 +2,6 @@
 layout: post
 title: Engaging the community
 ---
-
-
 If you never engage others, you never chat about what you've learned, never ask questions - you'll never truly grow. It's through discussion and debate that I've found to be the best way to change your views and expand your horizons. I've learned more discussing with friends than I think I would learn on my own reading blog posts and what not. When you're <em>programming by google</em> you're stuck in a little bubble. You tend to search for things you already know or were exposed enough to already want to learn more. You might be exposed to new ideas on how to do a particular method or implementation but others who understand what you're trying to accomplish might promote other methods or implementations you might have never thought of before.
 
 Recently I started a project in which I was designing my own language for an MVC View Engine I'm calling <a href="http://thisisparrot.com">Parrot</a>. This is pretty new territory for me. I've designed basic languages before. All based on something I was intimately familiar with. Very basic parsing based on substrings and indexofs. In other words horrible. I would have gone down this same path if I weren't discussing this new project with a long time friend of mine.
