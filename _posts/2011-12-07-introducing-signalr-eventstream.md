@@ -8,7 +8,7 @@ title: Introducing signalr eventstream
 
 Introducing a new favorite <a href="http://nuget.org">Nuget</a> package: <a href="https://nuget.org/packages/SignalR.EventStream">SignalR.EventStream</a>.
 
-<div style="background-color: #202020; border: 4px solid #C0C0C0;border-radius: 5px 5px 5px 5px;box-shadow: 2px 2px 3px #6E6E6E;color: #E2E2E2;display: block;font: 1.5em 'andale mono','lucida console',monospace; overflow: auto; padding:15px; margin-bottom: 1.5em;"><p style="margin-bottom:0;">PM&gt; Install-Package SignalR.EventStream</div>
+<div style="background-color: #202020; border: 4px solid #C0C0C0;border-radius: 5px 5px 5px 5px;box-shadow: 2px 2px 3px #6E6E6E;color: #E2E2E2;display: block;font: 1.5em 'andale mono','lucida console',monospace; overflow: auto; padding:15px; margin-bottom: 1.5em;"><p style="margin-bottom:0;">PM&gt; Install-Package SignalR.EventStream</p></div>
 
 This is a live feed of the visitors to this site. Leave this page open and watch the live feed. <em>Previous visitors will show up in a few seconds.</em>
 

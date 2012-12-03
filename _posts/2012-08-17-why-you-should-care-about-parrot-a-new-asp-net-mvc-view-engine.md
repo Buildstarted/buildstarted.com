@@ -10,7 +10,7 @@ This post highlights some of the main features of what Parrot is with a little d
 
 I have a <a href="http://testdrive.thisisparrot.com/">test drive</a> page that allows you to try out Parrot from your browser. Note that the test drive actually uses the alpha bits available for download from Nuget to render pages. It's a work in progress (standard Works On My Machine disclaimer) but it really helps demonstrate how Parrot works.
 
-<p style='text-align:center;'><a href="http://testdrive.thisisparrot.com/"><img src="https://a248.e.akamai.net/camo.github.com/7dded2d4f58f34f104ab8a1c1d34410162fea184/687474703a2f2f6177732e6275696c64737461727465642e636f6d2f746573742d64726976652e706e67" alt="Parrot's Test Drive" title="&quot;Parrot's Test Drive&quot;" style="max-width:100%;"></a>
+<a href="http://testdrive.thisisparrot.com/"><img src="https://a248.e.akamai.net/camo.github.com/7dded2d4f58f34f104ab8a1c1d34410162fea184/687474703a2f2f6177732e6275696c64737461727465642e636f6d2f746573742d64726976652e706e67" alt="Parrot's Test Drive" title="&quot;Parrot's Test Drive&quot;" style="max-width:100%;"></a>
 
 ##Simplicity
 
