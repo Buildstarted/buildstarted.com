@@ -3,7 +3,7 @@ layout: default
 title: Razor parser engine for the razor syntax highlighter
 ---
 
-<p>Here's my Razor Parser class that I use in my <a href='/razor-syntax-highlighter'>Razor Syntax Highlighter</a>. I'm going to post later about how I integrate this into Visual Studio using the <a href='http://www.microsoft.com/downloads/details.aspx?FamilyID=47305cf4-2bea-43c0-91cd-1b853602dcc5&displaylang=en' target='&#95;new'>Visual Studio SDK</a>.</p>
+Here's my Razor Parser class that I use in my <a href='/razor-syntax-highlighter'>Razor Syntax Highlighter</a>. I'm going to post later about how I integrate this into Visual Studio using the <a href='http://www.microsoft.com/downloads/details.aspx?FamilyID=47305cf4-2bea-43c0-91cd-1b853602dcc5&displaylang=en' target='&#95;new'>Visual Studio SDK</a>.
 
 <pre><code>    public IList<Token> Parse(ITextBuffer buffer) {
         List<Token> tokens = new List<Token>();
@@ -40,17 +40,17 @@ title: Razor parser engine for the razor syntax highlighter
     }
 </code></pre>
 
-<p>The ITextBuffer parameter of the Parse() method is pass from Visual Studio using the EditorClassifier project. This gives us access to the text content within the editor.</p>
+The ITextBuffer parameter of the Parse() method is pass from Visual Studio using the EditorClassifier project. This gives us access to the text content within the editor.
 
-<p>There are 4 different types of blocks returned to us via the InlinePageParser: Code, Markup, MetaCode, Transitions.</p>
+There are 4 different types of blocks returned to us via the InlinePageParser: Code, Markup, MetaCode, Transitions.
 
-<h2>Transitions</h2>
+##Transitions
 
-<p>Simply escaping from html into the code world. In the case of razor that's one of several sets of characters @, @:, @<, and &lt;text&gt;</p>
+Simply escaping from html into the code world. In the case of razor that's one of several sets of characters @, @:, @<, and &lt;text&gt;
 
-<h2>MetaCode</h2>
+##MetaCode
 
-<p>These are characters that define a block of code. These include () and {}. for example</p>
+These are characters that define a block of code. These include () and {}. for example
 
 <pre><code>@{
     View.Title = "Your Title Here";
@@ -58,21 +58,21 @@ title: Razor parser engine for the razor syntax highlighter
 }
 </code></pre>
 
-<p>or</p>
+or
 
 <pre><code>@("The title of this page is " + View.Title)</code></pre>
 
-<h2>Code</h2>
+##Code
 
-<p>This specifies that the block of text is actually code and not markup or a transition. I've just used basic keyword matching and a bit of magic to add syntax highlighting. It was very basic and not intended to be a full source highlighter.</p>
+This specifies that the block of text is actually code and not markup or a transition. I've just used basic keyword matching and a bit of magic to add syntax highlighting. It was very basic and not intended to be a full source highlighter.
 
-<h2>Markup</h2>
+##Markup
 
-<p>We don't care about markup here in that we're letting the Visual Studio default html classifiers here syntax highlight that.</p>
+We don't care about markup here in that we're letting the Visual Studio default html classifiers here syntax highlight that.
 
-<h2>Token Types</h2>
+##Token Types
 
-<p>We're only interested in a few token types to highlight cshtml to the point where it's basically usable.</p>
+We're only interested in a few token types to highlight cshtml to the point where it's basically usable.
 
 <pre><code>    public enum TokenType {
         CodeBlock,
@@ -86,14 +86,14 @@ title: Razor parser engine for the razor syntax highlighter
     }
 </code></pre>
 
-<p>This gives us our basic Content Types.
+This gives us our basic Content Types.
 1. CodeBlock gives us the background color for the code.
 2. CodeStart is the transition colors.
 3. Unknown/Whitespace are currently unused. (Whitespace was used in a previous implementation)
-4. CSharp[x] is just some very basic c# color coding</p>
+4. CSharp[x] is just some very basic c# color coding
 
-<p>This is the heart of the Razor Syntax Highlighter. It works reasonably well. I'm sure there are lots of improvements to be made regarding the c# highlighter and the highlighter's overall performance. </p>
+This is the heart of the Razor Syntax Highlighter. It works reasonably well. I'm sure there are lots of improvements to be made regarding the c# highlighter and the highlighter's overall performance. 
 
-<p>In my next post I'll explain how I integrate the parser with the editor classifier though I'm sure several of you will already have figured it out and will be working on your own soon.</p>
+In my next post I'll explain how I integrate the parser with the editor classifier though I'm sure several of you will already have figured it out and will be working on your own soon.
 
-<h3>-Ben</h3>
+###-Ben

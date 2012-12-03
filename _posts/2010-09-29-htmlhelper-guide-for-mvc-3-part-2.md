@@ -3,11 +3,11 @@ layout: default
 title: Htmlhelper guide for mvc 3 part 2
 ---
 
-<h2>Action</h2>
+##Action
 
-<p>This method calls an action method and returns the result as a string. </p>
+This method calls an action method and returns the result as a string. 
 
-<h3>Usage</h3>
+###Usage
 
 <pre><code>@Html.Action("actionName")
 @Html.Action("actionName", new { controller = "Home", id="value" })
@@ -17,11 +17,11 @@ title: Htmlhelper guide for mvc 3 part 2
 @Html.Action("actionName", "controllerName", new RouteValueDictionary(new {id="value"}))
 </code></pre>
 
-<p>Each Action call executes the appropriate action and returns a string. The actual output is dependent on the view.</p>
+Each Action call executes the appropriate action and returns a string. The actual output is dependent on the view.
 
-<h2>Render Action</h2>
+##Render Action
 
-<p>This method calls an action method and outputs the result inline with the parent</p>
+This method calls an action method and outputs the result inline with the parent
 
 <pre><code>@{ Html.RenderAction("actionName"); }
 @{ Html.RenderAction("actionName", new { controller = "Home", id="value" }); }
@@ -31,23 +31,23 @@ title: Htmlhelper guide for mvc 3 part 2
 @{ Html.RenderAction("actionName", "controllerName", new RouteValueDictionary(new {id="value"})); }
 </code></pre>
 
-<p>Each RenderAction call executes the appropriate action and outputs the resulting view directly to the response inline with the existing view. As these are void methods you must put the calls within a @{ } codeblock rather than just @.</p>
+Each RenderAction call executes the appropriate action and outputs the resulting view directly to the response inline with the existing view. As these are void methods you must put the calls within a @{ } codeblock rather than just @.
 
-<h2>Display</h2>
+##Display
 
-<p>This method returns and html representation of an object value.</p>
+This method returns and html representation of an object value.
 
-<h3>Usage</h3>
+###Usage
 
 <pre><code>@Html.Display("ModelObject")
 @Html.Display("ModelObject", new { Value="Test" })
 </code></pre>
 
-<h2>DisplayFor</h2>
+##DisplayFor
 
-<p>Renders objects as html. This is overridable by providing your own templates.</p>
+Renders objects as html. This is overridable by providing your own templates.
 
-<h3>Usage</h3>
+###Usage
 
 <pre><code>@Html.DisplayFor(model => model)
 @Html.DisplayFor(model => model.property)
@@ -58,17 +58,17 @@ title: Htmlhelper guide for mvc 3 part 2
 @Html.DisplayFor(model => model.property, "AlternateTemplateName", "htmlFieldName", new { id = "some value" })
 </code></pre>
 
-<h3>Results</h3>
+###Results
 
-<p>Results depend on the templates for the particular model you've passed in. "AlternateTemplateName" is a template you create for your particular model. HtmlFieldName is for when you are using a template for a single field you can specify an alternate name.</p>
+Results depend on the templates for the particular model you've passed in. "AlternateTemplateName" is a template you create for your particular model. HtmlFieldName is for when you are using a template for a single field you can specify an alternate name.
 
-<p><a href='http://buildstarted.com/2010/09/10/overriding-displayfor-and-editorfor-to-create-custom-outputs-for-mvc/'>More Detail</a> about custom templates in my previous post.</p>
+<a href='http://buildstarted.com/2010/09/10/overriding-displayfor-and-editorfor-to-create-custom-outputs-for-mvc/'>More Detail</a> about custom templates in my previous post.
 
-<h2>DisplayForModel</h2>
+##DisplayForModel
 
-<p>Same as DisplayFor but focuses on the model itself and does not accept any parameters for individual elements for a model.</p>
+Same as DisplayFor but focuses on the model itself and does not accept any parameters for individual elements for a model.
 
-<h3>Usage</h3>
+###Usage
 
 <pre><code>@Html.DisplayForModel()
 @Html.DisplayForModel(new { id = "some value" })
@@ -77,30 +77,30 @@ title: Htmlhelper guide for mvc 3 part 2
 @Html.DisplayForModel("AlternateTemplateName", "htmlFieldName", new { id = "some value" }))
 </code></pre>
 
-<h3>Results</h3>
+###Results
 
-<p>Results, again, depend on the template you design for them unless you're using one of the built in templates provided by MVC</p>
+Results, again, depend on the template you design for them unless you're using one of the built in templates provided by MVC
 
-<p><a href='http://buildstarted.com/2010/09/10/overriding-displayfor-and-editorfor-to-create-custom-outputs-for-mvc/'>More Detail</a> about custom templates in my previous post.</p>
+<a href='http://buildstarted.com/2010/09/10/overriding-displayfor-and-editorfor-to-create-custom-outputs-for-mvc/'>More Detail</a> about custom templates in my previous post.
 
-<h2>DisplayText</h2>
+##DisplayText
 
-<p>DisplayText outputs the property name of a particular property.</p>
+DisplayText outputs the property name of a particular property.
 
-<h3>Usage</h3>
+###Usage
 
 <pre><code>@Html.DisplayText("Title")
 </code></pre>
 
-<h3>Results</h3>
+###Results
 
-<p>This particular call will output the title of the page.</p>
+This particular call will output the title of the page.
 
-<h2>DisplayTextFor</h2>
+##DisplayTextFor
 
-<p>DisplayTextFor will output the title of a model property. This particular method will also look at any DataAnnotations you have applied to a property such as "Display" or "DisplayName"</p>
+DisplayTextFor will output the title of a model property. This particular method will also look at any DataAnnotations you have applied to a property such as "Display" or "DisplayName"
 
-<h3>Usage</h3>
+###Usage
 
 <pre><code>public class SomeModel {
 
@@ -113,27 +113,27 @@ title: Htmlhelper guide for mvc 3 part 2
 @Html.DisplayTextFor(model => model.FirstName)
 </code></pre>
 
-<h3>Results</h3>
+###Results
 
-<p>This will output "First name" (without quotes) using the data annotations. Otherwise it would output "FirstName" as it is the name of the property.</p>
+This will output "First name" (without quotes) using the data annotations. Otherwise it would output "FirstName" as it is the name of the property.
 
-<p>This can further be modified by overriding the ModelmetaData.</p>
+This can further be modified by overriding the ModelmetaData.
 
-<h2>Editor</h2>
+##Editor
 
-<p>This method returns and html input element representation of an object value.</p>
+This method returns and html input element representation of an object value.
 
-<h3>Usage</h3>
+###Usage
 
 <pre><code>@Html.Editor("ModelObject")
 @Html.Display("ModelObject", new { Value="Test" })
 </code></pre>
 
-<h2>EditorFor</h2>
+##EditorFor
 
-<p>Renders objects as input elements. This is overridable by providing your own templates.</p>
+Renders objects as input elements. This is overridable by providing your own templates.
 
-<h3>Usage</h3>
+###Usage
 
 <pre><code>@Html.EditorFor(model => model)
 @Html.EditorFor(model => model.property)
@@ -144,17 +144,17 @@ title: Htmlhelper guide for mvc 3 part 2
 @Html.EditorFor(model => model.property, "AlternateTemplateName", "htmlFieldName", new { id = "some value" })
 </code></pre>
 
-<h3>Results</h3>
+###Results
 
-<p>Results depend on the templates for the particular model you've passed in. "AlternateTemplateName" is a template you create for your particular model. HtmlFieldName is for when you are using a template for a single field you can specify an alternate name.</p>
+Results depend on the templates for the particular model you've passed in. "AlternateTemplateName" is a template you create for your particular model. HtmlFieldName is for when you are using a template for a single field you can specify an alternate name.
 
-<p><a href='http://buildstarted.com/2010/09/10/overriding-displayfor-and-editorfor-to-create-custom-outputs-for-mvc/'>More Detail</a> about custom templates in my previous post.</p>
+<a href='http://buildstarted.com/2010/09/10/overriding-displayfor-and-editorfor-to-create-custom-outputs-for-mvc/'>More Detail</a> about custom templates in my previous post.
 
-<h2>EditorForModel</h2>
+##EditorForModel
 
-<p>Same as EditorFor but focuses on the model itself and does not accept any parameters for individual elements for a model.</p>
+Same as EditorFor but focuses on the model itself and does not accept any parameters for individual elements for a model.
 
-<h3>Usage</h3>
+###Usage
 
 <pre><code>@Html.EditorForModel()
 @Html.EditorForModel(new { id = "some value" })
@@ -163,8 +163,8 @@ title: Htmlhelper guide for mvc 3 part 2
 @Html.EditorForModel("AlternateTemplateName", "htmlFieldName", new { id = "some value" }))
 </code></pre>
 
-<h3>Results</h3>
+###Results
 
-<p>Results, again, depend on the template you design for them unless you're using one of the built in templates provided by MVC</p>
+Results, again, depend on the template you design for them unless you're using one of the built in templates provided by MVC
 
-<p><a href='http://buildstarted.com/2010/09/10/overriding-displayfor-and-editorfor-to-create-custom-outputs-for-mvc/'>More Detail</a> about custom templates in my previous post.</p>
+<a href='http://buildstarted.com/2010/09/10/overriding-displayfor-and-editorfor-to-create-custom-outputs-for-mvc/'>More Detail</a> about custom templates in my previous post.

@@ -3,11 +3,11 @@ layout: default
 title: Entity Framework and lazy loading
 ---
 
-<h2>Entity Framework and virtual properties</h2>
+##Entity Framework and virtual properties
 
-<p>Some of you may have come across a situation where you've created your model and found that one of the properties is null when you were expecting a value.</p>
+Some of you may have come across a situation where you've created your model and found that one of the properties is null when you were expecting a value.
 
-<p>Here's a simple setup that would produce the error:</p>
+Here's a simple setup that would produce the error:
 
 <pre><code>public class Person {
     public int PersonID { get; set; }
@@ -29,9 +29,9 @@ Person owner = db.People.Single(p => p.PersonID == 1);
 output(owner.Details);
 </code></pre>
 
-<p>owner.Details would be null here due to LazyLoading. This allows us to have an object with many different objects that are only loaded when needed rather than loaded when a parent object is loaded. This is especially helpful if you have something like a <strong>Comments</strong> property as part of the user. Without LazyLoading the comments collection would be loaded whenever you wanted to grab just the First Name. A downside to LazyLoading is that each navigation performed requires a separate query to the data source. (Unless that object has already be loaded)</p>
+owner.Details would be null here due to LazyLoading. This allows us to have an object with many different objects that are only loaded when needed rather than loaded when a parent object is loaded. This is especially helpful if you have something like a <strong>Comments</strong> property as part of the user. Without LazyLoading the comments collection would be loaded whenever you wanted to grab just the First Name. A downside to LazyLoading is that each navigation performed requires a separate query to the data source. (Unless that object has already be loaded)
 
-<p>To allow for LazyLoading you need to mark related object properties as virtual.</p>
+To allow for LazyLoading you need to mark related object properties as virtual.
 
 <pre><code>public class Person {
     public int PersonID { get; set; }
@@ -41,7 +41,7 @@ output(owner.Details);
 }
 </code></pre>
 
-<p>In addition you must supply a navigation property in your context:</p>
+In addition you must supply a navigation property in your context:
 
 <pre><code>public class Database : DbContext {
     public DbSet<Person> People { get; set; }
@@ -49,7 +49,7 @@ output(owner.Details);
 }
 </code></pre>
 
-<p>Doing the above will allow entity framework to generate proxy classes that allow for lazy loading. Other requirements for these proxy classes to be generated:</p>
+Doing the above will allow entity framework to generate proxy classes that allow for lazy loading. Other requirements for these proxy classes to be generated:
 
 <ol>
 <li>A class must be <strong>public</strong>.</li>
@@ -60,4 +60,4 @@ output(owner.Details);
 <li>The ObjectContext property <strong>ProxyCreationEnabled</strong> must be set to true. (default)</li>
 </ol>
 
-<h3>- Ben</h3>
+###- Ben

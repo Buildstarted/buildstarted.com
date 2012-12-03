@@ -3,7 +3,7 @@ layout: default
 title: Update settings table with extension methods
 ---
 
-<p>So after working with the <a href='http://buildstarted.com/2010/08/09/creating-a-settings-table-that-can-handle-almost-any-type-of-value/'>Settings table</a> from my previous post a bit, it's clear to me that creating some extension methods would make working with settings easier. To do this though we have to modify the Model a bit first and rename "Value" to lowercase "value". The summary xml documentation is there to inform the user there's an Extension method</p>
+So after working with the <a href='http://buildstarted.com/2010/08/09/creating-a-settings-table-that-can-handle-almost-any-type-of-value/'>Settings table</a> from my previous post a bit, it's clear to me that creating some extension methods would make working with settings easier. To do this though we have to modify the Model a bit first and rename "Value" to lowercase "value". The summary xml documentation is there to inform the user there's an Extension method
 
 <pre><code>public class Setting {
     public int SettingID { get; set; }
@@ -18,9 +18,9 @@ title: Update settings table with extension methods
 }
 </code></pre>
 
-<p><br /></p>
+<br />
 
-<h3>Creating the Extension Method</h3>
+###Creating the Extension Method
 
 <pre><code>    [Extension]
     public static T Value<T>(this Setting setting) {
@@ -53,7 +53,7 @@ title: Update settings table with extension methods
     }
 </code></pre>
 
-<p>Doing this also has the added benefit of making the Generic methods in the DataContext cleaner</p>
+Doing this also has the added benefit of making the Generic methods in the DataContext cleaner
 
 <pre><code>    public T Setting<T>(string Name) {
         var setting = Settings.SingleOrDefault(s => s.Name == Name);
@@ -66,13 +66,13 @@ title: Update settings table with extension methods
     }
 </code></pre>
 
-<p>As you can see the extension methods are very easy to create. This gives us the benefit of accessing the values in a cleaner way</p>
+As you can see the extension methods are very easy to create. This gives us the benefit of accessing the values in a cleaner way
 
 <pre><code>var setting = db.Settings.First();
 setting.Value<string>("this is a new value");
 var theValue = setting.Value<string>();
 </code></pre>
 
-<p>The generic methods are what make the settings Model powerful and (almost) seamless.</p>
+The generic methods are what make the settings Model powerful and (almost) seamless.
 
-<h3>- Ben</h3>
+###- Ben

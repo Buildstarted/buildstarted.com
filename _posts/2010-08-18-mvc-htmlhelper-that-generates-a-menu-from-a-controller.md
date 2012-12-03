@@ -3,7 +3,7 @@ layout: default
 title: Mvc htmlhelper that generates a menu from a controller
 ---
 
-<p>Simple menu system that grabs a list of actions from a single controller and creates an unordered list of links. To accomplish this I've created an attribute that will be applied to the action methods we want to see in the menu</p>
+Simple menu system that grabs a list of actions from a single controller and creates an unordered list of links. To accomplish this I've created an attribute that will be applied to the action methods we want to see in the menu
 
 <pre><code>public class MenuItemAttribute : Attribute {
     public int Index { get; set; }
@@ -18,7 +18,7 @@ title: Mvc htmlhelper that generates a menu from a controller
 }
 </code></pre>
 
-<p>Simple and to the point. Here's an example of usage.</p>
+Simple and to the point. Here's an example of usage.
 
 <pre><code>[MainMenuItem(0)]
 [Display(Name = "Home")]
@@ -27,11 +27,11 @@ public ActionResult Index() {
 }
 </code></pre>
 
-<h2>Page navigation</h2>
+##Page navigation
 
-<p>The following method is an HtmlHelper Extension that will find a controller's type and grab all the methods that have our MenuItem attribute. In addition we check for the ActionNameAttribute in case the users specified a different action such as /Home/index-page. If the method name isn't really conducive to a menu name we can change it by checking for the Display attribute. After we have our list of methods we create a ul>li>a list and return.</p>
+The following method is an HtmlHelper Extension that will find a controller's type and grab all the methods that have our MenuItem attribute. In addition we check for the ActionNameAttribute in case the users specified a different action such as /Home/index-page. If the method name isn't really conducive to a menu name we can change it by checking for the Display attribute. After we have our list of methods we create a ul>li>a list and return.
 
-<p>The Menu() extension has several parameters such as htmlAttributes for each of the elements and also a parameter to set different attributes on the active item (the current page).</p>
+The Menu() extension has several parameters such as htmlAttributes for each of the elements and also a parameter to set different attributes on the active item (the current page).
 
 <pre><code>public static MvcHtmlString Menu(
     this HtmlHelper helper,
@@ -79,9 +79,9 @@ public ActionResult Index() {
 }
 </code></pre>
 
-<h2>Site Navigation</h2>
+##Site Navigation
 
-<p>For something like a Main navigation menu we might want to grab menu items from all sorts of controllers. This made the Query quite a bit more complicated but still produces the same results. The difference here is that I made a MainMenuItemAttribute to differentiate the two menu types.</p>
+For something like a Main navigation menu we might want to grab menu items from all sorts of controllers. This made the Query quite a bit more complicated but still produces the same results. The difference here is that I made a MainMenuItemAttribute to differentiate the two menu types.
 
 <pre><code>public static MvcHtmlString MainMenu(this HtmlHelper helper, object ulHtmlAttributes, object liHtmlAttributes, object activeHtmlAttributes) {
     System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -128,6 +128,6 @@ public ActionResult Index() {
     }
 </code></pre>
 
-<p>Sorry about the ugly code but I couldn't really find a way to make it look pretty on this site. </p>
+Sorry about the ugly code but I couldn't really find a way to make it look pretty on this site. 
 
-<h3>-Ben</h3>
+###-Ben

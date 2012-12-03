@@ -3,15 +3,15 @@ layout: default
 title: Making your own viewengine with markdown
 ---
 
-<p>Recently I was thinking about integrating the new <a href='http://buildstarted.com/2010/11/11/razor-templating-on-codeplex/'>Razor Templating Engine</a> into MVC so that I could learn how to create my own ViewEngine for MVC. However, I couldn't quite figure out exactly how to use it in anyway that would make it different from Razor itself. Instead I decided to use Markdown as I frequent <a href='http://stackoverflow.com'>Stackoverflow.com</a> quite a bit to try and help with questions related to Razor. (And get some answers for myself) It seemed like a good direction to go. Markdown is probably not a good idea though to use as a view in general.</p>
+Recently I was thinking about integrating the new <a href='http://buildstarted.com/2010/11/11/razor-templating-on-codeplex/'>Razor Templating Engine</a> into MVC so that I could learn how to create my own ViewEngine for MVC. However, I couldn't quite figure out exactly how to use it in anyway that would make it different from Razor itself. Instead I decided to use Markdown as I frequent <a href='http://stackoverflow.com'>Stackoverflow.com</a> quite a bit to try and help with questions related to Razor. (And get some answers for myself) It seemed like a good direction to go. Markdown is probably not a good idea though to use as a view in general.
 
-<h2>Markdown</h2>
+##Markdown
 
-<p>First things first, I needed a Markdown parser for c#. Luckily <a href='http://code.google.com/u/wumpus1/'>Wumpus1</a> already created a <a href='http://code.google.com/p/markdownsharp/'>markdownsharp</a> library available on <a href='http://code.google.com'>Google Code</a>.</p>
+First things first, I needed a Markdown parser for c#. Luckily <a href='http://code.google.com/u/wumpus1/'>Wumpus1</a> already created a <a href='http://code.google.com/p/markdownsharp/'>markdownsharp</a> library available on <a href='http://code.google.com'>Google Code</a>.
 
-<p>Markdown, somewhat, makes sense as a good sample as it's intended to take text, translate it to html, and display to the end user. It's also meant to be read without any translation...so this might work for some sort of user input where the end user doesn't need to know some complex markup language such as wikicode. I've added a list of locations to search by default to the <strong>MarkdownViewEngine</strong>.</p>
+Markdown, somewhat, makes sense as a good sample as it's intended to take text, translate it to html, and display to the end user. It's also meant to be read without any translation...so this might work for some sort of user input where the end user doesn't need to know some complex markup language such as wikicode. I've added a list of locations to search by default to the <strong>MarkdownViewEngine</strong>.
 
-<h2>The ViewEngine</h2>
+##The ViewEngine
 
 <pre><code>public class MarkdownViewEngine : IViewEngine {
     #region IViewEngine Members
@@ -38,11 +38,11 @@ title: Making your own viewengine with markdown
 }
 </code></pre>
 
-<p>Above is the basic layout for all ViewEngines. Right now, we're only concerned with <strong>FindView</strong> as we can't implement PartialViews just yet without creating a real Markup parser to look for those. However, since it's easy enough to refactor these we're going to create a single <strong>CreateView</strong> method that handles both. </p>
+Above is the basic layout for all ViewEngines. Right now, we're only concerned with <strong>FindView</strong> as we can't implement PartialViews just yet without creating a real Markup parser to look for those. However, since it's easy enough to refactor these we're going to create a single <strong>CreateView</strong> method that handles both. 
 
-<h2>CreateView</h2>
+##CreateView
 
-<p>The CreateView method is simple enough. We're going to return our MarkdownView in the ViewEngineResult. First, you need to find out what controllerName is being called in this request. The routeData in the controller context will contain that information so we can pull it out of there. Next we need to actually find our view. To do this I've created a GetViewPath method. Which in-turn calls <strong>FindPath</strong>. The FindPath method looks through our SearchLocations and attempts to find the file that contains our markdown. If I can't find the file I return a null which we then check for. If the path isn't null we return a new <strong>MarkdownView</strong> based on this file. Otherwise we return a ViewEngineResult that contains a list of the files we searched for.</p>
+The CreateView method is simple enough. We're going to return our MarkdownView in the ViewEngineResult. First, you need to find out what controllerName is being called in this request. The routeData in the controller context will contain that information so we can pull it out of there. Next we need to actually find our view. To do this I've created a GetViewPath method. Which in-turn calls <strong>FindPath</strong>. The FindPath method looks through our SearchLocations and attempts to find the file that contains our markdown. If I can't find the file I return a null which we then check for. If the path isn't null we return a new <strong>MarkdownView</strong> based on this file. Otherwise we return a ViewEngineResult that contains a list of the files we searched for.
 
 <pre><code>    /// <summary>
     /// Meat of the FindView methods.
@@ -116,7 +116,7 @@ title: Making your own viewengine with markdown
     }
 </code></pre>
 
-<p>FindView just calls our CreateView method and passes in a function you'll see called <strong>GetLayoutPath</strong>. This function just calls FindPath method but only requires the ControllerContext as we've hard coded "Layout" as the view name.</p>
+FindView just calls our CreateView method and passes in a function you'll see called <strong>GetLayoutPath</strong>. This function just calls FindPath method but only requires the ControllerContext as we've hard coded "Layout" as the view name.
 
 <pre><code>    public ViewEngineResult FindView(
         ControllerContext controllerContext, 
@@ -145,11 +145,11 @@ title: Making your own viewengine with markdown
     }
 </code></pre>
 
-<p>There we have the basics of our ViewEngine. It looks for a file based on the View and Controller name and returns a MarkdownView result that will then be rendered to the writer.</p>
+There we have the basics of our ViewEngine. It looks for a file based on the View and Controller name and returns a MarkdownView result that will then be rendered to the writer.
 
-<h2>MarkdownView</h2>
+##MarkdownView
 
-<p>The MarkdownView class only contains one interface method called <strong>Render</strong> which accepts a ViewContext and the writer we're going to render our html to. The MarkdownView requires just a few pieces of information the View and Layout partial paths. The render method is simple enough where we load the contents of the file, convert it and write it to the writer...can't go into too much detail with that one.</p>
+The MarkdownView class only contains one interface method called <strong>Render</strong> which accepts a ViewContext and the writer we're going to render our html to. The MarkdownView requires just a few pieces of information the View and Layout partial paths. The render method is simple enough where we load the contents of the file, convert it and write it to the writer...can't go into too much detail with that one.
 
 <pre><code>/// <summary>
 /// Implements IView and renders a Markdown
@@ -209,9 +209,9 @@ public class MarkdownView : IView {
 }
 </code></pre>
 
-<h2>Layout.md</h2>
+##Layout.md
 
-<p>Since markdown, by default, doesn't render the opening and closing html tags and just renders what would essentially be the body, we have to wrap our markdown files in html. I've decided to go the simplistic route for now and just use the following</p>
+Since markdown, by default, doesn't render the opening and closing html tags and just renders what would essentially be the body, we have to wrap our markdown files in html. I've decided to go the simplistic route for now and just use the following
 
 <pre><code><html>
     <head>
@@ -222,23 +222,23 @@ public class MarkdownView : IView {
 </html>
 </code></pre>
 
-<p><strong><em>_content</em>_</strong> will then be replaced with the rendered markdown.</p>
+<strong><em>_content</em>_</strong> will then be replaced with the rendered markdown.
 
-<h2>Putting it all together</h2>
+##Putting it all together
 
-<p>All that's necessary now is to register our new ViewEngine with MVC. This can be accomplished by adding the following lines to our Global.asax.</p>
+All that's necessary now is to register our new ViewEngine with MVC. This can be accomplished by adding the following lines to our Global.asax.
 
 <pre><code>ViewEngines.Engines.Add(new MarkdownViewEngine());
 </code></pre>
 
-<p>This will tell MVC that we have an additional view engine to parse the request. Currently other ViewEngines will be checked first such as the razor or webforms view engines. If a handler can't be found it will then look at our new MarkdownViewEngine.</p>
+This will tell MVC that we have an additional view engine to parse the request. Currently other ViewEngines will be checked first such as the razor or webforms view engines. If a handler can't be found it will then look at our new MarkdownViewEngine.
 
-<p>Our folder structure for the Markdown files is the same as any other view engine. The only difference is that we have a new <strong>.md</strong> file instead of <strong>.cshtml</strong> or <strong>.aspx</strong>.</p>
+Our folder structure for the Markdown files is the same as any other view engine. The only difference is that we have a new <strong>.md</strong> file instead of <strong>.cshtml</strong> or <strong>.aspx</strong>.
 
-<p><img src="http://buildstarted.com/wp-content/uploads/2010/11/markdownviewengine.png" alt="The MarkdownViewEngine folder structure" title="The MardownViewEngine folder structure" /></p>
+<img src="http://buildstarted.com/wp-content/uploads/2010/11/markdownviewengine.png" alt="The MarkdownViewEngine folder structure" title="The MardownViewEngine folder structure" />
 
-<h2>Final</h2>
+##Final
 
-<p>Creating a custom view engine was fairly simple. I didn't deal with model in this particular instance as that would have seriously complexified the current goal. Especially since I would have to basically create a parser to figure out what is markdown and what would be code. I might save that for a later post though. Custom ViewEngines have other methods of access that don't necessarily have to rely on the file system for your views. I could have easily pulled the View from a database or even an embedded view in the project. There are quite a few possibilities. I hope you enjoyed this article and find it of use to you.</p>
+Creating a custom view engine was fairly simple. I didn't deal with model in this particular instance as that would have seriously complexified the current goal. Especially since I would have to basically create a parser to figure out what is markdown and what would be code. I might save that for a later post though. Custom ViewEngines have other methods of access that don't necessarily have to rely on the file system for your views. I could have easily pulled the View from a database or even an embedded view in the project. There are quite a few possibilities. I hope you enjoyed this article and find it of use to you.
 
-<h2>-Ben</h2>
+##-Ben

@@ -9,7 +9,7 @@ If you're attending my session please come back to this post afterward and leave
 
 I've put my session layout on <a href='https://trello.com/board/routing-with-asp-net/4f0ddc110fbdd4ea5900f535'>Trello.com</a> and if you have any comments or would like me to omit anything please leave a note there.
 
-<h3>Update</h3>
+###Update
 Thanks everyone for attending. This was an excellent audience. Lots of questions. No demo fails. Live, raw, code...The only thing is I forgot to look at my notes and forgot a section :) However, you all stayed anyway until I finished. Thanks for making it a great session everybody. I look forward to giving this session one more time at the next code camp!
 
 Source code used in the session can be found <a href='https://github.com/Buildstarted/RoutingSession'>https://github.com/Buildstarted/RoutingSession</a>

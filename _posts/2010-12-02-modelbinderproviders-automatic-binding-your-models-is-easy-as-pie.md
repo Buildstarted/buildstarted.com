@@ -3,15 +3,15 @@ layout: default
 title: Modelbinderproviders automatic binding your models is easy as pie
 ---
 
-<p>One of the things I really like about MVC is it's ability to know things. You don't have to tell it anything, it just <strong>knows</strong>. How does it do this? How can MVC automagically know that a request for <strong>/home/index</strong> should go to the <strong>HomeController.Index</strong>? It's magic. No, really, it's magic!</p>
+One of the things I really like about MVC is it's ability to know things. You don't have to tell it anything, it just <strong>knows</strong>. How does it do this? How can MVC automagically know that a request for <strong>/home/index</strong> should go to the <strong>HomeController.Index</strong>? It's magic. No, really, it's magic!
 
-<p>Darn, thought I had you there. MVC uses a <a href='http://en.wikipedia.org/wiki/Convention_over_configuration'>Convention over configuration</a> software design paradigm. This basically means we don't have to configure everything if we follow a certain pattern. This allows us to imply certain behaviors based on the construction of our code rather than implicitly writing it.</p>
+Darn, thought I had you there. MVC uses a <a href='http://en.wikipedia.org/wiki/Convention_over_configuration'>Convention over configuration</a> software design paradigm. This basically means we don't have to configure everything if we follow a certain pattern. This allows us to imply certain behaviors based on the construction of our code rather than implicitly writing it.
 
-<p>One of the things I noticed when playing with MVC was that I found myself always writing ModelBinders. I wrote a <a href='http://buildstarted.com/2010/09/12/custom-model-binders-in-mvc-3-with-imodelbinder/'>previous article</a> on the subject. But suffice to say I always had to make sure I added the new ModelBinder that I wrote to the Binders list in <strong>ModelBinders.Binders.Add()</strong>. I didn't care for this so I wrote a <strong>ModelBinderProvider</strong> that will automagically look for my model binders whenever I needed them.</p>
+One of the things I noticed when playing with MVC was that I found myself always writing ModelBinders. I wrote a <a href='http://buildstarted.com/2010/09/12/custom-model-binders-in-mvc-3-with-imodelbinder/'>previous article</a> on the subject. But suffice to say I always had to make sure I added the new ModelBinder that I wrote to the Binders list in <strong>ModelBinders.Binders.Add()</strong>. I didn't care for this so I wrote a <strong>ModelBinderProvider</strong> that will automagically look for my model binders whenever I needed them.
 
-<h2>Design</h2>
+##Design
 
-<p>First, I needed some sort of design pattern that would make it easy for my ModelBinder to find my custom bindings. I settled on a <strong>&lt;Model&gt;ModelBinder</strong> naming convention. Here's a quick sample.</p>
+First, I needed some sort of design pattern that would make it easy for my ModelBinder to find my custom bindings. I settled on a <strong>&lt;Model&gt;ModelBinder</strong> naming convention. Here's a quick sample.
 
 <pre><code>public class User {
     public string Name {get;set;}
@@ -22,9 +22,9 @@ public class UserModelBinder : IModelBinder {
 }
 </code></pre>
 
-<p>This UserModelBinder will now be automagically bound to my User class by way of convention over configuration. There's no need for me to tell the ModelBinder that model A maps to binder B. It's implied. But, we also need a way to override these bindings whenever necessary because not everything will be perfect so I have to add that, as well.</p>
+This UserModelBinder will now be automagically bound to my User class by way of convention over configuration. There's no need for me to tell the ModelBinder that model A maps to binder B. It's implied. But, we also need a way to override these bindings whenever necessary because not everything will be perfect so I have to add that, as well.
 
-<p>The following is the start of our class. I'm just defining a static Dictionary to keep track of found ModelBinders.</p>
+The following is the start of our class. I'm just defining a static Dictionary to keep track of found ModelBinders.
 
 <pre><code>public class AutoModelBinder : IModelBinderProvider {
 
@@ -42,7 +42,7 @@ public class UserModelBinder : IModelBinder {
 }
 </code></pre>
 
-<p>If, for some ungodly reason, we want to manually bind a model, we can. This is a very important concept in Convention over Configuration. We provide defaults but allow it to be overridden.</p>
+If, for some ungodly reason, we want to manually bind a model, we can. This is a very important concept in Convention over Configuration. We provide defaults but allow it to be overridden.
 
 <pre><code>    /// <summary>
     /// Manually register ModelBinders for some strange reason
@@ -57,7 +57,7 @@ public class UserModelBinder : IModelBinder {
     }
 </code></pre>
 
-<p>Now for the meat of the class. We're implementing <strong>IModelBinderProvider</strong>, which gives us one method called <strong>GetBinder</strong>. This will be called whenever MVC would like to bind a model for our request. First, we need to check to see if we've already created an instance of our model binder for the requested type. If one isn't found we then look in the current assembly and find one. There really isn't much magic here I'm sorry to say.</p>
+Now for the meat of the class. We're implementing <strong>IModelBinderProvider</strong>, which gives us one method called <strong>GetBinder</strong>. This will be called whenever MVC would like to bind a model for our request. First, we need to check to see if we've already created an instance of our model binder for the requested type. If one isn't found we then look in the current assembly and find one. There really isn't much magic here I'm sorry to say.
 
 <pre><code>    /// <summary>
     /// Interface for IModelBinderProvider.GetBinder.
@@ -86,4 +86,4 @@ public class UserModelBinder : IModelBinder {
     }
 </code></pre>
 
-<p>Download Project: <a href='http://buildstarted.com/wp-content/uploads/2010/12/ModelBinderProviderTest.zip'>ModelBinderProviderTest.zip</a></p>
+Download Project: <a href='http://buildstarted.com/wp-content/uploads/2010/12/ModelBinderProviderTest.zip'>ModelBinderProviderTest.zip</a>

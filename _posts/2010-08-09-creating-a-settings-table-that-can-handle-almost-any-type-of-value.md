@@ -3,14 +3,14 @@ layout: default
 title: Creating a settings table that can handle almost any type of value
 ---
 
-<p><h3>Update: <a href='http://buildstarted.com/2010/08/13/update-settings-table-with-extension-methods/'>Updated article here</a>.</h3></p>
+###Update: <a href='http://buildstarted.com/2010/08/13/update-settings-table-with-extension-methods/'>Updated article here</a>.
 
-<p>Today I wanted to be able to have a table store any type of value as a way to store some settings for an application.
-The table needed to be able to store basically a name/value pair.</p>
+Today I wanted to be able to have a table store any type of value as a way to store some settings for an application.
+The table needed to be able to store basically a name/value pair.
 
-<p>I designed the object using a code-first approach</p>
+I designed the object using a code-first approach
 
-<h2>Initial Idea</h2>
+##Initial Idea
 
 <pre><code>
     public class Setting {
@@ -21,9 +21,9 @@ The table needed to be able to store basically a name/value pair.</p>
     }
 </code></pre>
 
-<p>Simple and to the point.</p>
+Simple and to the point.
 
-<p>Here is a snippet from my DataContext</p>
+Here is a snippet from my DataContext
 
 <pre><code>
 public class DataContext : DbContext, IDataContext {
@@ -31,15 +31,15 @@ public class DataContext : DbContext, IDataContext {
 }
 </code></pre>
 
-<p>To access the data I would simply cast Value to whatever type I expected it to be.</p>
+To access the data I would simply cast Value to whatever type I expected it to be.
 
-<p><code>var x = (string)Settings.Single(
-    s => s.Name == "sitename").Value;</code></p>
+<code>var x = (string)Settings.Single(
+    s => s.Name == "sitename").Value;</code>
 
-<h2>Problems</h2>
+##Problems
 
-<p>However, with EF and probably Linq (I didn't test that) the Value was <em>always</em> null after I called <em>SaveChanges</em>.
-At first I couldn't understand why but then it hit me. There's no direct relationship between object and SQL. So I switched the Value to a byte[]. Here is my new class.</p>
+However, with EF and probably Linq (I didn't test that) the Value was <em>always</em> null after I called <em>SaveChanges</em>.
+At first I couldn't understand why but then it hit me. There's no direct relationship between object and SQL. So I switched the Value to a byte[]. Here is my new class.
 
 <pre><code>
     public class Setting {
@@ -50,9 +50,9 @@ At first I couldn't understand why but then it hit me. There's no direct relatio
     }
 </code></pre>
 
-<p>This caused a few problems with the first method since it's not possible to typecast from a byte[] to a DateTime, int, string...and so on. So I added a few helper methods to my DataContext.</p>
+This caused a few problems with the first method since it's not possible to typecast from a byte[] to a DateTime, int, string...and so on. So I added a few helper methods to my DataContext.
 
-<h2>Solution</h2>
+##Solution
 
 <pre><code>
         public T Setting<T>(string Name) {
@@ -103,15 +103,15 @@ At first I couldn't understand why but then it hit me. There's no direct relatio
         }
 </code></pre>
 
-<p>Now instead of calling the above cast we can now use the following</p>
+Now instead of calling the above cast we can now use the following
 
 <pre><code>
     var x = DataContext.Setting<string>("sitename"); //get
     DataContext.Setting<string>("sitename", "buildstarted.com"); //set
 </code></pre>
 
-<p>Hope this is helpful and inspires someone. Please comment if you have a better method. I'm not too keen on serializing all the time but it's the best method I've come up with so far.</p>
+Hope this is helpful and inspires someone. Please comment if you have a better method. I'm not too keen on serializing all the time but it's the best method I've come up with so far.
 
-<p>One of the problems with having values stored in byte[] form is lack of searchability of values. However, you're unlikely to select all settings with values of "true".</p>
+One of the problems with having values stored in byte[] form is lack of searchability of values. However, you're unlikely to select all settings with values of "true".
 
-<h2>-Ben</h2>
+##-Ben

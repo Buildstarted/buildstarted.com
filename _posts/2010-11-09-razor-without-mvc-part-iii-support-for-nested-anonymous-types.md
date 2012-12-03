@@ -3,7 +3,7 @@ layout: default
 title: Razor without mvc part iii support for nested anonymous types
 ---
 
-<p>One of the problems with my previous post was you couldn't have an object definition like:</p>
+One of the problems with my previous post was you couldn't have an object definition like:
 
 <pre><code>var nestedType = new {
     Name = "Ben",
@@ -14,7 +14,7 @@ title: Razor without mvc part iii support for nested anonymous types
 };
 </code></pre>
 
-<p>I've updated the RazorDynamicObject to compensate. </p>
+I've updated the RazorDynamicObject to compensate. 
 
 <pre><code>    /// <summary>
     /// Dynamic object that we'll utilize to return anonymous type parameters
@@ -45,6 +45,6 @@ title: Razor without mvc part iii support for nested anonymous types
     }
 </code></pre>
 
-<p>Now, we're checking to see if the object we're pulling out of our model is another anonymous type and returning a new RazorDynamicObject to handle subsequent anonymous type calls.</p>
+Now, we're checking to see if the object we're pulling out of our model is another anonymous type and returning a new RazorDynamicObject to handle subsequent anonymous type calls.
 
-<p>I probably could have used the ExpandoObject but this works just fine.</p>
+I probably could have used the ExpandoObject but this works just fine.

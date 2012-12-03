@@ -13,7 +13,7 @@ He suggested I write or use an existing parser/generator engine. What's that?! L
 
 Through discussion and by engaging others I was able to learn something new that will benefit me for years to come.
 
-<h3>Friendships</h3>
+###Friendships
 
 However, you still need to have friends you can bounce ideas off of. People that listen to what you say and give you advice when needed or just act like a <a href="http://en.wikipedia.org/wiki/Rubber_duck_debugging">Rubber Duck</a>. But you have to get out there and mingle with other developers. There are <a href="http://www.nerddinner.com/">Nerd Dinners</a>, Code Camps, <a href="http://www.devcamps.ms/">DevCamps</a>, User Groups, <a href="http://jabbr.net">JabbR</a>, tons of ways to meet other devs who probably share the same passions you do. 
 

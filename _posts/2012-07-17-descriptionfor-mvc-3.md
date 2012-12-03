@@ -3,9 +3,9 @@ layout: default
 title: DescriptionFor mvc 3
 ---
 
-<p>I'm surprised this particular feature doesn't exist for MVC - it's such a simple function.</p>
+I'm surprised this particular feature doesn't exist for MVC - it's such a simple function.
 
-<p>I needed a description of the fields being entered for a form and I decided to use the <strong>Description</strong> parameter of the <strong>Display</strong> attribute. To add the attribute you just:</p>
+I needed a description of the fields being entered for a form and I decided to use the <strong>Description</strong> parameter of the <strong>Display</strong> attribute. To add the attribute you just:
 
 <pre><code>public class RegistrationModel {
     [Display(Name = "Referrer", Description="If anyone referred you to us please enter their name?")]
@@ -13,7 +13,7 @@ title: DescriptionFor mvc 3
 }
 </code></pre>
 
-<p>Nice and simple. However, there's no easy way to get the description text out of the property. </p>
+Nice and simple. However, there's no easy way to get the description text out of the property. 
 
 <pre><code>public static IHtmlString DescriptionFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression) {
     return DescriptionFor<TModel, TValue>(helper, expression, null);

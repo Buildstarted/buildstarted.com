@@ -3,13 +3,13 @@ layout: default
 title: Metadatatypes and why theyre useful
 ---
 
-<h2>MetadataType</h2>
+##MetadataType
 
-<p>You have a linq dbml file created and you wish to add some attributes to the properties. However, if you update your dbml file for any reason all your changes will disappear.</p>
+You have a linq dbml file created and you wish to add some attributes to the properties. However, if you update your dbml file for any reason all your changes will disappear.
 
-<p>You'll have 3 separate classes after you're done with one Linq object</p>
+You'll have 3 separate classes after you're done with one Linq object
 
-<h3>Linq Object</h3>
+###Linq Object
 
 <pre><code>public partial class YourLinqObject {
     public string FirstName { get; set; }
@@ -18,7 +18,7 @@ title: Metadatatypes and why theyre useful
 }
 </code></pre>
 
-<h3>Your attribute class holder</h3>
+###Your attribute class holder
 
 <pre><code>[MetadataType(typeof(YourLinqObjectMetadata))]
 public partial class YourLinqObject {
@@ -26,7 +26,7 @@ public partial class YourLinqObject {
 }
 </code></pre>
 
-<h3>Your metadata class</h3>
+###Your metadata class
 
 <pre><code>public class YourLinqObjectMetadata {
     [MaximumLength(50)]
@@ -40,6 +40,6 @@ public partial class YourLinqObject {
 }
 </code></pre>
 
-<p>Whenever you update your dbml it won't affect your partial class and you'll keep your attributes. It does cause a bit of code duplication, however with relation to the properties but it's effective none-the-less.</p>
+Whenever you update your dbml it won't affect your partial class and you'll keep your attributes. It does cause a bit of code duplication, however with relation to the properties but it's effective none-the-less.
 
-<h3>- Ben</h3>
+###- Ben

@@ -3,7 +3,7 @@ layout: default
 title: Mvc 3s ivalidatableobject
 ---
 
-<p>I've come across a couple ways to do validation in MVC. My favorite is the IValidatableObject method. It's fairly simple to setup.</p>
+I've come across a couple ways to do validation in MVC. My favorite is the IValidatableObject method. It's fairly simple to setup.
 
 <pre><code>public class User : IValidatableObject {
     public string Name { get; set; }
@@ -20,9 +20,9 @@ title: Mvc 3s ivalidatableobject
 }
 </code></pre>
 
-<p>This particular method is only called after all other validations have passed. If you have any DataAnnotations attributes such as [Required] or [StringLength] on your properties that fail then your Validate implementation will not be called.</p>
+This particular method is only called after all other validations have passed. If you have any DataAnnotations attributes such as [Required] or [StringLength] on your properties that fail then your Validate implementation will not be called.
 
-<p>The order of operations for the IValidatableObject to get called:</p>
+The order of operations for the IValidatableObject to get called:
 
 <ol>
 <li>Property attributes</li>
@@ -30,8 +30,8 @@ title: Mvc 3s ivalidatableobject
 <li>Validate interface</li>
 </ol>
 
-<p>If any of the steps fail it will return immediately and not continue processing.</p>
+If any of the steps fail it will return immediately and not continue processing.
 
-<p>One of the things I don't like with this particular method is that it puts validation in the model. I currently use the MetadataType attribute on all my models and put all DataAnnotations attributes in there. You can't implement IValidatableObject on your MetadataType, which is a shame. (Though I could be wrong but testing shows otherwise)</p>
+One of the things I don't like with this particular method is that it puts validation in the model. I currently use the MetadataType attribute on all my models and put all DataAnnotations attributes in there. You can't implement IValidatableObject on your MetadataType, which is a shame. (Though I could be wrong but testing shows otherwise)
 
-<h3>- Ben</h3>
+###- Ben

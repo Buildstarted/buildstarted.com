@@ -3,9 +3,9 @@ layout: default
 title: What are your favorite nuget mvc packages
 ---
 
-<p>What are your favorite MVC packages available on <a href="http://nuget.org">Nuget</a>? Why?</p>
+What are your favorite MVC packages available on <a href="http://nuget.org">Nuget</a>? Why?
 
-<p>Here are the most common ones I end up installing in a new MVC Application:</p>
+Here are the most common ones I end up installing in a new MVC Application:
 
 <ul>
 <li><a href="http://nuget.org/List/Package/Elmah">Elmah</a> - Great for capturing errors (I usually install <a href="http://nuget.org/List/Packages/Glimpse.Elmah">Elmah for Glimpse</a> as well)</li>

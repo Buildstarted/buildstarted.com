@@ -3,9 +3,9 @@ layout: default
 title: Managed extensibility framework and visual studio 2010 editor classifiers
 ---
 
-<h2>Few things first</h2>
+##Few things first
 
-<p>Few things to keep in mind when starting this. Visual Studio 2010 uses the Managed Extensibility Framework to handle it's extensions. Some of the important attributes you'll need to remember/keep an eye on in order to make sure it works properly is the ExportAttribute.</p>
+Few things to keep in mind when starting this. Visual Studio 2010 uses the Managed Extensibility Framework to handle it's extensions. Some of the important attributes you'll need to remember/keep an eye on in order to make sure it works properly is the ExportAttribute.
 
 <pre><code>[Export(typeof(IClassifierProvider))]
 internal class EditorClassifier1Provider : IClassifierProvider {
@@ -13,19 +13,19 @@ internal class EditorClassifier1Provider : IClassifierProvider {
 }
 </code></pre>
 
-<p>The parameter in the export specifies what type of contract it is. In this particular case it will be an IClassifierProvider. If no type is provided the type will be determined by looking at the class/method type. This will tell Visual Studio that we have an IClassifierProvider class that we want it to know about and load.</p>
+The parameter in the export specifies what type of contract it is. In this particular case it will be an IClassifierProvider. If no type is provided the type will be determined by looking at the class/method type. This will tell Visual Studio that we have an IClassifierProvider class that we want it to know about and load.
 
-<p>The ImportAttribute is the opposite. This will tell Visual Studio what we need set by it in order to work. </p>
+The ImportAttribute is the opposite. This will tell Visual Studio what we need set by it in order to work. 
 
 <pre><code>[Import]
 internal IClassificationTypeRegistryService ClassificationRegistry = null; // Set via MEF
 </code></pre>
 
-<p>Here we need the collection that contains all the classification types registered with Visual Studio.</p>
+Here we need the collection that contains all the classification types registered with Visual Studio.
 
-<h2>Starting</h2>
+##Starting
 
-<p>Create a new project and use the EditorClassifier provided by the Visual Studio SDK. First, create a ContentTypeDefinition for our new editor. I'm going to use the Razor extension as an example.</p>
+Create a new project and use the EditorClassifier provided by the Visual Studio SDK. First, create a ContentTypeDefinition for our new editor. I'm going to use the Razor extension as an example.
 
 <pre><code>[Export]
 [Name("razor")]
@@ -39,9 +39,9 @@ public static ContentTypeDefinition RazorContentType = null;
 public static FileExtensionToContentTypeDefinition cshtmlFileExtension = null;
 </code></pre>
 
-<p>I chose the BaseDefinition of my classification as <em>html</em> to tell Visual Studio to base my new content type on the existing html type. This will give us all the highlighting necessary for html - thank goodness for that! </p>
+I chose the BaseDefinition of my classification as <em>html</em> to tell Visual Studio to base my new content type on the existing html type. This will give us all the highlighting necessary for html - thank goodness for that! 
 
-<p>I've modified the default created classes below to get across what needs to be changed.</p>
+I've modified the default created classes below to get across what needs to be changed.
 
 <pre><code>[Export(typeof(IClassifierProvider))]
 [ContentType("text")]
@@ -86,7 +86,7 @@ class EditorClassifier1 : IClassifier {
 }
 </code></pre>
 
-<p>Modify the constructor for EditorClassfier1 and add an ITextBuffer and an IClassificationTypeRegistryService parameter. This will give us access to the list of classification types and raw access to the cshtml file. We also want to monitor for changes to the buffer so that we can update our syntax highlighting.</p>
+Modify the constructor for EditorClassfier1 and add an ITextBuffer and an IClassificationTypeRegistryService parameter. This will give us access to the list of classification types and raw access to the cshtml file. We also want to monitor for changes to the buffer so that we can update our syntax highlighting.
 
 <pre><code>public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span) {
     IList<ClassificationSpan> spans = new List<ClassificationSpan>();
@@ -129,7 +129,7 @@ static Dictionary<TokenType, string> tokenToClassificationType = new Dictionary<
 
 </code></pre>
 
-<p>This method will call our <a href='http://buildstarted.com/2010/09/07/razor-parser-engine-for-the-razor-syntax-highlighter/'>Parser</a> and loop through the returned tokens. Then, based on those tokens, it will get the ClassificationTypes and create the highlight spans for Visual Studio. Here's an example classification type. We're exporting an EditorFormatDefinition with a name so <em>GetClassificationTypeRazorToken</em> method above knows which one to use. I've created a dictionary to map the tokens to the classication name. After we've gotten our proper name for the classification type we then return the ClassificationRegistry entry based on that type. The classificationRegistry is populated from Visual Studio and is filled with our export below. Each highlight type requires it's own classification type entry</p>
+This method will call our <a href='http://buildstarted.com/2010/09/07/razor-parser-engine-for-the-razor-syntax-highlighter/'>Parser</a> and loop through the returned tokens. Then, based on those tokens, it will get the ClassificationTypes and create the highlight spans for Visual Studio. Here's an example classification type. We're exporting an EditorFormatDefinition with a name so <em>GetClassificationTypeRazorToken</em> method above knows which one to use. I've created a dictionary to map the tokens to the classication name. After we've gotten our proper name for the classification type we then return the ClassificationRegistry entry based on that type. The classificationRegistry is populated from Visual Studio and is filled with our export below. Each highlight type requires it's own classification type entry
 
 <pre><code>[Export(typeof(EditorFormatDefinition))]
 [ClassificationType(ClassificationTypeNames = "razor.codestart")]
@@ -144,8 +144,8 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
 }
 </code></pre>
 
-<p>That's pretty much it. The bulk of the code is in the actual parsing. </p>
+That's pretty much it. The bulk of the code is in the actual parsing. 
 
-<p>This is by no means complete but should give someone the basics to do this themselves. Any clarification issues comment and I'll reply. <em>feel free to be confused...</em> :)</p>
+This is by no means complete but should give someone the basics to do this themselves. Any clarification issues comment and I'll reply. <em>feel free to be confused...</em> :)
 
-<h3>- Ben</h3>
+###- Ben

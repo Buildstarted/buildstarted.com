@@ -3,20 +3,20 @@ layout: default
 title: Mvc 3 razor view engine without a controller
 ---
 
-<p>A question posted on stackoverflow caught my attention the other day that asked about using the Razor View Engine outside of MVC that would return a string value from a string template rather than a view...The code example was provided.</p>
+A question posted on stackoverflow caught my attention the other day that asked about using the Razor View Engine outside of MVC that would return a string value from a string template rather than a view...The code example was provided.
 
 <pre><code>string  myTemplate = "Hello @Name,  How are you today?";
 ViewModel.Name = "Billy Boy";
 string output = RazorViewEngineRender( myTemplate, ViewModel );
 </code></pre>
 
-<p>This particular solution didn't require the engine to exist outside of MVC so I relied on MVC to do a lot of the dirty work.</p>
+This particular solution didn't require the engine to exist outside of MVC so I relied on MVC to do a lot of the dirty work.
 
-<p><strong>This is some ugly ugly code that was hacked together without testing it other than getting it to work properly.</strong></p>
+<strong>This is some ugly ugly code that was hacked together without testing it other than getting it to work properly.</strong>
 
-<h2>VirtualPathProvider</h2>
+##VirtualPathProvider
 
-<p>Since we're not dealing with actual views on the server we have to add our own path provider to tell MVC where to get our dynamically generated templates. There should be more tests like checking the strings Dictionary to see if the view has been added.</p>
+Since we're not dealing with actual views on the server we have to add our own path provider to tell MVC where to get our dynamically generated templates. There should be more tests like checking the strings Dictionary to see if the view has been added.
 
 <pre><code>public class StringPathProvider : VirtualPathProvider {
     public StringPathProvider()
@@ -56,9 +56,9 @@ string output = RazorViewEngineRender( myTemplate, ViewModel );
 }
 </code></pre>
 
-<h2>Render Class</h2>
+##Render Class
 
-<p>This class takes your template as a constructor parameter and adds it to a static Dictionary that is then read by the VirtualPathProvider above. You then call Render and you can optionally pass in a model. This will add the fully qualified model type to the @inherits and prepend that to the file contents.</p>
+This class takes your template as a constructor parameter and adds it to a static Dictionary that is then read by the VirtualPathProvider above. You then call Render and you can optionally pass in a model. This will add the fully qualified model type to the @inherits and prepend that to the file contents.
 
 <pre><code>public class RazorViewEngineRender {
     internal static Dictionary&lt;string, string&gt; strings { get; set; }
@@ -103,13 +103,13 @@ string output = RazorViewEngineRender( myTemplate, ViewModel );
 }
 </code></pre>
 
-<h2>Global.asax</h2>
+##Global.asax
 
 <pre><code>System.Web.Hosting.HostingEnvironment.RegisterVirtualPathProvider(
     new Controllers.StringPathProvider());
 </code></pre>
 
-<h2>Calling the code</h2>
+##Calling the code
 
 <pre><code>string Template = "Hello, @Model.Name";
 Models.User user = new Models.User() { Name = "Billy Boy" };
@@ -117,10 +117,10 @@ RazorViewEngineRender view = new RazorViewEngineRender(Template);
 string Results = view.Render(user); //pass in your model
 </code></pre>
 
-<h2>Notes</h2>
+##Notes
 
-<p>This only works with typed Models. I attempted to pass in a new { Name = "Billy Boy" } and it's throwing errors. I'm not sure why and didn't really look too deeply into it. Before any of you ask, I did try to use the <strong><dynamic></strong> type. However it didn't seem to reflect properly. </p>
+This only works with typed Models. I attempted to pass in a new { Name = "Billy Boy" } and it's throwing errors. I'm not sure why and didn't really look too deeply into it. Before any of you ask, I did try to use the <strong><dynamic></strong> type. However it didn't seem to reflect properly. 
 
-<p>Anyway, this was a lot of fun. I'm definitely sure there are much better ways of doing this. Andrew Nurse has a nice blog post about using Razor outside of MVC entirely and I might revisit this in a later post and use that method.</p>
+Anyway, this was a lot of fun. I'm definitely sure there are much better ways of doing this. Andrew Nurse has a nice blog post about using Razor outside of MVC entirely and I might revisit this in a later post and use that method.
 
-<h3>- Ben</h3>
+###- Ben

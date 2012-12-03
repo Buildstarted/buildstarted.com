@@ -3,9 +3,9 @@ layout: default
 title: Fun with dynamicobject dynamic and the settings table
 ---
 
-<h2>What came before</h2>
+##What came before
 
-<p>In my <a href='http://buildstarted.com/2010/08/13/update-settings-table-with-extension-methods/'>previous post</a> I discussed ways of making the settings table using Generics to have typed access to our properties. This required us to still pass in the name of our property as a string to a method.</p>
+In my <a href='http://buildstarted.com/2010/08/13/update-settings-table-with-extension-methods/'>previous post</a> I discussed ways of making the settings table using Generics to have typed access to our properties. This required us to still pass in the name of our property as a string to a method.
 
 <pre><code>User user = db.Users.First();
 if (user.Setting<bool>("IsAdministrator")) {
@@ -13,9 +13,9 @@ if (user.Setting<bool>("IsAdministrator")) {
 }
 </code></pre>
 
-<p>Today we're going to take advantage of <strong>dynamic</strong> to take it one step further.</p>
+Today we're going to take advantage of <strong>dynamic</strong> to take it one step further.
 
-<h2>The Goal</h2>
+##The Goal
 
 <pre><code>User user = db.Users.First();
 if (user.Settings.IsAdministrator) {
@@ -23,9 +23,9 @@ if (user.Settings.IsAdministrator) {
 }
 </code></pre>
 
-<p>We're going to create a new class that inherits from <strong>DynamicObject</strong>. Doing so will allow us to utilize all the power of dynamics such as getting/setting members, calling methods, or type conversions. <a </p>
+We're going to create a new class that inherits from <strong>DynamicObject</strong>. Doing so will allow us to utilize all the power of dynamics such as getting/setting members, calling methods, or type conversions. <a 
 
-<p><a href='http://msdn.microsoft.com/en-us/library/dd233052(VS.100).aspx'>The dynamic language runtime</a> first checks to see if the property of our DynamicObject already exists and if it doesn't find the property it calls <strong>TryGetMember</strong> or <strong>TrySetMember</strong>. This is what we're going to use to return our settings property. Here is a barebones DynamicObject that uses a <strong>Dictionary&lt;string, object&gt;</strong> to store values.</p>
+<a href='http://msdn.microsoft.com/en-us/library/dd233052(VS.100).aspx'>The dynamic language runtime</a> first checks to see if the property of our DynamicObject already exists and if it doesn't find the property it calls <strong>TryGetMember</strong> or <strong>TrySetMember</strong>. This is what we're going to use to return our settings property. Here is a barebones DynamicObject that uses a <strong>Dictionary&lt;string, object&gt;</strong> to store values.
 
 <pre><code>    //These are essentially the same
     //user.Settings["IsAdministrator"]
@@ -52,9 +52,9 @@ if (user.Settings.IsAdministrator) {
     }
 </code></pre>
 
-<h2>Adding our new database overrides</h2>
+##Adding our new database overrides
 
-<p>We're now going to modify our overrides to pull values from the database if they don't already exist in the _dictionary object and add our code to save the new values.</p>
+We're now going to modify our overrides to pull values from the database if they don't already exist in the _dictionary object and add our code to save the new values.
 
 <pre><code>        public override bool TrySetMember(SetMemberBinder binder, object value) {
             SetDatabaseValue(binder.Name, value);
@@ -103,9 +103,9 @@ if (user.Settings.IsAdministrator) {
         }
 </code></pre>
 
-<h2>Modifying our existing user object</h2>
+##Modifying our existing user object
 
-<p>Now we have a new DynamicObject class that we can use to populate our settings but we'll need to modify our existing User class to utilize the new Settings. One of the downsides is that we'll have two exposed properties instead of one but I think it's negligable.</p>
+Now we have a new DynamicObject class that we can use to populate our settings but we'll need to modify our existing User class to utilize the new Settings. One of the downsides is that we'll have two exposed properties instead of one but I think it's negligable.
 
 <pre><code>public class User {
     public Int32 UserID { get; set; }
@@ -125,10 +125,10 @@ if (user.Settings.IsAdministrator) {
 }
 </code></pre>
 
-<p>And there you have it. We now have a dynamic enabled settings property that makes our code slightly easier to read. I hope this helps you on your way to understanding c# 4.0's new dynamic namespace.</p>
+And there you have it. We now have a dynamic enabled settings property that makes our code slightly easier to read. I hope this helps you on your way to understanding c# 4.0's new dynamic namespace.
 
-<h3>- Ben</h3>
+###- Ben
 
-<h3>Update: </h3>
+###Update: 
 
-<p>Fixed Constructor - thanks yesthatmcgurk</p>
+Fixed Constructor - thanks yesthatmcgurk

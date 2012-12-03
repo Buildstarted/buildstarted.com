@@ -3,11 +3,11 @@ layout: default
 title: Building a photo uploading website
 ---
 
-<h2>Starting it off</h2>
+##Starting it off
 
-<p>First, we're going to create an empty MVC (Razor) project. (I'm going to be using <a href='http://weblogs.asp.net/scottgu/archive/2010/07/02/introducing-razor.aspx'>razor</a> for my samples here.)</p>
+First, we're going to create an empty MVC (Razor) project. (I'm going to be using <a href='http://weblogs.asp.net/scottgu/archive/2010/07/02/introducing-razor.aspx'>razor</a> for my samples here.)
 
-<p>Well, let's start with the data requirements. At the basic level, for now, we'll just need a list of Photos. Rather than start with designing a DataContext we're going to use the new <a href='http://blogs.msdn.com/b/adonet/archive/2010/07/14/ctp4announcement.aspx'>Entity Frameworks</a> for a "code first" approach.</p>
+Well, let's start with the data requirements. At the basic level, for now, we'll just need a list of Photos. Rather than start with designing a DataContext we're going to use the new <a href='http://blogs.msdn.com/b/adonet/archive/2010/07/14/ctp4announcement.aspx'>Entity Frameworks</a> for a "code first" approach.
 
 <pre><code>public Photo {
     public int PhotoId { get; set; }
@@ -19,21 +19,21 @@ title: Building a photo uploading website
 }
 </code></pre>
 
-<p>Next, we'll need to create a DataContext.</p>
+Next, we'll need to create a DataContext.
 
 <pre><code>public class DataContext : System.Data.Entity.DbContext {
     public DbSet<Photo> Photos { get; set; }
 }
 </code></pre>
 
-<p>We inherit from *DbContext* which you'll get by adding a reference to "<em>System.Data.Entity.CTP</em>".</p>
+We inherit from *DbContext* which you'll get by adding a reference to "<em>System.Data.Entity.CTP</em>".
 
-<h3>Sample usage:</h3>
+###Sample usage:
 <pre><code>DataContext db = new DataContext();
 var photos = from p in db.Photos where p.PhotoId < 10;
 </code></pre>
 
-<h3>Adding some photos:</h3>
+###Adding some photos:
 We just need to create a few photos and add them to our db.Photos object
 <pre><code>//Adding a list of photos
 DataContext db = new DataContext();
@@ -56,7 +56,7 @@ db.SaveChanges();
 </code>
 </pre>
 
-<p>Here we just create a single photo and add it to our db.Photos object</p>
+Here we just create a single photo and add it to our db.Photos object
 
 <pre><code>//adding a single photo
 Photo photo = new Photo() {
@@ -69,9 +69,9 @@ db.Photos.Add(photo);
 db.SaveChanges();
 </code></pre>
 
-<h3>Grabbing a photo and updating it</h3>
+###Grabbing a photo and updating it
 
-<p>Here we can take a single photo modify it's title and save the changes to the Entity Framework db.</p>
+Here we can take a single photo modify it's title and save the changes to the Entity Framework db.
 
 <pre><code>
 DataContext db = new DataContext();
@@ -80,8 +80,8 @@ photo.Title = "Photo 1's new title";
 db.SaveChanges();
 </code></pre>
 
-<p>So here we have a basic Photo Model that we're going to use to bind our Views with. In addition we have an Entity Framework database with which we can do our testing all without creating a database.</p>
+So here we have a basic Photo Model that we're going to use to bind our Views with. In addition we have an Entity Framework database with which we can do our testing all without creating a database.
 
-<p>In my next post we'll look at integrating this with the Controller &amp; View</p>
+In my next post we'll look at integrating this with the Controller &amp; View
 
-<h3>- Ben</h3>
+###- Ben

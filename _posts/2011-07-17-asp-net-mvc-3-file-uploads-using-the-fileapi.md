@@ -155,4 +155,4 @@ The UploadFile method will change slightly to use <strong>RetrieveFileFromReques
 
 It's that simple. The only real difference between the two methods is that the HttpRequest.Files is not populated when using the FileApi. This can easily be used to create a Drag/Drop scenario by passing <strong>e.dataTransfer.files</strong> from the <strong>drop</strong> event into <strong>upload_files</strong>. 
 
-<h3>-Ben Dornis</h3>
+###-Ben Dornis
