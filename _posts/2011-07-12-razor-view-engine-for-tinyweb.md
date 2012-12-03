@@ -54,7 +54,7 @@ This razor compiler is tiny - and it only supports c#. (I'll be adding VB eventu
 
 ##RazorResult
 
-The <strong>RazorResult</strong> class just returns an <strong>IResult</strong> (expected by TinyWeb) which contains a single method <code>ProcessResult</code>.
+The <strong>RazorResult</strong> class just returns an <strong>IResult</strong> (expected by TinyWeb) which contains a single method `ProcessResult`.
 
     public virtual void ProcessResult(IRequestContext request, IResponseContext response) {
         response.ContentType = "text/html";

@@ -16,7 +16,7 @@ Parrot was designed to be similar to css. Something familiar that everyone shoul
     }
 
 
-Note the ul element is followed by an optional id and optional class declarations. There's an additional <code style='display:inline;'>(PhoneNumbers) parameter. This tells us that the ul is bound to the model property <code style='display:inline;'>PhoneNumbers. Since the model property is <code style='display:inline;'>IEnumerable the engine automatically loops over the child template and applies the current enumerable element to it. If we had a model like the following:
+Note the ul element is followed by an optional id and optional class declarations. There's an additional `(PhoneNumbers)` parameter. This tells us that the ul is bound to the model property `PhoneNumbers`. Since the model property is `IEnumerable` the engine automatically loops over the child template and applies the current enumerable element to it. If we had a model like the following:
 
     new {
          PhoneNumbers = 
@@ -39,7 +39,7 @@ Note the ul element is followed by an optional id and optional class declaration
     </ul>
 
 
-Each element can have a custom renderer. This allows for extreme flexibility when it comes to what parrot does. Suppose you want to loop a bunch of divs but inlined with other elements. You can create your own renderer for a custom element name like <code style='display:inline;'>foreach.
+Each element can have a custom renderer. This allows for extreme flexibility when it comes to what parrot does. Suppose you want to loop a bunch of divs but inlined with other elements. You can create your own renderer for a custom element name like `foreach`.
 
 Now instead of looping within a ul it just outputs a list of divs. 
 

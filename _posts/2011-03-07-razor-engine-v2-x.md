@@ -56,7 +56,7 @@ All RazorEngine derived objects inherit from <strong>TemplateBase</strong>. This
     }
 
 
-To utilize your new TemplateBase you must initialize it within the RazorEngine. <code>Razor.SetTemplateBase(typeof(MyCustomTemplateBase<>)); This <strong>must</strong> be the first call you make. Usually within <strong>Application_Start</strong> or <strong>main</strong> or some other initialization method. This is a static method and as such this affects <strong>all</strong> calls to the RazorEngine.
+To utilize your new TemplateBase you must initialize it within the RazorEngine. `Razor.SetTemplateBase(typeof(MyCustomTemplateBase<>));` This <strong>must</strong> be the first call you make. Usually within <strong>Application_Start</strong> or <strong>main</strong> or some other initialization method. This is a static method and as such this affects <strong>all</strong> calls to the RazorEngine.
 
 To call your new method within your razor files: 
 

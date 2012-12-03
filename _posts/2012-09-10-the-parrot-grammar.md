@@ -54,7 +54,7 @@ Ids and classes aren't the only attributes you'll want to add. Adding additional
 
 #Adding children
 
-There are two ways to add children. To add multiple children you'll usually want to wrap them in a parent using curly braces. To add a single child you can append it using the <code style="display:inline;">></code> syntax.
+There are two ways to add children. To add multiple children you'll usually want to wrap them in a parent using curly braces. To add a single child you can append it using the `>` syntax.
 
     ul {
         li
@@ -76,7 +76,7 @@ There are two ways to add children. To add multiple children you'll usually want
 
 #Adding siblings
 
-Sometimes you don't need or want to wrap multiple children in curly braces. You can add siblings to an element by using the <code style="display:inline;">+</code> selector syntax.
+Sometimes you don't need or want to wrap multiple children in curly braces. You can add siblings to an element by using the `+` selector syntax.
 
     ul > li + li + li + li
 
@@ -89,7 +89,7 @@ Sometimes you don't need or want to wrap multiple children in curly braces. You 
 
 #Model parameters
 
-To bind an element to a model you just add it to the element declaration surrounded by parenthesis <code style="display:inline;">()</code>.
+To bind an element to a model you just add it to the element declaration surrounded by parenthesis `()`.
 
     div(User)
 
@@ -116,7 +116,7 @@ There are several ways to output a string literal.
 
 #Variable outputs
 
-There are two shortcuts to output a variable. If you pass in a variable to a block element and do not provide any children the variable with be added to the dom as with <code style="display:inline;">ToString()</code> applied and added as the first child to that element. You can also encode output using <code style="display:inline;">:</code> or raw output using <code style="display:inline;">=</code>. (PageTitle = "Parrot")
+There are two shortcuts to output a variable. If you pass in a variable to a block element and do not provide any children the variable with be added to the dom as with `ToString()` applied and added as the first child to that element. You can also encode output using `@` or raw output using `=`. (PageTitle = "Parrot")
 
     title(PageTitle)
     title > :PageTitle
@@ -136,7 +136,7 @@ Some elements can override the default tag name such as a ul or ol. The default 
     ul > #sample-id
     <ul><li id="sample-id"></li></ul>
 
-You can shortcut common attributes such as <code style="display:inline;">type</code> as well. For instance when adding an input element you can specify it's type by adding a <code style="display:inline;">:</code> followed by type.
+You can shortcut common attributes such as `type` as well. For instance when adding an input element you can specify it's type by adding a `:` followed by type.
 
     input:text
     input:radio

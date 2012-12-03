@@ -49,11 +49,11 @@ By default variables are scoped based on their nearest parent with a parameter (
         span(Location)
     }
 
-You can see in the above code that we didn't have to tell the span <code style="display:inline;">Model.User.Name when we wanted to output the value. We just had to tell it name. When a model value is resolved it looks for a property on the parent that matches and will output that. Likewise the default model for all elements is <code style="display:inline;">this which is the same as <code style="display:inline;">Model
+You can see in the above code that we didn't have to tell the span  style="display:inline;">Model.User.Name when we wanted to output the value. We just had to tell it name. When a model value is resolved it looks for a property on the parent that matches and will output that. Likewise the default model for all elements is `this` which is the same as `Model`
 
 ###IEnumerable support
 
-IEnumerable support was something I wanted to include as a default thing in Parrot. Any time an element definition includes an IEnumerable as the first parameter and has children it will automatically loop over the parameter and create the child definition passing current element as a parameter to it. This is great for <code style="display:inline;">ul, <code style="display:inline;">ol, <code style="display:inline;">tbody and so forth. To illustrate this let's take a <code style="display:inline;">List<string> and pass it into a ul element.
+IEnumerable support was something I wanted to include as a default thing in Parrot. Any time an element definition includes an IEnumerable as the first parameter and has children it will automatically loop over the parameter and create the child definition passing current element as a parameter to it. This is great for `ul`, `ol`, `tbody` and so forth. To illustrate this let's take a `List<string>` and pass it into a ul element.
 
     var model = new 
     {
@@ -80,7 +80,7 @@ IEnumerable support was something I wanted to include as a default thing in Parr
     </ul>
 
 
-Note the parameter for <code style="display:inline;">li is <code style="display:inline;">this because the element we want to output is the current item in the list. If this were a property we wanted to output like <code style="display:inline;">Name we would just use <code style="display:inline;">li(Name) or <code style="display:inline;">li > :Name. By default all html elements support IEnumerable parameters. Some, such as any self closing element, will ignore the parameter.
+Note the parameter for `li` is `this` because the element we want to output is the current item in the list. If this were a property we wanted to output like `Name` we would just use `li(Name)` or `li > :Name`. By default all html elements support IEnumerable parameters. Some, such as any self closing element, will ignore the parameter.
 
 ##Renderers
 
@@ -88,9 +88,9 @@ Renderers are the heart and soul of Parrot. The grammar is just a vehicle to the
 
 Bottom line: Parrot view engine is built from renderers, and you can easily write your own renderers to add keywords that extend the language however you'd like.
 
-Creating a new renderer is as easy as implementing an interface and adding your new class to a <code style="display:inline;">RendererFactory. Any time the renderer comes across an element it will query the RenderFactory for it's renderer and use it to parse the block.
+Creating a new renderer is as easy as implementing an interface and adding your new class to a `RendererFactory`. Any time the renderer comes across an element it will query the RenderFactory for it's renderer and use it to parse the block.
 
-There are currently several custom renderers including a renderer that supports a <code style="display:inline;">layout view, <code style="display:inline;">foreach and <code style="display:inline;">doctype.
+There are currently several custom renderers including a renderer that supports a `layout` view, `foreach` and `doctype`.
 
     //child view
     layout("viewname") {
@@ -102,7 +102,7 @@ There are currently several custom renderers including a renderer that supports 
         content
     }
 
-Renderers can also override the default element for short-cut statements. For instance the following will not output the <code style="display:inline;">div but will instead output <code style="display:inline;">li
+Renderers can also override the default element for short-cut statements. For instance the following will not output the `div` but will instead output `li`
 
     ul(Authors) > .item(this)
     <ul>
