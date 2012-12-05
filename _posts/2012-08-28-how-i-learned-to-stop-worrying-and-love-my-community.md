@@ -3,13 +3,6 @@ layout: default
 title: How I learned to stop worrying and love my community
 ---
 
-<style type="text/css">
-    article a {
-        color: #222;
-        font-weight:bold;
-    }
-</style>
-<article>
 ##How I got started in programming.
 
 I was 8 years old and I was playing little league. For two years I was a member of the LA Dodgers and the Expos. I worked really hard at baseball. But I was no good. I probably held the record for the most walks in the history of little league because I couldn't hit the ball. Ever. My mother made me an offer I couldn't refuse. Hit the ball (and get on base) and she'd buy me a Nintendo. I wanted one since the day it came out. I would play Gouls and Ghosts at my friends house for hours on end. But, alas, I still couldn't hit the ball. During my second year and almost to the end of the season my coach was thrown out of the game. I don't recall why, but our team had renewed vigor. The next time I was up at bat. <em>I hit the ball.</em> I was shocked. Didn't know what to do. Finally I ran and made it to first base. My mother was elated.
@@ -51,4 +44,3 @@ I've tried to take my experience and help others. I hope that I've accomplished 
 If you're just starting out or you've been programming for 20+ years it can be scary to share your code with others. I hope I can encourage some of you to share your code. Share ideas. Make friends. Take that step. You never know where it might lead but it will lead nowhere if you don't take a chance. 
 
 <strong>-Ben Dornis</strong>
-</article>
