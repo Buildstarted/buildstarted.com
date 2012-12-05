@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Creating a settings table that can handle almost any type of value
 ---
 

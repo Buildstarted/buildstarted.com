@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Razor parser engine for the razor syntax highlighter
 ---
 

@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Metadatatypeattribute with dataannotations and unit testing
 ---
 

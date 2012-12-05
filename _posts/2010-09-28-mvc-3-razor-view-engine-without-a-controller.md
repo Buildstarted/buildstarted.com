@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Mvc 3 razor view engine without a controller
 ---
 

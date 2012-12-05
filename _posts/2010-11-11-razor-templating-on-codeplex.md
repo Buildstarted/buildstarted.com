@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Razor templating on codeplex
 ---
 

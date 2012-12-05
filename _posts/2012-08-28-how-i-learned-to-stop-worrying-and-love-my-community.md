@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: How I learned to stop worrying and love my community
 ---
 

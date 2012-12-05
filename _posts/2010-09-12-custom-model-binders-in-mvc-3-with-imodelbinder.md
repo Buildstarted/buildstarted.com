@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Custom model binders in mvc 3 with imodelbinder
 ---
 

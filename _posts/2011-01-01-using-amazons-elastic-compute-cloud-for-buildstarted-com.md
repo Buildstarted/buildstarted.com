@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Using amazons elastic compute cloud for buildstarted com
 ---
 

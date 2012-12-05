@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Fun with dynamicobject dynamic and the settings table
 ---
 

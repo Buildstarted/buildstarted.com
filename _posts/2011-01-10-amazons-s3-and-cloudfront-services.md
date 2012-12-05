@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Amazons s3 and cloudfront services
 ---
 

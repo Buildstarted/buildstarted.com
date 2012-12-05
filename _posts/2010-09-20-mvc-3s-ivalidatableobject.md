@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Mvc 3s ivalidatableobject
 ---
 

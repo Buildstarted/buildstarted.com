@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Overriding displayfor and editorfor to create custom outputs for mvc
 ---
 

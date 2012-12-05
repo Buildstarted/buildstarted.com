@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: What are your favorite nuget mvc packages
 ---
 

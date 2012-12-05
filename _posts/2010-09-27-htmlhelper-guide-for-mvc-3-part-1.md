@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Htmlhelper guide for mvc 3 part 1
 ---
 

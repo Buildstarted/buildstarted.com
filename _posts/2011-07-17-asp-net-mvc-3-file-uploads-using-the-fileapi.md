@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Asp.net mvc 3 file uploads using the fileapi
 ---
 

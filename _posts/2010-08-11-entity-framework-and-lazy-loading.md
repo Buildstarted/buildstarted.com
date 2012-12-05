@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Entity Framework and lazy loading
 ---
 

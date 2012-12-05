@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Dependency Injection with Ninject, Moq and unit testing
 ---
 

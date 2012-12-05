@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Razor without mvc part iv parser error messages
 ---
 

@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Razor syntax highlighter for mvc 3 beta
 ---
 

@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Entity framework with many to many one to many and one to one relationships
 ---
 

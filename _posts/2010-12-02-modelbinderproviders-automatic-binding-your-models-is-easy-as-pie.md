@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Modelbinderproviders automatic binding your models is easy as pie
 ---
 

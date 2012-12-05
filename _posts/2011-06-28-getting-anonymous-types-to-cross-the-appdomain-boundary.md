@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Getting anonymous types to cross the appdomain boundary
 ---
 

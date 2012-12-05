@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Razor without mvc part iii support for nested anonymous types
 ---
 

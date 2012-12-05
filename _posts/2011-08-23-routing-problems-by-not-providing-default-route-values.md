@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Routing problems by not providing default route values
 ---
 

@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Replacing default git bash console with Console2
 ---
 

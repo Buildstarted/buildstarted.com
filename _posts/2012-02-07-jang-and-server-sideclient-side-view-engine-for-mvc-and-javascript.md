@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Jang and server sideclient side view engine for mvc and javascript
 ---
 

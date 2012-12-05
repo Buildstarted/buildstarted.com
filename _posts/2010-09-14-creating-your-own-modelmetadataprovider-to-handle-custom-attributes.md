@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Creating your own modelmetadataprovider to handle custom attributes
 ---
 

@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Socal Code Camp this weekend
 ---
 

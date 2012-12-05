@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Why you should care about Parrot a new Asp.net mvc view engine
 ---
 

@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Microsofts webcamps la september 10th
 ---
 

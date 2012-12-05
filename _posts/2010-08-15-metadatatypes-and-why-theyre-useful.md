@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Metadatatypes and why theyre useful
 ---
 

@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Mvc 3 release candidate out so much for my razor syntax highlighter
 ---
 

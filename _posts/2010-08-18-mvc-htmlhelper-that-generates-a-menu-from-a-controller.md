@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: Mvc htmlhelper that generates a menu from a controller
 ---
 
