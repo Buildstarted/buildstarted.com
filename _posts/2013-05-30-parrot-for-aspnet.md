@@ -5,6 +5,8 @@ title: Parrot for AspNet
 Install the nuget package using the following command.
 <div class="nuget-badge"><p><code>PM&gt; Install-Package Parrot.AspNet</code></p></div>
 
+See my introductory article on Parrot [here](http://buildstarted.com/2012/08/17/why-you-should-care-about-parrot-a-new-asp-net-mvc-view-engine/).
+
 How is Parrot different from Razor?
 ===================================
 Views are meant to be dumb. They shouldn't contain any (or hardly any) code and just output the view with data from the model. Razor's focus was to give a cleaner separation of code and html, Parrot strives to remove code from your views.
