@@ -2,36 +2,34 @@
 layout: post
 title: Parrot for AspNet
 ---
-
 Install the nuget package using the following command.
 <div class="nuget-badge"><p><code>PM&gt; Install-Package Parrot.AspNet</code></p></div>
 
 How is Parrot different from Razor?
 ===================================
-
 Views are meant to be dumb. They shouldn't contain any (or hardly any) code and just output the view with data from the model. Razor's focus was to give a cleaner separation of code and html, Parrot strives to remove code from your views.
 
 Here is a sample razor template converted to parrot.
 
-    //Razor sample
+####Razor sample
     <h3>Welcome, @Model.Name</h3>
     
     <ul id="cart">
-    	@foreach(var item in Model.ShoppingCart) {
+      @foreach(var item in Model.ShoppingCart) {
     		<li class="item">@item.Name - @item.Price</li>
     	}
     </ul>
 
-    //Parrot sample
+####Parrot sample
     h3 | Welcome, @Name
     
     ul#cart(ShoppingCart) > li.item | @Name - @Price
 
 It's just a basic sample but you can already see some major differences. First note that the Model keyword isn't necessary. By default the page is scoped to the Model property of the page.
-You're not limited to that though. If your view has other properties you want to access you can easily do so by specifying the property name instead @Request.Url (or something similar). If there's a conflict the Model wins. (i think i need to change this or provide a way to force)
+You're not limited to that though. If your view has other objects you want to access, such as HttpContext.Request or ViewContext you can easily do so by specifying the property name instead, @Request.Url (or something similar). If there's a conflict the Model wins. (I think I need to change this or provide a way to force)
 
 There's no need for a foreach in Parrot as well. Tags are smart enough to know if the property applied to them is an array or IEnumerable to loop over the items and apply them to the children. 
-Notice there's no variable name declaration for the child element. By default the element is scoped to the iterator item.
+Notice there's no variable name declaration for the child tag. By default the tag is scoped to the iterator item.
 
 Layouts and Partials
 ====================
@@ -52,25 +50,26 @@ Partials are just as simple
 Extensibility
 =============
 
-Parrot was designed for extensibility. You can easily add new element renderers. 
+Parrot was designed for extensibility. You can easily add new tag renderers. 
 
-Take for example the `if` renderer. If a renderer does not exist for a specific element it will default to rendering it as html. In this case it would render `<if></if>`.
+If a tag is specified in code but no renderers exist for that particular tag then it will default to a standard html renderer and output `<tag>...contents...</tag>`.
 
-We have our `if` renderer and now it will only render if the parameter passed evaluates to `true`.
+Suppose we needed an `if` tag that would output it's children if the object passed in is true. Something like this.
 
     if(SomeModelValue) |It's true!
-	
-The above will render only the text `It's true!`. This particular renderer renders only children. Other renderers can do other things.
 
-A lot of renderers already exist for common types that behave differently than standard html `<openbracket></closebracket>`. Take the `ul/ol` tag for example. By default it would only render once including it's children once.
-I've created a renderer specifically for those two as they're lists. If you pass in an `IEnumerable` parameter it will loop over the items and render the children each time.
+It wouldn't make sense to output `<if>It's true!</if>` so the custom renderer not only outputs if the value is true but also only outputs the children.	
 
-I'll be working on the documentation on how to create these.
+A lot of renderers exist for common tags that behave differently than standard html `<tag></tag>`. The `ul/ol` tags, for example. I've created a renderer specifically for those two as they're lists. If you pass in an `IEnumerable` object as a parameter it will loop over the items and render the children each time.
 
+I'll be working on the documentation on how to create these as well as documenting the features of some of the custom ones in a future blog post.
+
+####Sample If renderer
+<script src="https://gist.github.com/Buildstarted/5676078.js"></script>
 
 Final Thoughts
 ==============
 
-Parrot is a very new product. There are going to be some rough edges to be smoothed out. Help is **very** welcome. Visit [This is parrot](http://thisisparrot.com/) for more info.
+Parrot is a very new project. There are going to be some rough edges to be smoothed out. Help is **very** welcome. Visit [This is parrot](http://thisisparrot.com/) for more info.
 
 **- Ben Dornis**
