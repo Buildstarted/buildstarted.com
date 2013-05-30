@@ -11,7 +11,7 @@ Views are meant to be dumb. They shouldn't contain any (or hardly any) code and 
 
 Here is a sample razor template converted to parrot.
 
-####Razor sample
+###Razor sample
     <h3>Welcome, @Model.Name</h3>
     
     <ul id="cart">
@@ -20,7 +20,7 @@ Here is a sample razor template converted to parrot.
     	}
     </ul>
 
-####Parrot sample
+###Parrot sample
     h3 | Welcome, @Name
     
     ul#cart(ShoppingCart) > li.item | @Name - @Price
@@ -64,12 +64,12 @@ A lot of renderers exist for common tags that behave differently than standard h
 
 I'll be working on the documentation on how to create these as well as documenting the features of some of the custom ones in a future blog post.
 
-####Sample If renderer
+###Sample If renderer
 <script src="https://gist.github.com/Buildstarted/5676078.js"></script>
 
 Final Thoughts
 ==============
 
-Parrot is a very new project. There are going to be some rough edges to be smoothed out. Help is **very** welcome. Visit [This is parrot](http://thisisparrot.com/) for more info.
+Parrot is a very new project. There are going to be some rough edges to be smoothed out. Help is **very** welcome. Visit [This is parrot](http://thisisparrot.com/) for more info on the Nancy, Javascript and Asp.Net libraries.
 
 **- Ben Dornis**
