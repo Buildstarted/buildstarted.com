@@ -3,9 +3,6 @@ layout: post
 title: Understanding jQuery's Deferred
 ---
 
-Understanding jQuery's Deferred
-===============================
-
 I was talking with a coworker earlier today trying to wrap my head around how part of jQuery's Deferred worked. I didn't understand how part of Deferred worked.
 
 Here's a sample call
