@@ -996,6 +996,10 @@ pre {
     display: inline-block;
 }
 
+pre.gist {
+    display: block;
+}
+
     pre code {
         border: none;
         white-space: pre;
