@@ -146,6 +146,17 @@ pre {
     padding: 1.6em;
     overflow: auto;
     max-width: 100%;
+    background-color: #F8F8F8;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px 3px 3px;
+    font-size: 13px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 6px 10px;
+}
+
+pre.prettyprint {
+    display: inline-block;
 }
 
 code, kbd, tt, var {
@@ -985,17 +996,6 @@ code, tt {
     padding: 0 5px;
 }
 
-pre {
-    background-color: #F8F8F8;
-    border: 1px solid #CCCCCC;
-    border-radius: 3px 3px 3px 3px;
-    font-size: 13px;
-    line-height: 19px;
-    overflow: auto;
-    padding: 6px 10px;
-    display: inline-block;
-}
-
 pre.gist {
     display: block;
 }
@@ -1054,6 +1054,10 @@ ul.posts {
     list-style: none;
     margin:0;
     padding:0;
+}
+
+.nuget-badge {
+    display: inline-block;
 }
 
 .nuget-badge code {
