@@ -296,6 +296,7 @@ textarea {
 a {
     color: #26ADE4;
     text-decoration: none;
+    font-size: 22px;
 }
 
     a:visited {
@@ -742,7 +743,7 @@ h1, h2, h3, h4, h5, h6 {
     margin: 20px 0;
 }
 
-h1 {
+h1 a {
     font-size: 36px;
 }
 
@@ -992,8 +993,7 @@ pre {
     line-height: 19px;
     overflow: auto;
     padding: 6px 10px;
-    margin: 15px 0;
-    display: block;
+    display: inline-block;
 }
 
     pre code {
