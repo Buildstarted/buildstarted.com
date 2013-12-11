@@ -1,4 +1,7 @@
-Organize By Feature
+---
+layout: post
+title: Organize By Feature
+---
 
 Taking inspiration from <a href='http://thefringeninja.com/'>João P. Bragança</a> in configuring <a href='http://nancyfx.org/'>Nancy</a> to <a href='http://thefringeninja.com/blog/481/organizing-per-feature-in-nancy'>organize per feature</a> I've taken the concept and applied it to MVC.
 
