@@ -26,6 +26,8 @@ Now we can modify our project structure like so:
 
 ![Organize By Feature](/images/mvc-feature.png)
 
+One thing to note is that the tooling for Visual Studio requires the standard Views location. I'm not sure how (if it's even possible) to modify this yet. Add View and Goto View currently do not work.
+
 Thanks to João P. Bragança aka The Fringe Ninja for the inspiration.
 
 -Ben Dornis
