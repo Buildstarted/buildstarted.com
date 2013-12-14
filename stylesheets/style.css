@@ -1075,3 +1075,7 @@ ul.posts {
     overflow: auto;
     padding: 15px;
 }
+
+#post a {
+	font-size: inherit;
+}
