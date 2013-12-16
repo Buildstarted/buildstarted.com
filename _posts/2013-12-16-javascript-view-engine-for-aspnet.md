@@ -11,7 +11,7 @@ First I had to find a nice vm for javascript that I could execute within .Net. I
 
 After I got the core library working I started thinking about ways to enhance it. It needed support for the plethora of templating engines already out there available for javascript. Rather than write a separate .Net class for each engine I just had the view engine itself search for specific types of javascript files in the project that it could then load. This has the advantage of being easily upgraded with new engines by just adding new .js files to the project or updating existing .js files.
 
-The view engine itself is fairly basic and isn't much different from any other view engine. The main difference is how the views are rendered. We build up our Javascript file run it through js.net and return the results. It's fairly simple and was a quickly put together project.
+The view engine itself is fairly basic and isn't much different from any other view engine. The main difference is how the views are rendered. We build up our Javascript file run it through ClearScript and return the results. It's fairly simple and was a quickly put together project.
 
 To get started one just needs to add the view engine to the list of available view engines to an MVC project.
 
@@ -24,7 +24,7 @@ To get started one just needs to add the view engine to the list of available vi
         RouteConfig.RegisterRoutes(RouteTable.Routes);
 
         ViewEngines.Engines.Add(new JavascriptViewEngine());
-        //ViewEngines.Engines.Add(new JavascriptViewEngine(new [] { "~/AlternateViewLocationDirectories" }));
+        //ViewEngines.Engines.Add(new JavascriptViewEngine(AlternateEngineDefinitionLocation, new [] { "~/AlternateViewLocationDirectories" }));
     }
 
 Next you'll need to tell the JavascriptViewEngine the location of your engines script. The default path is `~/scripts/Javascript.ViewEngines.js`.
@@ -43,3 +43,7 @@ Register your templating engine with the engine like the following.
 We have a little bit of meta data here. Most are fairly obvious. Extensions is an array of view filename extensions to look for. `includes` is an array of javascript files required to execute this engine against templates. `template` is the actual javascript rendering call. It's different for each engine. You must wrap the template function with the `new Template` constructor. This will tell the view engine how to execute the view.
 
 One "gotcha" is that these are run **on the server**. As such you don't have the ability to manipulate the dom or output to the console or any other things you can do on a client/browser templating engine.
+
+You can check out the code on my github repo at (https://github.com/Buildstarted/Javascript.ViewEngines). I'll be creating a [Nuget](https://nuget.org) package soon as there are some issues between x86 and x64.
+
+-Ben Dornis
