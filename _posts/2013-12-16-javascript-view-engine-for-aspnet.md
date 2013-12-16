@@ -44,7 +44,7 @@ We have a little bit of meta data here. Most are fairly obvious. Extensions is a
 
 One "gotcha" is that these are run **on the server**. As such you don't have the ability to manipulate the dom or output to the console or any other things you can do on a client/browser templating engine.
 
-You can view a live sample at http://jsve.buildstarted.com/. It has several engines already added. The templates are really simple for now.
+You can view a live sample at [http://jsve.buildstarted.com/](http://jsve.buildstarted.com/) It has several engines already added. The templates are really simple for now.
 
 You can check out the code on my github repo at [https://github.com/Buildstarted/Javascript.ViewEngines](https://github.com/Buildstarted/Javascript.ViewEngines). I'll be creating a [Nuget](https://nuget.org) package soon as there are some issues between x86 and x64.
 
