@@ -30,4 +30,8 @@ One thing to note is that the tooling for Visual Studio requires the standard Vi
 
 Thanks to João P. Bragança aka The Fringe Ninja for the inspiration.
 
+Clarification
+
+One of the problems with MVC Areas is that you're still stuck with their folder structure. The point of this post was to highlight a little know ability to change the locations of your views from standard to anything you'd like.
+
 -Ben Dornis
