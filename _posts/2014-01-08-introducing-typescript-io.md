@@ -12,13 +12,12 @@ I am currently working on adding user login support so you can save you prototyp
 Here are a couple sample prototypes you can use.
 
 [http://typescript.io/greeter](http://typescript.io/greeter)
-
 [http://typescript.io/Zk434lLa0Ag](http://typescript.io/Zk434lLa0Ag)
 
 Please mention any bugs you find. I'll try and fix them as I can.
 
 I hope you enjoy this site and share it around.
 
-- Ben Dornis
+-Ben Dornis
 
 
