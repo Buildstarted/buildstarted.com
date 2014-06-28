@@ -38,6 +38,8 @@ In essense *no*. Using [ILSpy](http://ilspy.net/) we can see that the generated 
 
 From a little bit of testing it seems that 'as' is also faster. Others could confirm this but in tight loops `isinst` performs significantly faster than `castclass`.
 
+![castclass vs. isinst](/images/castclass-vs-isinst.png)
+
 Here's my quick-and-dirty test. 
 <script src="https://gist.github.com/Buildstarted/e6646dfd8fcf000efd50.js"></script>
 Feel free to fork it and make improvements. There might be instances where castclass is faster.
