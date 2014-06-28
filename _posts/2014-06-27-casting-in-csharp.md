@@ -1,6 +1,6 @@
 ---
-layout: default
-title: Direct casting vs 'as' casting
+layout: post
+title: Direct casting vs as casting
 ---
 
 There are two primary ways to cast in C#, Direct casting and 'as' casting.
