@@ -39,6 +39,7 @@ In essense *no*. Using [ILSpy](http://ilspy.net/) we can see that the generated 
 From a little bit of testing it seems that 'as' is also faster. Others could confirm this but in tight loops `isinst` performs significantly faster than `castclass`.
 
 ![castclass vs. isinst](/images/castclass-vs-isinst.png)
+
 *Charts courtesy of [Jon Galloway](http://weblogs.asp.net/jongalloway)*
 
 Here's my quick-and-dirty test. 
