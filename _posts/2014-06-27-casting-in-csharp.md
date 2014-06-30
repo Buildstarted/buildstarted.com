@@ -25,10 +25,10 @@ The second example shows an explicit cast from an integer to a byte. The explici
 The types must be nullable or reference objects in this case.
 
     object animal = new Dog();
-    var value = source as Dog;
+    var value = animal as Dog;
 	
 	/* value, is this instance, will be `null` */
-	var value = source as Plankton;
+	var value = animal as Plankton;
 
 As casting basically does a check to see if the type is convertible and if so returns the value. If not it returns null.
 	
