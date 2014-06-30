@@ -36,6 +36,10 @@ As casting basically does a check to see if the type is convertible and if so re
 
 In essense *no*. Using [ILSpy](http://ilspy.net/) we can see that the generated `IL` for `explicit casts` uses the [castclass](msdn.microsoft.com/library/system.reflection.emit.opcodes.castclass.aspx), where as the `as` operator uses [isinst](http://msdn.microsoft.com/library/system.reflection.emit.opcodes.isinst.aspx). 
 
+    IL_0007: isinst CastClassVsIsInst.Dog
+    
+    IL_0007: castclass CastClassVsIsInst.Dog
+
 From a little bit of testing it seems that 'as' is also faster. Others could confirm this but in tight loops `isinst` performs significantly faster than `castclass`.
 
 ![castclass vs. isinst](/images/castclass-vs-isinst.png)
