@@ -21,6 +21,6 @@ There's a seemingly little known static class that gives us a lot of nice little
 
 This will create an instance of our User class ***without*** calling a constructor. Very useful for models that don't have any initialization. Although the object you get returned does not have any of the properties initialized that's OK. This will automatically be populated by the ORM.
 
-This doesn't really help the consumers of an ORM or serializer as the library must already implement this. However it's definitely something to think about if you're designing a simple ORM or any type of custom serializer. Check out the MSDN for [GetUnitializedObject](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.formatterservices.getuninitializedobject(v=vs.110).aspx) and see all the methods available on [FormatterServices](http://msdn.microsoft.com/en-us/library/System.Runtime.Serialization.FormatterServices(v=vs.110).aspx)
+This doesn't really help the consumers of an ORM or serializer as the library must already implement this. However it's definitely something to think about if you're designing a simple ORM or any type of custom serializer. Check out the MSDN for [GetUnitializedObject](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.formatterservices.getuninitializedobject.aspx) and see all the methods available on [FormatterServices](http://msdn.microsoft.com/en-us/library/System.Runtime.Serialization.FormatterServices.aspx)
 
 - **Ben Dornis**
