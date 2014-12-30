@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Dear Objects: How do I construct thee? Let me count the ways.
+title: Dear Objects - How do I construct thee? Let me count the ways.
 ---
 
 ## Typical construction
