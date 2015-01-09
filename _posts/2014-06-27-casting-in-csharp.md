@@ -52,4 +52,4 @@ Feel free to fork it and make improvements. There might be instances where castc
 
 It's not perfect but enough to convince me that `isinst` is a bit faster in tight loops than `castclass`
 
--**Ben Dornis**
+###-Ben Dornis

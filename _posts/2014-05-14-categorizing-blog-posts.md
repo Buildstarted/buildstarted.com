@@ -18,4 +18,4 @@ Both tags and date could be served by search. Since my blog is currently a stati
 
 I hope to solicit the community for advice on which way to go.
 
-**-Ben Dornis**
+###-Ben Dornis

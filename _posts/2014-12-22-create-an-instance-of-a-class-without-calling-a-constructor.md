@@ -23,4 +23,4 @@ This will create an instance of our User class ***without*** calling a construct
 
 This doesn't really help the consumers of an ORM or serializer as the library must already implement this. However it's definitely something to think about if you're designing a simple ORM or any type of custom serializer. Check out the MSDN for [GetUnitializedObject](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.formatterservices.getuninitializedobject.aspx) and see all the methods available on [FormatterServices](http://msdn.microsoft.com/en-us/library/System.Runtime.Serialization.FormatterServices.aspx)
 
-- **Ben Dornis**
+###-Ben Dornis
