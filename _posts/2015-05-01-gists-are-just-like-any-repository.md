@@ -1,4 +1,7 @@
-Gists are just like any repository.
+---
+layout: post
+title: Gists are just like any repository.
+---
 
 I was editing a gist recently when I thought. `There's got to be a better way!` So I tried to clone my gist from the command line using the following command.
 
