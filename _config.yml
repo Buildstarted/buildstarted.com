@@ -1,8 +1,5 @@
 safe:        true
 auto:        true
-server:      false
-server_port: 4000
-url: http://localhost:4000
 
 source:      .
 destination: ./_site
