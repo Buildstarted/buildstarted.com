@@ -4,23 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Using amazons elastic compute cloud for buildstarted com &#8211; BuildStarted.com</title>
-    <link rel="stylesheet" type="text/css" href="../../../../stylesheets/style.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
 </head>
 <body class="home blog">
     <div id="page" class="hfeed site">
         <header id="masthead" class="site-header" role="banner">
             <hgroup>
-                <a class="site-logo" href="../../../../index.html" title="BuildStarted.com" rel="home">
-                    <img src="http://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
-                <h1 class="site-title"><a href="../../../../index.html" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
                 <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
             </hgroup>
             <nav role="navigation" class="site-navigation main-navigation">
                 <h1 class="assistive-text">Menu</h1>
-                <div class="assistive-text skip-link"><a href="index.html#content" title="Skip to content">Skip to content</a></div>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
                 <div class="menu">
                     <ul>
-                        <li class="page_item page-item-2"><a href="../../../../about/index.html">About</a></li>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
                     </ul>
                 </div>
             </nav>
@@ -33,7 +33,7 @@
 
     
 
-<p>After a few outages of my previous host I&rsquo;ve decided to move my server to Amazon&rsquo;s <a href='http://aws.amazon.com/ec2/'>EC2</a> services. I have to tell you it was <strong>not</strong> an easy transition. I was more than confused with the array of options on Amazon&rsquo;s services.</p>
+<p>After a few outages of my previous host I&rsquo;ve decided to move my server to Amazon&rsquo;s <a href='https://aws.amazon.com/ec2/'>EC2</a> services. I have to tell you it was <strong>not</strong> an easy transition. I was more than confused with the array of options on Amazon&rsquo;s services.</p>
 
 <p>I&rsquo;m going to go over exactly the choices I&rsquo;ve made and what I did to get it working.</p>
 
@@ -56,7 +56,7 @@
 
 <h2>AMI&rsquo;s</h2>
 
-<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancelist.png'><img src='http://aws.buildstarted.com/instancelist.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancelist.png'><img src='https://aws.buildstarted.com/instancelist.png' style='width:100%;' /></a></div>
 
 
 <p>AMI&rsquo;s or Amazon Instance Machines are the bases for any system you wish to start up on EC2. There are a wide range of over 6000 different systems available on the Community AMI list from Windows to Linux and even OpenSolaris to custom server types like a default wordpress and joomla setups. I chose a blank Ubuntu setup as that is what I&rsquo;m familiar with and I know what I&rsquo;m getting since I&rsquo;ll be forced to install everything myself.</p>
@@ -65,42 +65,42 @@
 
 <p>The first step in setting up your new machine is to choose what type of instance you want.</p>
 
-<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancetype.png'><img src='http://aws.buildstarted.com/instancetype.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancetype.png'><img src='https://aws.buildstarted.com/instancetype.png' style='width:100%;' /></a></div>
 
 
 <p>You have a selection, based on your chosen ami, of what type of machine you want. This is really powerful as a single AMI can be any type of system you want. So if your site is small - like this one - but it gets really popular you can either add new instances of the same type for load balancing <em>or</em> you can just change the type of machine your instance runs on. I can&rsquo;t figure out how the hell they do this but it&rsquo;s damn awesome.</p>
 
 <h4>Kernel/Ram</h4>
 
-<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancedetails.png'><img src='http://aws.buildstarted.com/instancedetails.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancedetails.png'><img src='https://aws.buildstarted.com/instancedetails.png' style='width:100%;' /></a></div>
 
 
 <p>I have no clue exactly what this is. I just use the default Kernel and RAM Disks. Here you can enable CloudWatch which allows you to see detailed information on disk/ram/network usage while your machine is running.</p>
 
 <h4>Machine Tags</h4>
 
-<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancekeys.png'><img src='http://aws.buildstarted.com/instancekeys.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancekeys.png'><img src='https://aws.buildstarted.com/instancekeys.png' style='width:100%;' /></a></div>
 
 
 <p>Here you can add some tags. The default one of Name always works well. Tags are really only useful if you have a lot of different instances in your list and you want to quickly find instances based on a particular attribute.</p>
 
 <h4>Key pairs</h4>
 
-<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancekeypair.png'><img src='http://aws.buildstarted.com/instancekeypair.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancekeypair.png'><img src='https://aws.buildstarted.com/instancekeypair.png' style='width:100%;' /></a></div>
 
 
-<p>Here you can create a key pair for remote access to your system. This doesn&rsquo;t require you to remember a username or password - which, as we&rsquo;ve seen with the recent <a href='http://www.codinghorror.com/blog/2010/12/the-dirty-truth-about-web-passwords.html'>Gawker incident</a>, is never a good idea. Store your keypairs in a safe place. When you ssh with a client such as PuTTY you&rsquo;ll set your auth to your keypair you&rsquo;ve created here.</p>
+<p>Here you can create a key pair for remote access to your system. This doesn&rsquo;t require you to remember a username or password - which, as we&rsquo;ve seen with the recent <a href='https://www.codinghorror.com/blog/2010/12/the-dirty-truth-about-web-passwords.html'>Gawker incident</a>, is never a good idea. Store your keypairs in a safe place. When you ssh with a client such as PuTTY you&rsquo;ll set your auth to your keypair you&rsquo;ve created here.</p>
 
 <h4>Firewall</h4>
 
-<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancefirewall.png'><img src='http://aws.buildstarted.com/instancefirewall.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancefirewall.png'><img src='https://aws.buildstarted.com/instancefirewall.png' style='width:100%;' /></a></div>
 
 
 <p>Setting up your instance firewall allows you to open ports to your instance and make it available to the internet or a select ip range. I&rsquo;ve opened up HTTP and SSH here as all I would need is a cheap web server and nothing more. Though I&rsquo;ve selected <strong>All Internet</strong> for both options I would recommend you only use a port range for something like SSH. But for testing, who cares? :)</p>
 
 <h4>Launch</h4>
 
-<div style='text-align:center;'><a href='http://aws.buildstarted.com/instancereview.png'><img src='http://aws.buildstarted.com/instancereview.png' style='width:100%;' /></a></div>
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancereview.png'><img src='https://aws.buildstarted.com/instancereview.png' style='width:100%;' /></a></div>
 
 
 <p>This page is just a review of what you&rsquo;ve selected on the previous pages with the option to go back and make changes if you screwed up somehow. If everything is good you just need to click <strong>Launch</strong>.</p>
@@ -137,7 +137,7 @@
 
 <h2>Final</h2>
 
-<p>As I learn more about this process I will post more. This whole setup has brought up some questions that I&rsquo;m sure I&rsquo;ll find the answers for over time (I&rsquo;ll probably head over to <a href='http://www.serverfault.com/'>serverfault.com</a> and ask them!) I&rsquo;m currently finalizing another site that I intend to host on Amazon&rsquo;s EC2 service that will be much more popular. (I hope) So I should have a chance to test stuff like upgrading the server to a more powerful machine and what not to see how that works.</p>
+<p>As I learn more about this process I will post more. This whole setup has brought up some questions that I&rsquo;m sure I&rsquo;ll find the answers for over time (I&rsquo;ll probably head over to <a href='https://www.serverfault.com/'>serverfault.com</a> and ask them!) I&rsquo;m currently finalizing another site that I intend to host on Amazon&rsquo;s EC2 service that will be much more popular. (I hope) So I should have a chance to test stuff like upgrading the server to a more powerful machine and what not to see how that works.</p>
 
 <h3>Ben</h3>
 
@@ -145,17 +145,17 @@
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         var disqus_shortname = 'buildstarted';
-        var disqus_url = "http://buildstarted.com/2011/01/01/using-amazons-elastic-compute-cloud-for-buildstarted-com/";
+        var disqus_url = "https://buildstarted.com/2011/01/01/using-amazons-elastic-compute-cloud-for-buildstarted-com/";
 
         /* * * DON'T EDIT BELOW THIS LINE * * */
         (function () {
             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
         })();
     </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="https://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
 </div>
                 </div>
                 <!-- #content -->
@@ -166,28 +166,28 @@
                 <aside id="text-5" class="widget widget_text">
                     <h1 class="widget-title">Follow</h1>
                     <div class="textwidget">
-                        <a href="http://twitter.com/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://twitter.com']);">Twitter</a><br />
-                        <a href="http://stackoverflow.com/users/365526/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://stackoverflow.com']);">Stackoverflow.com</a><br />
-                        <a href="https://plus.google.com/118314403854065988234" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://plus.google.com']);">Google+</a><br />
-                        <a href="https://github.com/Buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://github.com']);">Github</a>
+                        <a href="https://twitter.com/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://twitter.com']);">Twitter</a><br />
+                        <a href="https://stackoverflow.com/users/365526/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://stackoverflow.com']);">Stackoverflow.com</a><br />
+                        <a href="https://plus.google.com/118314403854065988234" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://plus.google.com']);">Google+</a><br />
+                        <a href="https://github.com/Buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://github.com']);">Github</a>
                     </div>
                 </aside>
                 <aside id="text-8" class="widget widget_text">
                     <h1 class="widget-title">Other sites</h1>
                     <div class="textwidget">
-                        <a href="http://typescript.io/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://typescript.io']);">typescript.io</a><br />
-                        <a href="http://csharptube.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://csharptube.com']);">csharptube.com</a><br />
-                        <a href="http://thisisparrot.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://thisisparrot.com']);">Parrot</a><br />
+                        <a href="https://typescript.io/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://typescript.io']);">typescript.io</a><br />
+                        <a href="https://csharptube.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://csharptube.com']);">csharptube.com</a><br />
+                        <a href="https://thisisparrot.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://thisisparrot.com']);">Parrot</a><br />
                     </div>
                 </aside>
                 <aside id="linkcat-6" class="widget widget_links">
                     <h1 class="widget-title">Other Blogs</h1>
                     <ul class='xoxo blogroll'>
-                        <li><a href="http://blog.andrewnurse.net/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://blog.andrewnurse.net/']);">Andrew Nurse @ Microsoft</a></li>
-                        <li><a href="http://weblogs.asp.net/jgalloway/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://weblogs.asp.net/jgalloway/']);">Jon Galloway @ Microsoft</a></li>
-                        <li><a href="http://msmvps.com/blogs/jon_skeet/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://msmvps.com/blogs/jon_skeet/']);">Jon Skeet</a></li>
-                        <li><a href="http://invalidcast.com" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://invalidcast.com']);">Martin Rue</a></li>
-                        <li><a href="http://haacked.com/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://haacked.com/']);">Phil Haack @ Github</a></li>
+                        <li><a href="https://blog.andrewnurse.net/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://blog.andrewnurse.net/']);">Andrew Nurse @ Microsoft</a></li>
+                        <li><a href="https://weblogs.asp.net/jgalloway/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://weblogs.asp.net/jgalloway/']);">Jon Galloway @ Microsoft</a></li>
+                        <li><a href="https://msmvps.com/blogs/jon_skeet/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://msmvps.com/blogs/jon_skeet/']);">Jon Skeet</a></li>
+                        <li><a href="https://invalidcast.com" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://invalidcast.com']);">Martin Rue</a></li>
+                        <li><a href="https://haacked.com/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://haacked.com/']);">Phil Haack @ Github</a></li>
 
                     </ul>
                 </aside>
@@ -202,14 +202,14 @@
                           <!-- May placeholder -->
                           
                             
-                            <li><a href='../../../../archive.html#2015May'>May 2015</a></li>
+                            <li><a href='/archive#2015May'>May 2015</a></li>
                           
                         
                           
                           <!-- December May -->
                           
                             
-                            <li><a href='../../../../archive.html#2014December'>December 2014</a></li>
+                            <li><a href='/archive#2014December'>December 2014</a></li>
                           
                         
                           
@@ -220,21 +220,21 @@
                           <!-- June December -->
                           
                             
-                            <li><a href='../../../../archive.html#2014June'>June 2014</a></li>
+                            <li><a href='/archive#2014June'>June 2014</a></li>
                           
                         
                           
                           <!-- May June -->
                           
                             
-                            <li><a href='../../../../archive.html#2014May'>May 2014</a></li>
+                            <li><a href='/archive#2014May'>May 2014</a></li>
                           
                         
                           
                           <!-- January May -->
                           
                             
-                            <li><a href='../../../../archive.html#2014January'>January 2014</a></li>
+                            <li><a href='/archive#2014January'>January 2014</a></li>
                           
                         
                           
@@ -245,7 +245,7 @@
                           <!-- December January -->
                           
                             
-                            <li><a href='../../../../archive.html#2013December'>December 2013</a></li>
+                            <li><a href='/archive#2013December'>December 2013</a></li>
                           
                         
                           
@@ -256,7 +256,7 @@
                           <!-- June December -->
                           
                             
-                            <li><a href='../../../../archive.html#2013June'>June 2013</a></li>
+                            <li><a href='/archive#2013June'>June 2013</a></li>
                           
                         
                           
@@ -267,28 +267,28 @@
                           <!-- May June -->
                           
                             
-                            <li><a href='../../../../archive.html#2013May'>May 2013</a></li>
+                            <li><a href='/archive#2013May'>May 2013</a></li>
                           
                         
                           
                           <!-- February May -->
                           
                             
-                            <li><a href='../../../../archive.html#2013February'>February 2013</a></li>
+                            <li><a href='/archive#2013February'>February 2013</a></li>
                           
                         
                           
                           <!-- November February -->
                           
                             
-                            <li><a href='../../../../archive.html#2012November'>November 2012</a></li>
+                            <li><a href='/archive#2012November'>November 2012</a></li>
                           
                         
                           
                           <!-- September November -->
                           
                             
-                            <li><a href='../../../../archive.html#2012September'>September 2012</a></li>
+                            <li><a href='/archive#2012September'>September 2012</a></li>
                           
                         
                           
@@ -299,7 +299,7 @@
                           <!-- August September -->
                           
                             
-                            <li><a href='../../../../archive.html#2012August'>August 2012</a></li>
+                            <li><a href='/archive#2012August'>August 2012</a></li>
                           
                         
                           
@@ -314,7 +314,7 @@
                           <!-- July August -->
                           
                             
-                            <li><a href='../../../../archive.html#2012July'>July 2012</a></li>
+                            <li><a href='/archive#2012July'>July 2012</a></li>
                           
                         
                           
@@ -325,28 +325,28 @@
                           <!-- June July -->
                           
                             
-                            <li><a href='../../../../archive.html#2012June'>June 2012</a></li>
+                            <li><a href='/archive#2012June'>June 2012</a></li>
                           
                         
                           
                           <!-- May June -->
                           
                             
-                            <li><a href='../../../../archive.html#2012May'>May 2012</a></li>
+                            <li><a href='/archive#2012May'>May 2012</a></li>
                           
                         
                           
                           <!-- February May -->
                           
                             
-                            <li><a href='../../../../archive.html#2012February'>February 2012</a></li>
+                            <li><a href='/archive#2012February'>February 2012</a></li>
                           
                         
                           
                           <!-- January February -->
                           
                             
-                            <li><a href='../../../../archive.html#2012January'>January 2012</a></li>
+                            <li><a href='/archive#2012January'>January 2012</a></li>
                           
                         
                           
@@ -357,7 +357,7 @@
                           <!-- December January -->
                           
                             
-                            <li><a href='../../../../archive.html#2011December'>December 2011</a></li>
+                            <li><a href='/archive#2011December'>December 2011</a></li>
                           
                         
                           
@@ -372,21 +372,21 @@
                           <!-- October December -->
                           
                             
-                            <li><a href='../../../../archive.html#2011October'>October 2011</a></li>
+                            <li><a href='/archive#2011October'>October 2011</a></li>
                           
                         
                           
                           <!-- August October -->
                           
                             
-                            <li><a href='../../../../archive.html#2011August'>August 2011</a></li>
+                            <li><a href='/archive#2011August'>August 2011</a></li>
                           
                         
                           
                           <!-- July August -->
                           
                             
-                            <li><a href='../../../../archive.html#2011July'>July 2011</a></li>
+                            <li><a href='/archive#2011July'>July 2011</a></li>
                           
                         
                           
@@ -397,21 +397,21 @@
                           <!-- June July -->
                           
                             
-                            <li><a href='../../../../archive.html#2011June'>June 2011</a></li>
+                            <li><a href='/archive#2011June'>June 2011</a></li>
                           
                         
                           
                           <!-- March June -->
                           
                             
-                            <li><a href='../../../../archive.html#2011March'>March 2011</a></li>
+                            <li><a href='/archive#2011March'>March 2011</a></li>
                           
                         
                           
                           <!-- January March -->
                           
                             
-                            <li><a href='../../../../archive.html#2011January'>January 2011</a></li>
+                            <li><a href='/archive#2011January'>January 2011</a></li>
                           
                         
                           
@@ -422,14 +422,14 @@
                           <!-- December January -->
                           
                             
-                            <li><a href='../../../../archive.html#2010December'>December 2010</a></li>
+                            <li><a href='/archive#2010December'>December 2010</a></li>
                           
                         
                           
                           <!-- November December -->
                           
                             
-                            <li><a href='../../../../archive.html#2010November'>November 2010</a></li>
+                            <li><a href='/archive#2010November'>November 2010</a></li>
                           
                         
                           
@@ -456,7 +456,7 @@
                           <!-- October November -->
                           
                             
-                            <li><a href='../../../../archive.html#2010October'>October 2010</a></li>
+                            <li><a href='/archive#2010October'>October 2010</a></li>
                           
                         
                           
@@ -467,7 +467,7 @@
                           <!-- September October -->
                           
                             
-                            <li><a href='../../../../archive.html#2010September'>September 2010</a></li>
+                            <li><a href='/archive#2010September'>September 2010</a></li>
                           
                         
                           
@@ -518,7 +518,7 @@
                           <!-- August September -->
                           
                             
-                            <li><a href='../../../../archive.html#2010August'>August 2010</a></li>
+                            <li><a href='/archive#2010August'>August 2010</a></li>
                           
                         
                           
@@ -580,15 +580,15 @@
 
         <footer id="colophon" class="site-footer" role="contentinfo">
             <div class="site-info">
-                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="http://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
             </div>
             <!-- .site-info -->
         </footer>
         <!-- #colophon .site-footer -->
     </div>
     <!-- #page .hfeed .site -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src='../../../../javascripts/prettify.js' type='text/javascript'></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
     <script type='text/javascript'>
         $(function () {
             $("pre code").parent().each(function () {

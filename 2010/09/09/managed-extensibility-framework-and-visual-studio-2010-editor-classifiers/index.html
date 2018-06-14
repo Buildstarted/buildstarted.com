@@ -4,23 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Managed extensibility framework and visual studio 2010 editor classifiers &#8211; BuildStarted.com</title>
-    <link rel="stylesheet" type="text/css" href="../../../../stylesheets/style.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
 </head>
 <body class="home blog">
     <div id="page" class="hfeed site">
         <header id="masthead" class="site-header" role="banner">
             <hgroup>
-                <a class="site-logo" href="../../../../index.html" title="BuildStarted.com" rel="home">
-                    <img src="http://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
-                <h1 class="site-title"><a href="../../../../index.html" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
                 <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
             </hgroup>
             <nav role="navigation" class="site-navigation main-navigation">
                 <h1 class="assistive-text">Menu</h1>
-                <div class="assistive-text skip-link"><a href="index.html#content" title="Skip to content">Skip to content</a></div>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
                 <div class="menu">
                     <ul>
-                        <li class="page_item page-item-2"><a href="../../../../about/index.html">About</a></li>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
                     </ul>
                 </div>
             </nav>
@@ -156,7 +156,7 @@ static Dictionary&lt;TokenType, string&gt; tokenToClassificationType = new Dicti
 };
 </code></pre>
 
-<p>This method will call our <a href='../../07/razor-parser-engine-for-the-razor-syntax-highlighter/index.html'>Parser</a> and loop through the returned tokens. Then, based on those tokens, it will get the ClassificationTypes and create the highlight spans for Visual Studio. Here&rsquo;s an example classification type. We&rsquo;re exporting an EditorFormatDefinition with a name so <em>GetClassificationTypeRazorToken</em> method above knows which one to use. I&rsquo;ve created a dictionary to map the tokens to the classication name. After we&rsquo;ve gotten our proper name for the classification type we then return the ClassificationRegistry entry based on that type. The classificationRegistry is populated from Visual Studio and is filled with our export below. Each highlight type requires it&rsquo;s own classification type entry</p>
+<p>This method will call our <a href='https://buildstarted.com/2010/09/07/razor-parser-engine-for-the-razor-syntax-highlighter/'>Parser</a> and loop through the returned tokens. Then, based on those tokens, it will get the ClassificationTypes and create the highlight spans for Visual Studio. Here&rsquo;s an example classification type. We&rsquo;re exporting an EditorFormatDefinition with a name so <em>GetClassificationTypeRazorToken</em> method above knows which one to use. I&rsquo;ve created a dictionary to map the tokens to the classication name. After we&rsquo;ve gotten our proper name for the classification type we then return the ClassificationRegistry entry based on that type. The classificationRegistry is populated from Visual Studio and is filled with our export below. Each highlight type requires it&rsquo;s own classification type entry</p>
 
 <pre><code>[Export(typeof(EditorFormatDefinition))]
 [ClassificationType(ClassificationTypeNames = "razor.codestart")]
@@ -181,17 +181,17 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         var disqus_shortname = 'buildstarted';
-        var disqus_url = "http://buildstarted.com/2010/09/09/managed-extensibility-framework-and-visual-studio-2010-editor-classifiers/";
+        var disqus_url = "https://buildstarted.com/2010/09/09/managed-extensibility-framework-and-visual-studio-2010-editor-classifiers/";
 
         /* * * DON'T EDIT BELOW THIS LINE * * */
         (function () {
             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
         })();
     </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="https://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
 </div>
                 </div>
                 <!-- #content -->
@@ -202,28 +202,28 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                 <aside id="text-5" class="widget widget_text">
                     <h1 class="widget-title">Follow</h1>
                     <div class="textwidget">
-                        <a href="http://twitter.com/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://twitter.com']);">Twitter</a><br />
-                        <a href="http://stackoverflow.com/users/365526/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://stackoverflow.com']);">Stackoverflow.com</a><br />
-                        <a href="https://plus.google.com/118314403854065988234" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://plus.google.com']);">Google+</a><br />
-                        <a href="https://github.com/Buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://github.com']);">Github</a>
+                        <a href="https://twitter.com/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://twitter.com']);">Twitter</a><br />
+                        <a href="https://stackoverflow.com/users/365526/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://stackoverflow.com']);">Stackoverflow.com</a><br />
+                        <a href="https://plus.google.com/118314403854065988234" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://plus.google.com']);">Google+</a><br />
+                        <a href="https://github.com/Buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://github.com']);">Github</a>
                     </div>
                 </aside>
                 <aside id="text-8" class="widget widget_text">
                     <h1 class="widget-title">Other sites</h1>
                     <div class="textwidget">
-                        <a href="http://typescript.io/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://typescript.io']);">typescript.io</a><br />
-                        <a href="http://csharptube.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://csharptube.com']);">csharptube.com</a><br />
-                        <a href="http://thisisparrot.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://thisisparrot.com']);">Parrot</a><br />
+                        <a href="https://typescript.io/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://typescript.io']);">typescript.io</a><br />
+                        <a href="https://csharptube.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://csharptube.com']);">csharptube.com</a><br />
+                        <a href="https://thisisparrot.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://thisisparrot.com']);">Parrot</a><br />
                     </div>
                 </aside>
                 <aside id="linkcat-6" class="widget widget_links">
                     <h1 class="widget-title">Other Blogs</h1>
                     <ul class='xoxo blogroll'>
-                        <li><a href="http://blog.andrewnurse.net/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://blog.andrewnurse.net/']);">Andrew Nurse @ Microsoft</a></li>
-                        <li><a href="http://weblogs.asp.net/jgalloway/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://weblogs.asp.net/jgalloway/']);">Jon Galloway @ Microsoft</a></li>
-                        <li><a href="http://msmvps.com/blogs/jon_skeet/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://msmvps.com/blogs/jon_skeet/']);">Jon Skeet</a></li>
-                        <li><a href="http://invalidcast.com" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://invalidcast.com']);">Martin Rue</a></li>
-                        <li><a href="http://haacked.com/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://haacked.com/']);">Phil Haack @ Github</a></li>
+                        <li><a href="https://blog.andrewnurse.net/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://blog.andrewnurse.net/']);">Andrew Nurse @ Microsoft</a></li>
+                        <li><a href="https://weblogs.asp.net/jgalloway/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://weblogs.asp.net/jgalloway/']);">Jon Galloway @ Microsoft</a></li>
+                        <li><a href="https://msmvps.com/blogs/jon_skeet/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://msmvps.com/blogs/jon_skeet/']);">Jon Skeet</a></li>
+                        <li><a href="https://invalidcast.com" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://invalidcast.com']);">Martin Rue</a></li>
+                        <li><a href="https://haacked.com/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://haacked.com/']);">Phil Haack @ Github</a></li>
 
                     </ul>
                 </aside>
@@ -238,14 +238,14 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- May placeholder -->
                           
                             
-                            <li><a href='../../../../archive.html#2015May'>May 2015</a></li>
+                            <li><a href='/archive#2015May'>May 2015</a></li>
                           
                         
                           
                           <!-- December May -->
                           
                             
-                            <li><a href='../../../../archive.html#2014December'>December 2014</a></li>
+                            <li><a href='/archive#2014December'>December 2014</a></li>
                           
                         
                           
@@ -256,21 +256,21 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- June December -->
                           
                             
-                            <li><a href='../../../../archive.html#2014June'>June 2014</a></li>
+                            <li><a href='/archive#2014June'>June 2014</a></li>
                           
                         
                           
                           <!-- May June -->
                           
                             
-                            <li><a href='../../../../archive.html#2014May'>May 2014</a></li>
+                            <li><a href='/archive#2014May'>May 2014</a></li>
                           
                         
                           
                           <!-- January May -->
                           
                             
-                            <li><a href='../../../../archive.html#2014January'>January 2014</a></li>
+                            <li><a href='/archive#2014January'>January 2014</a></li>
                           
                         
                           
@@ -281,7 +281,7 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- December January -->
                           
                             
-                            <li><a href='../../../../archive.html#2013December'>December 2013</a></li>
+                            <li><a href='/archive#2013December'>December 2013</a></li>
                           
                         
                           
@@ -292,7 +292,7 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- June December -->
                           
                             
-                            <li><a href='../../../../archive.html#2013June'>June 2013</a></li>
+                            <li><a href='/archive#2013June'>June 2013</a></li>
                           
                         
                           
@@ -303,28 +303,28 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- May June -->
                           
                             
-                            <li><a href='../../../../archive.html#2013May'>May 2013</a></li>
+                            <li><a href='/archive#2013May'>May 2013</a></li>
                           
                         
                           
                           <!-- February May -->
                           
                             
-                            <li><a href='../../../../archive.html#2013February'>February 2013</a></li>
+                            <li><a href='/archive#2013February'>February 2013</a></li>
                           
                         
                           
                           <!-- November February -->
                           
                             
-                            <li><a href='../../../../archive.html#2012November'>November 2012</a></li>
+                            <li><a href='/archive#2012November'>November 2012</a></li>
                           
                         
                           
                           <!-- September November -->
                           
                             
-                            <li><a href='../../../../archive.html#2012September'>September 2012</a></li>
+                            <li><a href='/archive#2012September'>September 2012</a></li>
                           
                         
                           
@@ -335,7 +335,7 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- August September -->
                           
                             
-                            <li><a href='../../../../archive.html#2012August'>August 2012</a></li>
+                            <li><a href='/archive#2012August'>August 2012</a></li>
                           
                         
                           
@@ -350,7 +350,7 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- July August -->
                           
                             
-                            <li><a href='../../../../archive.html#2012July'>July 2012</a></li>
+                            <li><a href='/archive#2012July'>July 2012</a></li>
                           
                         
                           
@@ -361,28 +361,28 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- June July -->
                           
                             
-                            <li><a href='../../../../archive.html#2012June'>June 2012</a></li>
+                            <li><a href='/archive#2012June'>June 2012</a></li>
                           
                         
                           
                           <!-- May June -->
                           
                             
-                            <li><a href='../../../../archive.html#2012May'>May 2012</a></li>
+                            <li><a href='/archive#2012May'>May 2012</a></li>
                           
                         
                           
                           <!-- February May -->
                           
                             
-                            <li><a href='../../../../archive.html#2012February'>February 2012</a></li>
+                            <li><a href='/archive#2012February'>February 2012</a></li>
                           
                         
                           
                           <!-- January February -->
                           
                             
-                            <li><a href='../../../../archive.html#2012January'>January 2012</a></li>
+                            <li><a href='/archive#2012January'>January 2012</a></li>
                           
                         
                           
@@ -393,7 +393,7 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- December January -->
                           
                             
-                            <li><a href='../../../../archive.html#2011December'>December 2011</a></li>
+                            <li><a href='/archive#2011December'>December 2011</a></li>
                           
                         
                           
@@ -408,21 +408,21 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- October December -->
                           
                             
-                            <li><a href='../../../../archive.html#2011October'>October 2011</a></li>
+                            <li><a href='/archive#2011October'>October 2011</a></li>
                           
                         
                           
                           <!-- August October -->
                           
                             
-                            <li><a href='../../../../archive.html#2011August'>August 2011</a></li>
+                            <li><a href='/archive#2011August'>August 2011</a></li>
                           
                         
                           
                           <!-- July August -->
                           
                             
-                            <li><a href='../../../../archive.html#2011July'>July 2011</a></li>
+                            <li><a href='/archive#2011July'>July 2011</a></li>
                           
                         
                           
@@ -433,21 +433,21 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- June July -->
                           
                             
-                            <li><a href='../../../../archive.html#2011June'>June 2011</a></li>
+                            <li><a href='/archive#2011June'>June 2011</a></li>
                           
                         
                           
                           <!-- March June -->
                           
                             
-                            <li><a href='../../../../archive.html#2011March'>March 2011</a></li>
+                            <li><a href='/archive#2011March'>March 2011</a></li>
                           
                         
                           
                           <!-- January March -->
                           
                             
-                            <li><a href='../../../../archive.html#2011January'>January 2011</a></li>
+                            <li><a href='/archive#2011January'>January 2011</a></li>
                           
                         
                           
@@ -458,14 +458,14 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- December January -->
                           
                             
-                            <li><a href='../../../../archive.html#2010December'>December 2010</a></li>
+                            <li><a href='/archive#2010December'>December 2010</a></li>
                           
                         
                           
                           <!-- November December -->
                           
                             
-                            <li><a href='../../../../archive.html#2010November'>November 2010</a></li>
+                            <li><a href='/archive#2010November'>November 2010</a></li>
                           
                         
                           
@@ -492,7 +492,7 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- October November -->
                           
                             
-                            <li><a href='../../../../archive.html#2010October'>October 2010</a></li>
+                            <li><a href='/archive#2010October'>October 2010</a></li>
                           
                         
                           
@@ -503,7 +503,7 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- September October -->
                           
                             
-                            <li><a href='../../../../archive.html#2010September'>September 2010</a></li>
+                            <li><a href='/archive#2010September'>September 2010</a></li>
                           
                         
                           
@@ -554,7 +554,7 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
                           <!-- August September -->
                           
                             
-                            <li><a href='../../../../archive.html#2010August'>August 2010</a></li>
+                            <li><a href='/archive#2010August'>August 2010</a></li>
                           
                         
                           
@@ -616,15 +616,15 @@ sealed class RazorCodeStart : ClassificationFormatDefinition {
 
         <footer id="colophon" class="site-footer" role="contentinfo">
             <div class="site-info">
-                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="http://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
             </div>
             <!-- .site-info -->
         </footer>
         <!-- #colophon .site-footer -->
     </div>
     <!-- #page .hfeed .site -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src='../../../../javascripts/prettify.js' type='text/javascript'></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
     <script type='text/javascript'>
         $(function () {
             $("pre code").parent().each(function () {

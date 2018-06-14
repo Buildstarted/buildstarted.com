@@ -4,23 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Buildstarted.com &#8211; BuildStarted.com</title>
-    <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
 </head>
 <body class="home blog">
     <div id="page" class="hfeed site">
         <header id="masthead" class="site-header" role="banner">
             <hgroup>
-                <a class="site-logo" href="index.html" title="BuildStarted.com" rel="home">
-                    <img src="http://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
-                <h1 class="site-title"><a href="index.html" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
                 <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
             </hgroup>
             <nav role="navigation" class="site-navigation main-navigation">
                 <h1 class="assistive-text">Menu</h1>
-                <div class="assistive-text skip-link"><a href="index.html#content" title="Skip to content">Skip to content</a></div>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
                 <div class="menu">
                     <ul>
-                        <li class="page_item page-item-2"><a href="about/index.html">About</a></li>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
                     </ul>
                 </div>
             </nav>
@@ -31,7 +31,7 @@
                     <ul class="posts">
   
 <li>
-    <h1><a href="2015/05/01/gists-are-just-like-any-repository/index.html">Gists are just like any repository.</a> <span style='font-size:8pt; font-weight:normal;'>(01 May 2015)</span></h1> 
+    <h1><a href="/2015/05/01/gists-are-just-like-any-repository/">Gists are just like any repository.</a> <span style='font-size:8pt; font-weight:normal;'>(01 May 2015)</span></h1> 
     <p>I was editing a gist recently when I thought. <code>There's got to be a better way!</code> So I tried to clone my gist from the command line using the following command.</p>
 
 <p><code>git clone git@gist.github.com:&lt;gistid&gt;</code></p>
@@ -45,7 +45,7 @@
 </li>
   
 <li>
-    <h1><a href="2014/12/30/dear-objects-how-do-i-construct-thee-let-me-count-the-ways/index.html">Dear Objects - How do I construct thee? Let me count the ways.</a> <span style='font-size:8pt; font-weight:normal;'>(30 Dec 2014)</span></h1> 
+    <h1><a href="/2014/12/30/dear-objects-how-do-i-construct-thee-let-me-count-the-ways/">Dear Objects - How do I construct thee? Let me count the ways.</a> <span style='font-size:8pt; font-weight:normal;'>(30 Dec 2014)</span></h1> 
     <h2>Typical construction</h2>
 
 <p>The standard way to create a new instance of an object is to use the <code>new</code> keyword.</p>
@@ -75,7 +75,7 @@ Type[] arrayOfTypeParameters = new [] { typeof(bool) };
 var constructorInfo = typeof(CoolObject).GetConstructor(BindingFlags.Instance, null, arrayOfTypeParameters, null);
 </code></pre>
 
-<p>With the <a href="http://msdn.microsoft.com/en-us/library/system.reflection.constructorinfo%28v=vs.110%29.aspx">constructorInfo</a> we can now invoke the constructor to return our object.</p>
+<p>With the <a href="https://msdn.microsoft.com/en-us/library/system.reflection.constructorinfo%28v=vs.110%29.aspx">constructorInfo</a> we can now invoke the constructor to return our object.</p>
 
 <pre><code>var instance = (CoolObject)constructorInfo.Invoke(null);
 </code></pre>
@@ -89,7 +89,7 @@ var constructorInfo = typeof(CoolObject).GetConstructor(BindingFlags.Instance, n
 
 <h2>Activator.CreateInstance/Assembly.CreateInstance</h2>
 
-<p>These are both technically shortcuts to the <em>Reflection</em> method above. <a href="http://msdn.microsoft.com/en-us/library/system.reflection.assembly.createinstance%28v=vs.110%29.aspx">Assembly.CreateInstance</a> calls <a href="http://msdn.microsoft.com/en-us/library/system.activator.createinstance%28v=vs.110%29.aspx">Activator.CreateInstance</a> which calls <code>ConstructorInfo.Invoke</code>. You can, however, use a string for the type you wish to construct.</p>
+<p>These are both technically shortcuts to the <em>Reflection</em> method above. <a href="https://msdn.microsoft.com/en-us/library/system.reflection.assembly.createinstance%28v=vs.110%29.aspx">Assembly.CreateInstance</a> calls <a href="https://msdn.microsoft.com/en-us/library/system.activator.createinstance%28v=vs.110%29.aspx">Activator.CreateInstance</a> which calls <code>ConstructorInfo.Invoke</code>. You can, however, use a string for the type you wish to construct.</p>
 
 <pre><code>var instance = (CoolObject)Activator.CreateInstance("MyAwesomeProgram.CoolObject");
 var instance = (CoolObject)Assembly.GetExecutingAssembly().CreateInstance("MyAwesomeProgram.CoolObject");
@@ -130,7 +130,7 @@ public T MakeObject&lt;T&gt;() where T : new()
 
 <h2>FormatterServices.GetUninitializedObject</h2>
 
-<p>I covered this in my previous <a href="2014/12/22/create-an-instance-of-a-class-without-calling-a-constructor/index.html">blog post</a>. However here&rsquo;s the short version.</p>
+<p>I covered this in my previous <a href="https://buildstarted.com/2014/12/22/create-an-instance-of-a-class-without-calling-a-constructor/">blog post</a>. However here&rsquo;s the short version.</p>
 
 <pre><code>var instance = (CoolObject)FormatterServices.GetUninitializedObject(typeof(CoolObject));
 </code></pre>
@@ -146,7 +146,7 @@ public T MakeObject&lt;T&gt;() where T : new()
 </li>
   
 <li>
-    <h1><a href="2014/12/22/create-an-instance-of-a-class-without-calling-a-constructor/index.html">Create an instance of a class without calling a constructor.</a> <span style='font-size:8pt; font-weight:normal;'>(22 Dec 2014)</span></h1> 
+    <h1><a href="/2014/12/22/create-an-instance-of-a-class-without-calling-a-constructor/">Create an instance of a class without calling a constructor.</a> <span style='font-size:8pt; font-weight:normal;'>(22 Dec 2014)</span></h1> 
     <p>When creating database models I tend to want required fields to be in the constructor.</p>
 
 <pre><code>public User(string name, string email)
@@ -168,14 +168,14 @@ public T MakeObject&lt;T&gt;() where T : new()
 
 <p>This will create an instance of our User class <strong><em>without</em></strong> calling a constructor. Very useful for models that don&rsquo;t have any initialization. Although the object you get returned does not have any of the properties initialized that&rsquo;s OK. This will automatically be populated by the ORM.</p>
 
-<p>This doesn&rsquo;t really help the consumers of an ORM or serializer as the library must already implement this. However it&rsquo;s definitely something to think about if you&rsquo;re designing a simple ORM or any type of custom serializer. Check out the MSDN for <a href="http://msdn.microsoft.com/en-us/library/system.runtime.serialization.formatterservices.getuninitializedobject.aspx">GetUnitializedObject</a> and see all the methods available on <a href="http://msdn.microsoft.com/en-us/library/System.Runtime.Serialization.FormatterServices.aspx">FormatterServices</a></p>
+<p>This doesn&rsquo;t really help the consumers of an ORM or serializer as the library must already implement this. However it&rsquo;s definitely something to think about if you&rsquo;re designing a simple ORM or any type of custom serializer. Check out the MSDN for <a href="https://msdn.microsoft.com/en-us/library/system.runtime.serialization.formatterservices.getuninitializedobject.aspx">GetUnitializedObject</a> and see all the methods available on <a href="https://msdn.microsoft.com/en-us/library/System.Runtime.Serialization.FormatterServices.aspx">FormatterServices</a></p>
 
 <h3>-Ben Dornis</h3>
 
 </li>
   
 <li>
-    <h1><a href="2014/06/27/casting-in-csharp/index.html">Direct casting vs as casting</a> <span style='font-size:8pt; font-weight:normal;'>(27 Jun 2014)</span></h1> 
+    <h1><a href="/2014/06/27/casting-in-csharp/">Direct casting vs as casting</a> <span style='font-size:8pt; font-weight:normal;'>(27 Jun 2014)</span></h1> 
     <p>There are two primary ways to cast in C#, Direct casting and &lsquo;as&rsquo; casting.</p>
 
 <h3>Explicit/Implicit casting</h3>
@@ -210,7 +210,7 @@ var value = animal as Plankton;
 
 <h3>Are these the same?</h3>
 
-<p>In essense <em>no</em>. Using <a href="http://ilspy.net/">ILSpy</a> we can see that the generated <code>IL</code> for <code>explicit casts</code> uses the <a href="https://buildstarted.com/msdn.microsoft.com/library/system.reflection.emit.opcodes.castclass.aspx">castclass</a>, where as the <code>as</code> operator uses <a href="http://msdn.microsoft.com/library/system.reflection.emit.opcodes.isinst.aspx">isinst</a>.</p>
+<p>In essense <em>no</em>. Using <a href="https://ilspy.net/">ILSpy</a> we can see that the generated <code>IL</code> for <code>explicit casts</code> uses the <a href="msdn.microsoft.com/library/system.reflection.emit.opcodes.castclass.aspx">castclass</a>, where as the <code>as</code> operator uses <a href="https://msdn.microsoft.com/library/system.reflection.emit.opcodes.isinst.aspx">isinst</a>.</p>
 
 <pre><code>IL_0007: isinst CastClassVsIsInst.Dog
 
@@ -219,9 +219,9 @@ IL_0007: castclass CastClassVsIsInst.Dog
 
 <p>From a little bit of testing it seems that &lsquo;as&rsquo; is also faster. Others could confirm this but in tight loops <code>isinst</code> performs significantly faster than <code>castclass</code>.</p>
 
-<p><img src="images/castclass-vs-isinst.png" alt="castclass vs. isinst" /></p>
+<p><img src="/images/castclass-vs-isinst.png" alt="castclass vs. isinst" /></p>
 
-<p><em>Charts courtesy of <a href="http://weblogs.asp.net/jongalloway">Jon Galloway</a></em></p>
+<p><em>Charts courtesy of <a href="https://weblogs.asp.net/jongalloway">Jon Galloway</a></em></p>
 
 <p>Here&rsquo;s my quick-and-dirty test.</p>
 
@@ -237,7 +237,7 @@ IL_0007: castclass CastClassVsIsInst.Dog
 </li>
   
 <li>
-    <h1><a href="2014/05/14/categorizing-blog-posts/index.html">Categorizing blog posts</a> <span style='font-size:8pt; font-weight:normal;'>(14 May 2014)</span></h1> 
+    <h1><a href="/2014/05/14/categorizing-blog-posts/">Categorizing blog posts</a> <span style='font-size:8pt; font-weight:normal;'>(14 May 2014)</span></h1> 
     <p>How important is it to categorize blog posts?</p>
 
 <p>I ask this question because during the redesign process my blog and there were several features offered by the Wordpress that I have left out in this new version. Namely date grouping and tags. I&rsquo;ve already stopped categorizing my entries as of late due to lack of remembering to do so. Looking at the logs almost nobody has ever clicked on a tag and very few people search by date. I suspect most people who view by date are just going into the past of my blog and seeing what else I&rsquo;ve written about. Is discovery that important? Quite a few of the blog posts in my past are horribly out of date.</p>
@@ -248,7 +248,7 @@ IL_0007: castclass CastClassVsIsInst.Dog
 
 <h3>Dates</h3>
 
-<p>With the speed that things are changing in the dev world I&rsquo;ve noticed some blog posts are out of date within months of posting them or I&rsquo;ve found better ways and probably wrote a new blog post to cover that method. Does this mean that having an archive is pointless? Why would you go back in time to read articles that are no longer of any use to anyone. For me it&rsquo;s a bit of nostalgia to look back and go &ldquo;wow&hellip;I was really naive then&rdquo;. But to the general user older posts seem to be of no use. Maybe it&rsquo;s me. Maybe my blog posts are too specific. I look at someone like <a href="http://hanselman.com">Hanselman</a>&rsquo;s blog and a lot of his articles are relevant today as they were 3-4 years ago when they were posted. Sure, some are very specific and may not be relevant but I could probably go back in his history and find something that I could post on twitter today and people will still get use out of it.</p>
+<p>With the speed that things are changing in the dev world I&rsquo;ve noticed some blog posts are out of date within months of posting them or I&rsquo;ve found better ways and probably wrote a new blog post to cover that method. Does this mean that having an archive is pointless? Why would you go back in time to read articles that are no longer of any use to anyone. For me it&rsquo;s a bit of nostalgia to look back and go &ldquo;wow&hellip;I was really naive then&rdquo;. But to the general user older posts seem to be of no use. Maybe it&rsquo;s me. Maybe my blog posts are too specific. I look at someone like <a href="https://hanselman.com">Hanselman</a>&rsquo;s blog and a lot of his articles are relevant today as they were 3-4 years ago when they were posted. Sure, some are very specific and may not be relevant but I could probably go back in his history and find something that I could post on twitter today and people will still get use out of it.</p>
 
 <h3>My Conclusion</h3>
 
@@ -261,8 +261,8 @@ IL_0007: castclass CastClassVsIsInst.Dog
 </li>
   
 <li>
-    <h1><a href="2014/01/22/why-do-i-write-view-engines/index.html">Why do I waste time with View Engines?</a> <span style='font-size:8pt; font-weight:normal;'>(22 Jan 2014)</span></h1> 
-    <p>A few people recently asked me why I bother writing View Engines like <a href="http://thisisparrot.com">Parrot</a> when it&rsquo;s very likely that nobody will ever use them.</p>
+    <h1><a href="/2014/01/22/why-do-i-write-view-engines/">Why do I waste time with View Engines?</a> <span style='font-size:8pt; font-weight:normal;'>(22 Jan 2014)</span></h1> 
+    <p>A few people recently asked me why I bother writing View Engines like <a href="https://thisisparrot.com">Parrot</a> when it&rsquo;s very likely that nobody will ever use them.</p>
 
 <p>It&rsquo;s not about usage or even getting a popular library out there. It&rsquo;s all about the experience and growing as a developer.</p>
 
@@ -300,7 +300,7 @@ end
 </li>
   
 <li>
-    <h1><a href="2014/01/08/introducing-typescript-io/index.html">Introducing Typescript.io</a> <span style='font-size:8pt; font-weight:normal;'>(08 Jan 2014)</span></h1> 
+    <h1><a href="/2014/01/08/introducing-typescript-io/">Introducing Typescript.io</a> <span style='font-size:8pt; font-weight:normal;'>(08 Jan 2014)</span></h1> 
     <p>For the past couple weeks I&rsquo;ve been working on a sort of jsfiddle for Typescript. Most of that time has been working on the intellisense features for typescript. It&rsquo;s amazing what the designers of Typescript made available.</p>
 
 <p>The UI is fairly simple. You have your typescript, html, css editors and a results pane. You can hide/show them as necessary. All prototypes are private by default.</p>
@@ -309,8 +309,8 @@ end
 
 <p>Here are a couple sample prototypes you can use.</p>
 
-<p><a href="http://typescript.io/greeter">http://typescript.io/greeter</a>
-<a href="http://typescript.io/Zk434lLa0Ag">http://typescript.io/Zk434lLa0Ag</a></p>
+<p><a href="https://typescript.io/greeter">https://typescript.io/greeter</a>
+<a href="https://typescript.io/Zk434lLa0Ag">https://typescript.io/Zk434lLa0Ag</a></p>
 
 <p>Please mention any bugs you find. I&rsquo;ll try and fix them as I can.</p>
 
@@ -321,12 +321,12 @@ end
 </li>
   
 <li>
-    <h1><a href="2013/12/16/javascript-view-engine-for-aspnet/index.html">Javascript View Engine for Asp.Net</a> <span style='font-size:8pt; font-weight:normal;'>(16 Dec 2013)</span></h1> 
-    <p>I was chatting with a friend the other day and was remarking about <a href="http://thisisparrot.com">Parrot</a> when I made an offhand comment that I should build a <strong>view engine</strong> that can execute Javascript.</p>
+    <h1><a href="/2013/12/16/javascript-view-engine-for-aspnet/">Javascript View Engine for Asp.Net</a> <span style='font-size:8pt; font-weight:normal;'>(16 Dec 2013)</span></h1> 
+    <p>I was chatting with a friend the other day and was remarking about <a href="https://thisisparrot.com">Parrot</a> when I made an offhand comment that I should build a <strong>view engine</strong> that can execute Javascript.</p>
 
 <p>I hate when that happens. I started thinking that there are so many great view engines out there written in Javascript that instead of writing a new one I should just use what&rsquo;s already out there. A few hours later I found myself writing such a view engine.</p>
 
-<p>First I had to find a nice vm for javascript that I could execute within .Net. I found some promising ones after a lot of searching, <a href="http://v8sharp.codeplex.com/">v8sharp</a> and <a href="https://github.com/chillitom/Javascript.Net">Javascript.Net</a>. I first played around with js.net but ran into some issues and since this was just a test I wasn&rsquo;t interested in figuring out what&rsquo;s wrong and went with v8sharp instead. Dev went well and I got the basics of the engine working. Eventually I settled on <a href="http://clearscript.codeplex.com/">ClearScript</a>. It had the most feature complete implementation that had excellent host side capabilities and is in active development. I could execute a <a href="https://github.com/janl/mustache.js">Mustache</a> template without any issues.</p>
+<p>First I had to find a nice vm for javascript that I could execute within .Net. I found some promising ones after a lot of searching, <a href="https://v8sharp.codeplex.com/">v8sharp</a> and <a href="https://github.com/chillitom/Javascript.Net">Javascript.Net</a>. I first played around with js.net but ran into some issues and since this was just a test I wasn&rsquo;t interested in figuring out what&rsquo;s wrong and went with v8sharp instead. Dev went well and I got the basics of the engine working. Eventually I settled on <a href="https://clearscript.codeplex.com/">ClearScript</a>. It had the most feature complete implementation that had excellent host side capabilities and is in active development. I could execute a <a href="https://github.com/janl/mustache.js">Mustache</a> template without any issues.</p>
 
 <p>After I got the core library working I started thinking about ways to enhance it. It needed support for the plethora of templating engines already out there available for javascript. Rather than write a separate .Net class for each engine I just had the view engine itself search for specific types of javascript files in the project that it could then load. This has the advantage of being easily upgraded with new engines by just adding new .js files to the project or updating existing .js files.</p>
 
@@ -365,7 +365,7 @@ end
 
 <p>One &ldquo;gotcha&rdquo; is that these are run <strong>on the server</strong>. As such you don&rsquo;t have the ability to manipulate the dom or output to the console or any other things you can do on a client/browser templating engine.</p>
 
-<p>You can view a live sample at <a href="http://jsve.buildstarted.com/">http://jsve.buildstarted.com/</a> It has several engines already added. The templates are really simple for now.</p>
+<p>You can view a live sample at <a href="https://jsve.buildstarted.com/">https://jsve.buildstarted.com/</a> It has several engines already added. The templates are really simple for now.</p>
 
 <p>You can check out the code on my github repo at <a href="https://github.com/Buildstarted/Javascript.ViewEngines">https://github.com/Buildstarted/Javascript.ViewEngines</a>. I&rsquo;ll be creating a <a href="https://nuget.org">Nuget</a> package soon as there are some issues between x86 and x64.</p>
 
@@ -374,14 +374,14 @@ end
 </li>
   
 <li>
-    <h1><a href="2013/12/10/organize-by-feature/index.html">Organize By Feature</a> <span style='font-size:8pt; font-weight:normal;'>(10 Dec 2013)</span></h1> 
-    <p>Taking inspiration from <a href='http://thefringeninja.com/'>João P. Bragança</a> in configuring <a href='http://nancyfx.org/'>Nancy</a> to <a href='http://thefringeninja.com/blog/481/organizing-per-feature-in-nancy'>organize per feature</a> I&rsquo;ve taken the concept and applied it to MVC.</p>
+    <h1><a href="/2013/12/10/organize-by-feature/">Organize By Feature</a> <span style='font-size:8pt; font-weight:normal;'>(10 Dec 2013)</span></h1> 
+    <p>Taking inspiration from <a href='https://thefringeninja.com/'>João P. Bragança</a> in configuring <a href='https://nancyfx.org/'>Nancy</a> to <a href='https://thefringeninja.com/blog/481/organizing-per-feature-in-nancy'>organize per feature</a> I&rsquo;ve taken the concept and applied it to MVC.</p>
 
 <p>The idea behind it is to group related classes/files together by feature rather than function.</p>
 
 <p>By default MVC creates a <code>Controllers</code>, <code>Models</code>, and <code>Views</code> folder. This is fine for tiny projects with a couple controllers. It gets unyielding when your website grows.</p>
 
-<p><img src="images/mvc-default.png" alt="Organize By Function" /></p>
+<p><img src="/images/mvc-default.png" alt="Organize By Function" /></p>
 
 <p>All we need to do is update the Razor View Engine and tell it where our files now reside.</p>
 
@@ -397,7 +397,7 @@ end
 
 <p>Now we can modify our project structure like so:</p>
 
-<p><img src="images/mvc-feature.png" alt="Organize By Feature" /></p>
+<p><img src="/images/mvc-feature.png" alt="Organize By Feature" /></p>
 
 <p>One thing to note is that the tooling for Visual Studio requires the standard Views location. I&rsquo;m not sure how (if it&rsquo;s even possible) to modify this yet. Add View and Goto View currently do not work.</p>
 
@@ -412,7 +412,7 @@ end
 </li>
   
 <li>
-    <h1><a href="2013/06/21/invoking-extension-methods-via-reflection/index.html">Invoking extension methods via reflection</a> <span style='font-size:8pt; font-weight:normal;'>(21 Jun 2013)</span></h1> 
+    <h1><a href="/2013/06/21/invoking-extension-methods-via-reflection/">Invoking extension methods via reflection</a> <span style='font-size:8pt; font-weight:normal;'>(21 Jun 2013)</span></h1> 
     <p>As part of a small project I&rsquo;m working on I created a dynamic wrapper around a class that was almost exclusively used with extension methods. You can&rsquo;t just do the following.</p>
 
 <pre><code>_someClass.GetType().GetMethod("ExtensionMethod").Invoke(_someClass, null);
@@ -444,28 +444,28 @@ end
                 <aside id="text-5" class="widget widget_text">
                     <h1 class="widget-title">Follow</h1>
                     <div class="textwidget">
-                        <a href="http://twitter.com/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://twitter.com']);">Twitter</a><br />
-                        <a href="http://stackoverflow.com/users/365526/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://stackoverflow.com']);">Stackoverflow.com</a><br />
-                        <a href="https://plus.google.com/118314403854065988234" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://plus.google.com']);">Google+</a><br />
-                        <a href="https://github.com/Buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://github.com']);">Github</a>
+                        <a href="https://twitter.com/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://twitter.com']);">Twitter</a><br />
+                        <a href="https://stackoverflow.com/users/365526/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://stackoverflow.com']);">Stackoverflow.com</a><br />
+                        <a href="https://plus.google.com/118314403854065988234" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://plus.google.com']);">Google+</a><br />
+                        <a href="https://github.com/Buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://github.com']);">Github</a>
                     </div>
                 </aside>
                 <aside id="text-8" class="widget widget_text">
                     <h1 class="widget-title">Other sites</h1>
                     <div class="textwidget">
-                        <a href="http://typescript.io/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://typescript.io']);">typescript.io</a><br />
-                        <a href="http://csharptube.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://csharptube.com']);">csharptube.com</a><br />
-                        <a href="http://thisisparrot.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://thisisparrot.com']);">Parrot</a><br />
+                        <a href="https://typescript.io/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://typescript.io']);">typescript.io</a><br />
+                        <a href="https://csharptube.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://csharptube.com']);">csharptube.com</a><br />
+                        <a href="https://thisisparrot.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','https://thisisparrot.com']);">Parrot</a><br />
                     </div>
                 </aside>
                 <aside id="linkcat-6" class="widget widget_links">
                     <h1 class="widget-title">Other Blogs</h1>
                     <ul class='xoxo blogroll'>
-                        <li><a href="http://blog.andrewnurse.net/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://blog.andrewnurse.net/']);">Andrew Nurse @ Microsoft</a></li>
-                        <li><a href="http://weblogs.asp.net/jgalloway/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://weblogs.asp.net/jgalloway/']);">Jon Galloway @ Microsoft</a></li>
-                        <li><a href="http://msmvps.com/blogs/jon_skeet/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://msmvps.com/blogs/jon_skeet/']);">Jon Skeet</a></li>
-                        <li><a href="http://invalidcast.com" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://invalidcast.com']);">Martin Rue</a></li>
-                        <li><a href="http://haacked.com/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://haacked.com/']);">Phil Haack @ Github</a></li>
+                        <li><a href="https://blog.andrewnurse.net/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://blog.andrewnurse.net/']);">Andrew Nurse @ Microsoft</a></li>
+                        <li><a href="https://weblogs.asp.net/jgalloway/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://weblogs.asp.net/jgalloway/']);">Jon Galloway @ Microsoft</a></li>
+                        <li><a href="https://msmvps.com/blogs/jon_skeet/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://msmvps.com/blogs/jon_skeet/']);">Jon Skeet</a></li>
+                        <li><a href="https://invalidcast.com" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://invalidcast.com']);">Martin Rue</a></li>
+                        <li><a href="https://haacked.com/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','https://haacked.com/']);">Phil Haack @ Github</a></li>
 
                     </ul>
                 </aside>
@@ -480,14 +480,14 @@ end
                           <!-- May placeholder -->
                           
                             
-                            <li><a href='archive.html#2015May'>May 2015</a></li>
+                            <li><a href='/archive#2015May'>May 2015</a></li>
                           
                         
                           
                           <!-- December May -->
                           
                             
-                            <li><a href='archive.html#2014December'>December 2014</a></li>
+                            <li><a href='/archive#2014December'>December 2014</a></li>
                           
                         
                           
@@ -498,21 +498,21 @@ end
                           <!-- June December -->
                           
                             
-                            <li><a href='archive.html#2014June'>June 2014</a></li>
+                            <li><a href='/archive#2014June'>June 2014</a></li>
                           
                         
                           
                           <!-- May June -->
                           
                             
-                            <li><a href='archive.html#2014May'>May 2014</a></li>
+                            <li><a href='/archive#2014May'>May 2014</a></li>
                           
                         
                           
                           <!-- January May -->
                           
                             
-                            <li><a href='archive.html#2014January'>January 2014</a></li>
+                            <li><a href='/archive#2014January'>January 2014</a></li>
                           
                         
                           
@@ -523,7 +523,7 @@ end
                           <!-- December January -->
                           
                             
-                            <li><a href='archive.html#2013December'>December 2013</a></li>
+                            <li><a href='/archive#2013December'>December 2013</a></li>
                           
                         
                           
@@ -534,7 +534,7 @@ end
                           <!-- June December -->
                           
                             
-                            <li><a href='archive.html#2013June'>June 2013</a></li>
+                            <li><a href='/archive#2013June'>June 2013</a></li>
                           
                         
                           
@@ -545,28 +545,28 @@ end
                           <!-- May June -->
                           
                             
-                            <li><a href='archive.html#2013May'>May 2013</a></li>
+                            <li><a href='/archive#2013May'>May 2013</a></li>
                           
                         
                           
                           <!-- February May -->
                           
                             
-                            <li><a href='archive.html#2013February'>February 2013</a></li>
+                            <li><a href='/archive#2013February'>February 2013</a></li>
                           
                         
                           
                           <!-- November February -->
                           
                             
-                            <li><a href='archive.html#2012November'>November 2012</a></li>
+                            <li><a href='/archive#2012November'>November 2012</a></li>
                           
                         
                           
                           <!-- September November -->
                           
                             
-                            <li><a href='archive.html#2012September'>September 2012</a></li>
+                            <li><a href='/archive#2012September'>September 2012</a></li>
                           
                         
                           
@@ -577,7 +577,7 @@ end
                           <!-- August September -->
                           
                             
-                            <li><a href='archive.html#2012August'>August 2012</a></li>
+                            <li><a href='/archive#2012August'>August 2012</a></li>
                           
                         
                           
@@ -592,7 +592,7 @@ end
                           <!-- July August -->
                           
                             
-                            <li><a href='archive.html#2012July'>July 2012</a></li>
+                            <li><a href='/archive#2012July'>July 2012</a></li>
                           
                         
                           
@@ -603,28 +603,28 @@ end
                           <!-- June July -->
                           
                             
-                            <li><a href='archive.html#2012June'>June 2012</a></li>
+                            <li><a href='/archive#2012June'>June 2012</a></li>
                           
                         
                           
                           <!-- May June -->
                           
                             
-                            <li><a href='archive.html#2012May'>May 2012</a></li>
+                            <li><a href='/archive#2012May'>May 2012</a></li>
                           
                         
                           
                           <!-- February May -->
                           
                             
-                            <li><a href='archive.html#2012February'>February 2012</a></li>
+                            <li><a href='/archive#2012February'>February 2012</a></li>
                           
                         
                           
                           <!-- January February -->
                           
                             
-                            <li><a href='archive.html#2012January'>January 2012</a></li>
+                            <li><a href='/archive#2012January'>January 2012</a></li>
                           
                         
                           
@@ -635,7 +635,7 @@ end
                           <!-- December January -->
                           
                             
-                            <li><a href='archive.html#2011December'>December 2011</a></li>
+                            <li><a href='/archive#2011December'>December 2011</a></li>
                           
                         
                           
@@ -650,21 +650,21 @@ end
                           <!-- October December -->
                           
                             
-                            <li><a href='archive.html#2011October'>October 2011</a></li>
+                            <li><a href='/archive#2011October'>October 2011</a></li>
                           
                         
                           
                           <!-- August October -->
                           
                             
-                            <li><a href='archive.html#2011August'>August 2011</a></li>
+                            <li><a href='/archive#2011August'>August 2011</a></li>
                           
                         
                           
                           <!-- July August -->
                           
                             
-                            <li><a href='archive.html#2011July'>July 2011</a></li>
+                            <li><a href='/archive#2011July'>July 2011</a></li>
                           
                         
                           
@@ -675,21 +675,21 @@ end
                           <!-- June July -->
                           
                             
-                            <li><a href='archive.html#2011June'>June 2011</a></li>
+                            <li><a href='/archive#2011June'>June 2011</a></li>
                           
                         
                           
                           <!-- March June -->
                           
                             
-                            <li><a href='archive.html#2011March'>March 2011</a></li>
+                            <li><a href='/archive#2011March'>March 2011</a></li>
                           
                         
                           
                           <!-- January March -->
                           
                             
-                            <li><a href='archive.html#2011January'>January 2011</a></li>
+                            <li><a href='/archive#2011January'>January 2011</a></li>
                           
                         
                           
@@ -700,14 +700,14 @@ end
                           <!-- December January -->
                           
                             
-                            <li><a href='archive.html#2010December'>December 2010</a></li>
+                            <li><a href='/archive#2010December'>December 2010</a></li>
                           
                         
                           
                           <!-- November December -->
                           
                             
-                            <li><a href='archive.html#2010November'>November 2010</a></li>
+                            <li><a href='/archive#2010November'>November 2010</a></li>
                           
                         
                           
@@ -734,7 +734,7 @@ end
                           <!-- October November -->
                           
                             
-                            <li><a href='archive.html#2010October'>October 2010</a></li>
+                            <li><a href='/archive#2010October'>October 2010</a></li>
                           
                         
                           
@@ -745,7 +745,7 @@ end
                           <!-- September October -->
                           
                             
-                            <li><a href='archive.html#2010September'>September 2010</a></li>
+                            <li><a href='/archive#2010September'>September 2010</a></li>
                           
                         
                           
@@ -796,7 +796,7 @@ end
                           <!-- August September -->
                           
                             
-                            <li><a href='archive.html#2010August'>August 2010</a></li>
+                            <li><a href='/archive#2010August'>August 2010</a></li>
                           
                         
                           
@@ -858,15 +858,15 @@ end
 
         <footer id="colophon" class="site-footer" role="contentinfo">
             <div class="site-info">
-                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="http://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
             </div>
             <!-- .site-info -->
         </footer>
         <!-- #colophon .site-footer -->
     </div>
     <!-- #page .hfeed .site -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src='javascripts/prettify.js' type='text/javascript'></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
     <script type='text/javascript'>
         $(function () {
             $("pre code").parent().each(function () {
