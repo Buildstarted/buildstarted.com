@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Getting anonymous types to cross the appdomain boundary &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="../../../../stylesheets/style.css" />
+</head>
+<body class="home blog">
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="../../../../index.html" title="BuildStarted.com" rel="home">
+                    <img src="http://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="../../../../index.html" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="index.html#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="../../../../about/index.html">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content">
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Getting anonymous types to cross the appdomain boundary</h1>
+
+    <p>Matthew Abbott asked <a href='http://stackoverflow.com/q/6452034/365526'>this</a> question on <a href='http://stackoverflow.com/'>StackOverflow.com</a> and it&rsquo;s an interesting challenge that I wanted to solve. The question basically wanted to know how to pass an Anonymous type from one AppDomain to another.</p>
+
+<p>I&rsquo;ve had such little experience with AppDomains. This was definitely going to be a challenge for me.</p>
+
+<p>The first thing I did was find out what error would occur when I attempted to use an <strong>Anonymous Type</strong> and here&rsquo;s the result.</p>
+
+<div style='text-align:center;'><a href="http://aws.buildstarted.com/proxywithanonymoustype.png"><img src="http://aws.buildstarted.com/proxywithanonymoustype.png" alt="" title="proxywithanonymoustype" width="634" height="309" class="alignnone size-full wp-image-599" /></a></div>
+
+
+<p>As you can see, anonymous types are not Serializable. This leads me to believe that I need to make the anonymous type serialized and if I could do that then all will be well.</p>
+
+<p>I&rsquo;ve created a ProxyAnonymousObject that will wrap the anonymous object in an <strong>ISerializable</strong> wrapper. ISerializable has a single implementation, <strong>GetObjectData</strong> and a constructor override.</p>
+
+<p>When the <strong>GetObjectData</strong> method is called we&rsquo;re going to add a value which contains the anonymous model&rsquo;s FullName. This will allow us to cache type conversions for overall speed increases. We&rsquo;re also going to iterate through all the Anonymous Type&rsquo;s properties and add them to the serializationInfo object like so:</p>
+
+<pre><code>public void GetObjectData(SerializationInfo info, StreamingContext context) {
+
+    //I wonder if it's safe to assume that this will always be the first property
+    info.AddValue("ProxyAnonymousObject_ModelType", modelType);
+
+    foreach (var pi in Model.GetType().GetProperties()) {
+        info.AddValue(pi.Name, pi.GetValue(Model, null), pi.PropertyType);
+    }
+
+}
+</code></pre>
+
+<p>This basically copies our anonymous type property by property into a serialized state. I don&rsquo;t know enough about serialization to wonder if this works with all types. It seemed to work fine with all the generic types I&rsquo;ve tried. Now that we have an <strong>ISerializable</strong> object we can now pass it into our function. Since I know the target type has a few methods such as <strong>SetModel</strong> and <strong>Render</strong>.</p>
+
+<p>Here is the object we&rsquo;re executing in a different <strong>AppDomain</strong></p>
+
+<pre><code>public class DynamicCallTest {
+    public dynamic Model { get; private set; }
+
+    public void SetModel(dynamic model) {
+        this.Model = model;
+    }
+
+    public void Render() {
+        Console.WriteLine(Model.Name);
+    }
+}
+</code></pre>
+
+<p>Here is what we&rsquo;re using to call that object</p>
+
+<pre><code>public void ExecuteSomethingWithDynamicModel(ProxyAnonymousObject model) {
+
+    System.Console.WriteLine("Executing from {0}", AppDomain.CurrentDomain.FriendlyName);
+    if (DomainLibrary == null)
+        DomainLibrary = Assembly.Load(System.IO.File.ReadAllBytes("DomainLibrary.dll"));
+
+    type = DomainLibrary.GetType("DomainLibrary.DynamicCallTest");
+    instance = Activator.CreateInstance(type);
+    var setModel = type.GetMethod("SetModel", BindingFlags.Public | BindingFlags.Instance);
+    var render = type.GetMethod("Render", BindingFlags.Public | BindingFlags.Instance);
+
+    setModel.Invoke(instance, new object[] { new ProxyDynamicObject() { Proxy = model } });
+    render.Invoke(instance, null);
+}
+</code></pre>
+
+<p>We&rsquo;re again wrapping our <strong>ProxyAnonymousObject</strong> in a <strong>ProxyDynamicObject</strong> so that we can use <strong>dynamic</strong> in our called class. Since we&rsquo;re using an anonymous type our called class doesn&rsquo;t know anything about what we&rsquo;re passing so we need to use dynamic. In the <strong>ProxyDynamicObject</strong> we&rsquo;re going to override <strong>TryGetMember</strong> and use a dictionary to get our values.</p>
+
+<p>Now here&rsquo;s where the neat stuff comes&hellip;we still need a concrete type in our new appdomain that represents the anonymous object we passed in. So originally I opted to create a type on the fly and use reflection. However, for the simplistic nature of this I&rsquo;ve opted for a <strong>IDictionary</strong> instead. (I&rsquo;ll have to add recursion later to take care of nested properties)</p>
+
+<p>When the type is deserialized across the AppDomain threshold a constructor for the <strong>ProxyAnonymousObject</strong> is called</p>
+
+<pre><code>public ProxyAnonymousObject(SerializationInfo info, StreamingContext ctx) {
+    try {
+
+        string fieldName = string.Empty;
+        object fieldValue = null;
+
+        foreach (var field in info) {
+            fieldName = field.Name;
+            fieldValue = field.Value;
+
+            if (string.IsNullOrWhiteSpace(fieldName))
+                continue;
+
+            if (fieldValue == null)
+                continue;
+
+            ModelProperties.Add(fieldName, fieldValue);
+
+        }
+
+    } catch (Exception e) {
+        var x = e;
+    }
+}
+</code></pre>
+
+<p>All we&rsquo;re doing here is reading the <strong>SerializationInfo</strong> from the passed parameter and adding the values to a Dictionary object. Then in the <strong>TryGetMember</strong> of ProxyDomainObject we just return the value from the Dictionary.</p>
+
+<p>In the words of the immutable Jon Skeet: &ldquo;<strong>Anonymous type are meant to be used for simple projections of very loosely coupled data, used only within a method.</strong>&rdquo;</p>
+
+<p>So really, you shouldn&rsquo;t use this for anything. It was just a test. It&rsquo;s slow. It&rsquo;s very buggy. It probably doesn&rsquo;t work everywhere. But it does work here.</p>
+
+<h3>Ben Dornis</h3>
+
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'buildstarted';
+        var disqus_url = "http://buildstarted.com/2011/06/28/getting-anonymous-types-to-cross-the-appdomain-boundary/";
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content -->
+
+            <div id="secondary" class="widget-area" role="complementary">
+                <aside id="text-5" class="widget widget_text">
+                    <h1 class="widget-title">Follow</h1>
+                    <div class="textwidget">
+                        <a href="http://twitter.com/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://twitter.com']);">Twitter</a><br />
+                        <a href="http://stackoverflow.com/users/365526/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://stackoverflow.com']);">Stackoverflow.com</a><br />
+                        <a href="https://plus.google.com/118314403854065988234" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://plus.google.com']);">Google+</a><br />
+                        <a href="https://github.com/Buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://github.com']);">Github</a>
+                    </div>
+                </aside>
+                <aside id="text-8" class="widget widget_text">
+                    <h1 class="widget-title">Other sites</h1>
+                    <div class="textwidget">
+                        <a href="http://typescript.io/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://typescript.io']);">typescript.io</a><br />
+                        <a href="http://csharptube.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://csharptube.com']);">csharptube.com</a><br />
+                        <a href="http://thisisparrot.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://thisisparrot.com']);">Parrot</a><br />
+                    </div>
+                </aside>
+                <aside id="linkcat-6" class="widget widget_links">
+                    <h1 class="widget-title">Other Blogs</h1>
+                    <ul class='xoxo blogroll'>
+                        <li><a href="http://blog.andrewnurse.net/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://blog.andrewnurse.net/']);">Andrew Nurse @ Microsoft</a></li>
+                        <li><a href="http://weblogs.asp.net/jgalloway/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://weblogs.asp.net/jgalloway/']);">Jon Galloway @ Microsoft</a></li>
+                        <li><a href="http://msmvps.com/blogs/jon_skeet/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://msmvps.com/blogs/jon_skeet/']);">Jon Skeet</a></li>
+                        <li><a href="http://invalidcast.com" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://invalidcast.com']);">Martin Rue</a></li>
+                        <li><a href="http://haacked.com/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://haacked.com/']);">Phil Haack @ Github</a></li>
+
+                    </ul>
+                </aside>
+                <aside id="archives-4" class="widget widget_archive">
+                    <h1 class="widget-title">Archive</h1>
+                    
+                    
+
+                      <ul class="posts">
+                        
+                          
+                          <!-- May placeholder -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2015May'>May 2015</a></li>
+                          
+                        
+                          
+                          <!-- December May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014December'>December 2014</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- June December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014June'>June 2014</a></li>
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014May'>May 2014</a></li>
+                          
+                        
+                          
+                          <!-- January May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014January'>January 2014</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013December'>December 2013</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- June December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013June'>June 2013</a></li>
+                          
+                        
+                          
+                          <!-- June June -->
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013May'>May 2013</a></li>
+                          
+                        
+                          
+                          <!-- February May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013February'>February 2013</a></li>
+                          
+                        
+                          
+                          <!-- November February -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012November'>November 2012</a></li>
+                          
+                        
+                          
+                          <!-- September November -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012September'>September 2012</a></li>
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- August September -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012August'>August 2012</a></li>
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- July August -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012July'>July 2012</a></li>
+                          
+                        
+                          
+                          <!-- July July -->
+                          
+                        
+                          
+                          <!-- June July -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012June'>June 2012</a></li>
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012May'>May 2012</a></li>
+                          
+                        
+                          
+                          <!-- February May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012February'>February 2012</a></li>
+                          
+                        
+                          
+                          <!-- January February -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012January'>January 2012</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011December'>December 2011</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- October December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011October'>October 2011</a></li>
+                          
+                        
+                          
+                          <!-- August October -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011August'>August 2011</a></li>
+                          
+                        
+                          
+                          <!-- July August -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011July'>July 2011</a></li>
+                          
+                        
+                          
+                          <!-- July July -->
+                          
+                        
+                          
+                          <!-- June July -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011June'>June 2011</a></li>
+                          
+                        
+                          
+                          <!-- March June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011March'>March 2011</a></li>
+                          
+                        
+                          
+                          <!-- January March -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011January'>January 2011</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010December'>December 2010</a></li>
+                          
+                        
+                          
+                          <!-- November December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010November'>November 2010</a></li>
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- October November -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010October'>October 2010</a></li>
+                          
+                        
+                          
+                          <!-- October October -->
+                          
+                        
+                          
+                          <!-- September October -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010September'>September 2010</a></li>
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- August September -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010August'>August 2010</a></li>
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                      </ul>
+                </aside>
+            </div>
+            <!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="http://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='../../../../javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+</body>
+</html>

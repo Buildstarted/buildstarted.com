@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Routing problems by not providing default route values &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="../../../../stylesheets/style.css" />
+</head>
+<body class="home blog">
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="../../../../index.html" title="BuildStarted.com" rel="home">
+                    <img src="http://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="../../../../index.html" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="index.html#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="../../../../about/index.html">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content">
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Routing problems by not providing default route values</h1>
+
+    <p>While working on a new site that uses <a href='http://haacked.com/'>Phil Haack</a>&rsquo;s <a href='http://routemagic.codeplex.com/'>RouteMagic</a> I came across a curious thing. All my <strong>Html.ActionLink</strong> calls were routing to a controller/action that they shouldn&rsquo;t route to. I fired up <a href='http://getglimpse.com/'>Glimpse</a> to see what routes were possible matches to try and find the culprit. (The route exists in an external library) Here&rsquo;s an example:</p>
+
+<pre><code>@Html.ActionLink("Log on", "LogOn", "Account")
+</code></pre>
+
+<p>This would normally route to <strong>/account/logon</strong> however if you have a <strong>routes.MapDelegate</strong> call that has no <strong>{parameters}</strong> it will match every time.</p>
+
+<p>Given the following routes</p>
+
+<pre><code>routes.MapDelegate("RouteFailureTest", "home/test", context =&gt; new HomeController().HomeTest(context.HttpContext));
+
+routes.MapRoute(
+    "Default", // Route name
+    "{controller}/{action}/{id}", // URL with parameters
+    new { controller = "Home", action = "Index", id = UrlParameter.Optional }//, // Parameter defaults
+);
+</code></pre>
+
+<p>a call to <strong>@Html.ActionLink(&ldquo;Log Off&rdquo;, &ldquo;Logout&rdquo;, &ldquo;User&rdquo;)</strong> always matches the &ldquo;RouteFailureTest&rdquo;.</p>
+
+<p>After checking the source code from Codeplex I can see that no default route values are specified in the call (here is the source from RouteMagic)</p>
+
+<pre><code>public static Route MapHttpHandler(this RouteCollection routes, IHttpHandler httpHandler, string name, string url, object defaults, object constraints) {
+    var route = new Route(url, new HttpHandlerRouteHandler(httpHandler));
+    route.Defaults = new RouteValueDictionary(defaults); //I believe this is where the problem lies
+    route.Constraints = new RouteValueDictionary(constraints);
+    routes.Add(name, new NormalizeRoute(route));
+    route.SetRouteName(name);
+    return route;
+}
+</code></pre>
+
+<p>Since <strong>Html.ActionLink</strong> and it&rsquo;s brethren supply their own Controller/Action values my thoughts were that the lack of values in the route caused it to match. To confirm this is the case I created another standard route with null as it&rsquo;s default parameter values.</p>
+
+<pre><code>routes.MapRoute(
+    "ShouldntMatch", // Route name
+    "home/test", // URL with parameters
+    null // Parameter defaults
+);
+</code></pre>
+
+<p>This caused the same issue as <strong>RouteMagic</strong>&rsquo;s <strong>MapDelegate</strong>.</p>
+
+<p>Normally all routes have default values but <strong>MapDelegate</strong> tells the router exactly where it should go to handle a particular route. This means that it bypasses the <strong>DefaultControllerFactory</strong> which utilizes the route values to determine where the url should route to. This would normally be fine except for the way that ActionLink determines which route to format the url after.</p>
+
+<p>There really doesn&rsquo;t seem to be much that we can do to get around this except to provide a default to the <strong>MapDelegate</strong> route that will never hit.</p>
+
+<pre><code>var route = routes.MapDelegate("RouteFailureTest", "home/test",
+    context =&gt; new HomeController().HomeTest(context.HttpContext));
+
+route.Defaults = new RouteValueDictionary(new { controller = "thisisacontrollerthatwillneverhit", action = "thisisanactionthatwillneverhit" });
+</code></pre>
+
+<p>This is such an interesting case. It relies on the fact that the route has <strong>no</strong> default controller, action or parameters such as {id}. Yet it breaks a lot of other MVC functions that rely on routes having those values. For now I&rsquo;ve hard coded the particular issue I have with this and replace other <strong>Html.ActionLink</strong>s with <strong>Html.RouteLink</strong> but this is only a temporary solution until either Phil Haack can resolve it or I can find another solution. For now I&rsquo;m modifying the specific route that is causing problems with the unhittable controller/action. It seems to work but I definitely can&rsquo;t rely on it.</p>
+
+<h3>- Ben Dornis</h3>
+
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'buildstarted';
+        var disqus_url = "http://buildstarted.com/2011/08/23/routing-problems-by-not-providing-default-route-values/";
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content -->
+
+            <div id="secondary" class="widget-area" role="complementary">
+                <aside id="text-5" class="widget widget_text">
+                    <h1 class="widget-title">Follow</h1>
+                    <div class="textwidget">
+                        <a href="http://twitter.com/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://twitter.com']);">Twitter</a><br />
+                        <a href="http://stackoverflow.com/users/365526/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://stackoverflow.com']);">Stackoverflow.com</a><br />
+                        <a href="https://plus.google.com/118314403854065988234" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://plus.google.com']);">Google+</a><br />
+                        <a href="https://github.com/Buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://github.com']);">Github</a>
+                    </div>
+                </aside>
+                <aside id="text-8" class="widget widget_text">
+                    <h1 class="widget-title">Other sites</h1>
+                    <div class="textwidget">
+                        <a href="http://typescript.io/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://typescript.io']);">typescript.io</a><br />
+                        <a href="http://csharptube.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://csharptube.com']);">csharptube.com</a><br />
+                        <a href="http://thisisparrot.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://thisisparrot.com']);">Parrot</a><br />
+                    </div>
+                </aside>
+                <aside id="linkcat-6" class="widget widget_links">
+                    <h1 class="widget-title">Other Blogs</h1>
+                    <ul class='xoxo blogroll'>
+                        <li><a href="http://blog.andrewnurse.net/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://blog.andrewnurse.net/']);">Andrew Nurse @ Microsoft</a></li>
+                        <li><a href="http://weblogs.asp.net/jgalloway/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://weblogs.asp.net/jgalloway/']);">Jon Galloway @ Microsoft</a></li>
+                        <li><a href="http://msmvps.com/blogs/jon_skeet/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://msmvps.com/blogs/jon_skeet/']);">Jon Skeet</a></li>
+                        <li><a href="http://invalidcast.com" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://invalidcast.com']);">Martin Rue</a></li>
+                        <li><a href="http://haacked.com/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://haacked.com/']);">Phil Haack @ Github</a></li>
+
+                    </ul>
+                </aside>
+                <aside id="archives-4" class="widget widget_archive">
+                    <h1 class="widget-title">Archive</h1>
+                    
+                    
+
+                      <ul class="posts">
+                        
+                          
+                          <!-- May placeholder -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2015May'>May 2015</a></li>
+                          
+                        
+                          
+                          <!-- December May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014December'>December 2014</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- June December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014June'>June 2014</a></li>
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014May'>May 2014</a></li>
+                          
+                        
+                          
+                          <!-- January May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014January'>January 2014</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013December'>December 2013</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- June December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013June'>June 2013</a></li>
+                          
+                        
+                          
+                          <!-- June June -->
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013May'>May 2013</a></li>
+                          
+                        
+                          
+                          <!-- February May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013February'>February 2013</a></li>
+                          
+                        
+                          
+                          <!-- November February -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012November'>November 2012</a></li>
+                          
+                        
+                          
+                          <!-- September November -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012September'>September 2012</a></li>
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- August September -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012August'>August 2012</a></li>
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- July August -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012July'>July 2012</a></li>
+                          
+                        
+                          
+                          <!-- July July -->
+                          
+                        
+                          
+                          <!-- June July -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012June'>June 2012</a></li>
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012May'>May 2012</a></li>
+                          
+                        
+                          
+                          <!-- February May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012February'>February 2012</a></li>
+                          
+                        
+                          
+                          <!-- January February -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012January'>January 2012</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011December'>December 2011</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- October December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011October'>October 2011</a></li>
+                          
+                        
+                          
+                          <!-- August October -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011August'>August 2011</a></li>
+                          
+                        
+                          
+                          <!-- July August -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011July'>July 2011</a></li>
+                          
+                        
+                          
+                          <!-- July July -->
+                          
+                        
+                          
+                          <!-- June July -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011June'>June 2011</a></li>
+                          
+                        
+                          
+                          <!-- March June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011March'>March 2011</a></li>
+                          
+                        
+                          
+                          <!-- January March -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011January'>January 2011</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010December'>December 2010</a></li>
+                          
+                        
+                          
+                          <!-- November December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010November'>November 2010</a></li>
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- October November -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010October'>October 2010</a></li>
+                          
+                        
+                          
+                          <!-- October October -->
+                          
+                        
+                          
+                          <!-- September October -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010September'>September 2010</a></li>
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- August September -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010August'>August 2010</a></li>
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                      </ul>
+                </aside>
+            </div>
+            <!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="http://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='../../../../javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Modelbinderproviders automatic binding your models is easy as pie &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="../../../../stylesheets/style.css" />
+</head>
+<body class="home blog">
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="../../../../index.html" title="BuildStarted.com" rel="home">
+                    <img src="http://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="../../../../index.html" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="index.html#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="../../../../about/index.html">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content">
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Modelbinderproviders automatic binding your models is easy as pie</h1>
+
+    <p>One of the things I really like about MVC is it&rsquo;s ability to know things. You don&rsquo;t have to tell it anything, it just <strong>knows</strong>. How does it do this? How can MVC automagically know that a request for <strong>/home/index</strong> should go to the <strong>HomeController.Index</strong>? It&rsquo;s magic. No, really, it&rsquo;s magic!</p>
+
+<p>Darn, thought I had you there. MVC uses a <a href='http://en.wikipedia.org/wiki/Convention_over_configuration'>Convention over configuration</a> software design paradigm. This basically means we don&rsquo;t have to configure everything if we follow a certain pattern. This allows us to imply certain behaviors based on the construction of our code rather than implicitly writing it.</p>
+
+<p>One of the things I noticed when playing with MVC was that I found myself always writing ModelBinders. I wrote a <a href='../../../09/12/custom-model-binders-in-mvc-3-with-imodelbinder/index.html'>previous article</a> on the subject. But suffice to say I always had to make sure I added the new ModelBinder that I wrote to the Binders list in <strong>ModelBinders.Binders.Add()</strong>. I didn&rsquo;t care for this so I wrote a <strong>ModelBinderProvider</strong> that will automagically look for my model binders whenever I needed them.</p>
+
+<h2>Design</h2>
+
+<p>First, I needed some sort of design pattern that would make it easy for my ModelBinder to find my custom bindings. I settled on a <strong>&lt;Model&gt;ModelBinder</strong> naming convention. Here&rsquo;s a quick sample.</p>
+
+<pre><code>public class User {
+    public string Name {get;set;}
+}
+
+public class UserModelBinder : IModelBinder {
+    //implement binder
+}
+</code></pre>
+
+<p>This UserModelBinder will now be automagically bound to my User class by way of convention over configuration. There&rsquo;s no need for me to tell the ModelBinder that model A maps to binder B. It&rsquo;s implied. But, we also need a way to override these bindings whenever necessary because not everything will be perfect so I have to add that, as well.</p>
+
+<p>The following is the start of our class. I&rsquo;m just defining a static Dictionary to keep track of found ModelBinders.</p>
+
+<pre><code>public class AutoModelBinder : IModelBinderProvider {
+
+    /// &lt;summary&gt;
+    /// Cached collection of existing binders
+    /// &lt;/summary&gt;
+    static Dictionary&lt;Type, IModelBinder&gt; Binders { get; set; }
+
+    /// &lt;summary&gt;
+    /// Static constructor to initialize Binders
+    /// &lt;/summary&gt;
+    static AutoModelBinder() {
+        Binders = new Dictionary&lt;Type, IModelBinder&gt;();
+    }
+}
+</code></pre>
+
+<p>If, for some ungodly reason, we want to manually bind a model, we can. This is a very important concept in Convention over Configuration. We provide defaults but allow it to be overridden.</p>
+
+<pre><code>/// &lt;summary&gt;
+/// Manually register ModelBinders for some strange reason
+/// &lt;/summary&gt;
+/// &lt;param name="type"&gt;The type of object we're binding to&lt;/param&gt;
+/// &lt;param name="instance"&gt;The instance of our Model Binder&lt;/param&gt;
+public static void RegisterType(Type type, IModelBinder instance) {
+    if (Binders.ContainsKey(type))
+        Binders[type] = instance;
+    else
+        Binders.Add(type, instance);
+}
+</code></pre>
+
+<p>Now for the meat of the class. We&rsquo;re implementing <strong>IModelBinderProvider</strong>, which gives us one method called <strong>GetBinder</strong>. This will be called whenever MVC would like to bind a model for our request. First, we need to check to see if we&rsquo;ve already created an instance of our model binder for the requested type. If one isn&rsquo;t found we then look in the current assembly and find one. There really isn&rsquo;t much magic here I&rsquo;m sorry to say.</p>
+
+<pre><code>/// &lt;summary&gt;
+/// Interface for IModelBinderProvider.GetBinder.
+/// Checks Binders for the passed type else loop through the assembly and look for a binder
+/// &lt;/summary&gt;
+/// &lt;param name="modelType"&gt;The type of object we're going to bind to&lt;/param&gt;
+/// &lt;returns&gt;An instance of IModelBinder from our list of found Binders.&lt;/returns&gt;
+public IModelBinder GetBinder(Type modelType) {
+    //Check to see if a type was already bound.
+    if (Binders.ContainsKey(modelType)) 
+        return Binders[modelType];
+
+    //Check the assembly and look for a &lt;name&gt;ModelBinder
+    Assembly assembly = Assembly.GetExecutingAssembly();
+    Type[] types = assembly.GetTypes();
+    foreach (Type type in types) {
+        //Convention over configuration
+        if (type.Name == modelType.Name + "ModelBinder") {
+            IModelBinder instance = (IModelBinder)assembly.CreateInstance(type.FullName);
+            Binders.Add(modelType, instance);
+            return instance;
+        }
+    }
+
+    return null;
+}
+</code></pre>
+
+<p>Download Project: <a href='http://buildstarted.com/wp-content/uploads/2010/12/ModelBinderProviderTest.zip'>ModelBinderProviderTest.zip</a></p>
+
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'buildstarted';
+        var disqus_url = "http://buildstarted.com/2010/12/02/modelbinderproviders-automatic-binding-your-models-is-easy-as-pie/";
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content -->
+
+            <div id="secondary" class="widget-area" role="complementary">
+                <aside id="text-5" class="widget widget_text">
+                    <h1 class="widget-title">Follow</h1>
+                    <div class="textwidget">
+                        <a href="http://twitter.com/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://twitter.com']);">Twitter</a><br />
+                        <a href="http://stackoverflow.com/users/365526/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://stackoverflow.com']);">Stackoverflow.com</a><br />
+                        <a href="https://plus.google.com/118314403854065988234" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://plus.google.com']);">Google+</a><br />
+                        <a href="https://github.com/Buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://github.com']);">Github</a>
+                    </div>
+                </aside>
+                <aside id="text-8" class="widget widget_text">
+                    <h1 class="widget-title">Other sites</h1>
+                    <div class="textwidget">
+                        <a href="http://typescript.io/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://typescript.io']);">typescript.io</a><br />
+                        <a href="http://csharptube.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://csharptube.com']);">csharptube.com</a><br />
+                        <a href="http://thisisparrot.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://thisisparrot.com']);">Parrot</a><br />
+                    </div>
+                </aside>
+                <aside id="linkcat-6" class="widget widget_links">
+                    <h1 class="widget-title">Other Blogs</h1>
+                    <ul class='xoxo blogroll'>
+                        <li><a href="http://blog.andrewnurse.net/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://blog.andrewnurse.net/']);">Andrew Nurse @ Microsoft</a></li>
+                        <li><a href="http://weblogs.asp.net/jgalloway/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://weblogs.asp.net/jgalloway/']);">Jon Galloway @ Microsoft</a></li>
+                        <li><a href="http://msmvps.com/blogs/jon_skeet/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://msmvps.com/blogs/jon_skeet/']);">Jon Skeet</a></li>
+                        <li><a href="http://invalidcast.com" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://invalidcast.com']);">Martin Rue</a></li>
+                        <li><a href="http://haacked.com/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://haacked.com/']);">Phil Haack @ Github</a></li>
+
+                    </ul>
+                </aside>
+                <aside id="archives-4" class="widget widget_archive">
+                    <h1 class="widget-title">Archive</h1>
+                    
+                    
+
+                      <ul class="posts">
+                        
+                          
+                          <!-- May placeholder -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2015May'>May 2015</a></li>
+                          
+                        
+                          
+                          <!-- December May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014December'>December 2014</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- June December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014June'>June 2014</a></li>
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014May'>May 2014</a></li>
+                          
+                        
+                          
+                          <!-- January May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014January'>January 2014</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013December'>December 2013</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- June December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013June'>June 2013</a></li>
+                          
+                        
+                          
+                          <!-- June June -->
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013May'>May 2013</a></li>
+                          
+                        
+                          
+                          <!-- February May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013February'>February 2013</a></li>
+                          
+                        
+                          
+                          <!-- November February -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012November'>November 2012</a></li>
+                          
+                        
+                          
+                          <!-- September November -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012September'>September 2012</a></li>
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- August September -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012August'>August 2012</a></li>
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- July August -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012July'>July 2012</a></li>
+                          
+                        
+                          
+                          <!-- July July -->
+                          
+                        
+                          
+                          <!-- June July -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012June'>June 2012</a></li>
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012May'>May 2012</a></li>
+                          
+                        
+                          
+                          <!-- February May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012February'>February 2012</a></li>
+                          
+                        
+                          
+                          <!-- January February -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012January'>January 2012</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011December'>December 2011</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- October December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011October'>October 2011</a></li>
+                          
+                        
+                          
+                          <!-- August October -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011August'>August 2011</a></li>
+                          
+                        
+                          
+                          <!-- July August -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011July'>July 2011</a></li>
+                          
+                        
+                          
+                          <!-- July July -->
+                          
+                        
+                          
+                          <!-- June July -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011June'>June 2011</a></li>
+                          
+                        
+                          
+                          <!-- March June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011March'>March 2011</a></li>
+                          
+                        
+                          
+                          <!-- January March -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011January'>January 2011</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010December'>December 2010</a></li>
+                          
+                        
+                          
+                          <!-- November December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010November'>November 2010</a></li>
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- October November -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010October'>October 2010</a></li>
+                          
+                        
+                          
+                          <!-- October October -->
+                          
+                        
+                          
+                          <!-- September October -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010September'>September 2010</a></li>
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- August September -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010August'>August 2010</a></li>
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                      </ul>
+                </aside>
+            </div>
+            <!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="http://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='../../../../javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+</body>
+</html>

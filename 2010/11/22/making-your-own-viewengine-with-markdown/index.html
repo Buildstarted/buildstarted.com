@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Making your own viewengine with markdown &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="../../../../stylesheets/style.css" />
+</head>
+<body class="home blog">
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="../../../../index.html" title="BuildStarted.com" rel="home">
+                    <img src="http://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="../../../../index.html" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="index.html#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="../../../../about/index.html">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content">
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Making your own viewengine with markdown</h1>
+
+    <p>Recently I was thinking about integrating the new <a href='../../11/razor-templating-on-codeplex/index.html'>Razor Templating Engine</a> into MVC so that I could learn how to create my own ViewEngine for MVC. However, I couldn&rsquo;t quite figure out exactly how to use it in anyway that would make it different from Razor itself. Instead I decided to use Markdown as I frequent <a href='http://stackoverflow.com'>Stackoverflow.com</a> quite a bit to try and help with questions related to Razor. (And get some answers for myself) It seemed like a good direction to go. Markdown is probably not a good idea though to use as a view in general.</p>
+
+<h2>Markdown</h2>
+
+<p>First things first, I needed a Markdown parser for c#. Luckily <a href='http://code.google.com/u/wumpus1/'>Wumpus1</a> already created a <a href='http://code.google.com/p/markdownsharp/'>markdownsharp</a> library available on <a href='http://code.google.com'>Google Code</a>.</p>
+
+<p>Markdown, somewhat, makes sense as a good sample as it&rsquo;s intended to take text, translate it to html, and display to the end user. It&rsquo;s also meant to be read without any translation&hellip;so this might work for some sort of user input where the end user doesn&rsquo;t need to know some complex markup language such as wikicode. I&rsquo;ve added a list of locations to search by default to the <strong>MarkdownViewEngine</strong>.</p>
+
+<h2>The ViewEngine</h2>
+
+<pre><code>public class MarkdownViewEngine : IViewEngine {
+    #region IViewEngine Members
+
+    string[] SearchLocations;
+
+    ViewEngineResult FindPartialView(
+        ControllerContext controllerContext, 
+        string partialViewName, 
+        bool useCache) {
+    }
+
+    ViewEngineResult FindView(
+        ControllerContext controllerContext, 
+        string viewName, 
+        string masterName, 
+        bool useCache) {
+    }
+
+    void ReleaseView(ControllerContext controllerContext, IView view) {
+    }
+
+    #endregion
+}
+</code></pre>
+
+<p>Above is the basic layout for all ViewEngines. Right now, we&rsquo;re only concerned with <strong>FindView</strong> as we can&rsquo;t implement PartialViews just yet without creating a real Markup parser to look for those. However, since it&rsquo;s easy enough to refactor these we&rsquo;re going to create a single <strong>CreateView</strong> method that handles both.</p>
+
+<h2>CreateView</h2>
+
+<p>The CreateView method is simple enough. We&rsquo;re going to return our MarkdownView in the ViewEngineResult. First, you need to find out what controllerName is being called in this request. The routeData in the controller context will contain that information so we can pull it out of there. Next we need to actually find our view. To do this I&rsquo;ve created a GetViewPath method. Which in-turn calls <strong>FindPath</strong>. The FindPath method looks through our SearchLocations and attempts to find the file that contains our markdown. If I can&rsquo;t find the file I return a null which we then check for. If the path isn&rsquo;t null we return a new <strong>MarkdownView</strong> based on this file. Otherwise we return a ViewEngineResult that contains a list of the files we searched for.</p>
+
+<pre><code>/// &lt;summary&gt;
+/// Meat of the FindView methods.
+/// &lt;/summary&gt;
+/// &lt;param name="controllerContext"&gt;The current controller context for this request.&lt;/param&gt;
+/// &lt;param name="viewName"&gt;The requested view name. &lt;/param&gt;
+/// &lt;param name="masterName"&gt;The master page view name (currently unused)&lt;/param&gt;
+/// &lt;param name="layoutPath"&gt;The layout path location (Replaces the masterpage in other view engines)&lt;/param&gt;
+/// &lt;param name="useCache"&gt;Cache the viewpage?&lt;/param&gt;
+/// &lt;remarks&gt;The layout path is currently hardcoded to "Layout" and will look in the SearchLocations for that path&lt;/remarks&gt;
+/// &lt;returns&gt;Returns a ViewEngineResult with the requested view&lt;/returns&gt;
+public ViewEngineResult CreateView(
+    ControllerContext controllerContext, 
+    string viewName, 
+    string masterName, 
+    string layoutPath, 
+    bool useCache) {
+    //grab the current controller from the route data
+    string controllerName = controllerContext.RouteData.GetRequiredString("controller");
+
+    //for proper error handling we need to return a list of locations we attempted to search for the view
+    string[] SearchedLocations;
+
+    //get the actual path of the view - returns null if none is found
+    string viewPath = GetViewPath(
+    viewName, 
+    controllerName, 
+    out SearchedLocations);
+
+    if (viewPath != null) {
+        MarkdownView view = new MarkdownView(
+    controllerContext, 
+    viewPath, 
+    layoutPath);
+        return new ViewEngineResult(view, this);
+    }
+
+    //we couldn't find the view
+    return new ViewEngineResult(SearchedLocations);
+}
+
+/// &lt;summary&gt;
+/// Look for the view in the current file system
+/// &lt;/summary&gt;
+/// &lt;param name="viewName"&gt;The name of the View you're looking for&lt;/param&gt;
+/// &lt;param name="controllerName"&gt;Current controller name&lt;/param&gt;
+/// &lt;param name="SearchedLocations"&gt;out a list of locations searched&lt;/param&gt;
+/// &lt;returns&gt;A string value of the relative path&lt;/returns&gt;
+public string FindPath(
+    string viewName, 
+    string controllerName, 
+    out string[] SearchedLocations) {
+    SearchedLocations = new string[SearchLocations.Length];
+
+    for (int i = 0; i &lt; SearchLocations.Length; i++) {
+        string virtualPath = string.Format(
+        SearchLocations[i], 
+        viewName, 
+        controllerName);
+
+        SearchedLocations[i] = virtualPath;
+
+        //check the active VirtualPathProvider if the file exists
+        if (VirtualPathProvider.FileExists(virtualPath)) {
+            //add it to cache - not currently implemented
+            return VirtualPathProvider.GetFile(virtualPath).VirtualPath;
+        }
+    }
+
+    return null;
+}
+</code></pre>
+
+<p>FindView just calls our CreateView method and passes in a function you&rsquo;ll see called <strong>GetLayoutPath</strong>. This function just calls FindPath method but only requires the ControllerContext as we&rsquo;ve hard coded &ldquo;Layout&rdquo; as the view name.</p>
+
+<pre><code>public ViewEngineResult FindView(
+    ControllerContext controllerContext, 
+    string viewName, 
+    string masterName, 
+    bool useCache) {
+    return CreateView(
+    controllerContext, 
+    viewName, 
+    masterName, 
+    GetLayoutPath(controllerContext), 
+    useCache);
+}
+
+/// &lt;summary&gt;
+/// Get the layout virtual path
+/// &lt;/summary&gt;
+/// &lt;param name="controllerContext"&gt;The current Controller context for this request&lt;/param&gt;
+/// &lt;returns&gt;A string virtual path&lt;/returns&gt;
+public string GetLayoutPath(ControllerContext controllerContext) {
+    string[] locations;
+
+string controllerName = controllerContext.RouteData.GetRequiredString("controller");
+
+    return FindPath("Layout", controllerName, out locations);
+}
+</code></pre>
+
+<p>There we have the basics of our ViewEngine. It looks for a file based on the View and Controller name and returns a MarkdownView result that will then be rendered to the writer.</p>
+
+<h2>MarkdownView</h2>
+
+<p>The MarkdownView class only contains one interface method called <strong>Render</strong> which accepts a ViewContext and the writer we&rsquo;re going to render our html to. The MarkdownView requires just a few pieces of information the View and Layout partial paths. The render method is simple enough where we load the contents of the file, convert it and write it to the writer&hellip;can&rsquo;t go into too much detail with that one.</p>
+
+<pre><code>/// &lt;summary&gt;
+/// Implements IView and renders a Markdown
+/// &lt;/summary&gt;
+public class MarkdownView : IView {
+
+    string ViewPath;
+    string LayoutPath;
+
+    public MarkdownView(string viewPath, string layoutPath) {
+        this.ViewPath = viewPath;
+        this.LayoutPath = layoutPath;
+    }
+
+    #region IView Members
+
+    /// &lt;summary&gt;
+    /// Converts markdown to html and writes it to the passed in writer
+    /// &lt;/summary&gt;
+    /// &lt;param name="viewContext"&gt;&lt;/param&gt;
+    /// &lt;param name="writer"&gt;&lt;/param&gt;
+    public void Render(ViewContext viewContext, System.IO.TextWriter writer) {
+        //View contents
+        string contents = new StreamReader(VirtualPathProvider.OpenFile(ViewPath)).ReadToEnd();
+        string layoutContents = LayoutPath == null 
+        ? null 
+        : new StreamReader(VirtualPathProvider.OpenFile(LayoutPath)).ReadToEnd();
+
+        contents = Parse(contents);
+
+        string output;
+        output = layoutContents == null 
+        ? contents 
+        : layoutContents.Replace("__content__", contents);
+
+        writer.Write(output);
+    }
+
+    /// &lt;summary&gt;
+    /// Converts markdown to html
+    /// &lt;/summary&gt;
+    /// &lt;param name="markdown"&gt;Markdown text&lt;/param&gt;
+    /// &lt;returns&gt;Html formatted markdown text&lt;/returns&gt;
+    string Parse(string markdown) {
+
+        MarkdownSharp.Markdown markdownSharp = new MarkdownSharp.Markdown(
+            new MarkdownSharp.MarkdownOptions() {
+                AutoHyperlink = true,
+                AutoNewlines = true,
+                StrictBoldItalic = true
+            });
+
+        return markdownSharp.Transform(markdown);
+    }
+
+    #endregion
+}
+</code></pre>
+
+<h2>Layout.md</h2>
+
+<p>Since markdown, by default, doesn&rsquo;t render the opening and closing html tags and just renders what would essentially be the body, we have to wrap our markdown files in html. I&rsquo;ve decided to go the simplistic route for now and just use the following</p>
+
+<pre><code>&lt;html&gt;
+    &lt;head&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        __content__
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p><strong><em><em>content</em></em></strong> will then be replaced with the rendered markdown.</p>
+
+<h2>Putting it all together</h2>
+
+<p>All that&rsquo;s necessary now is to register our new ViewEngine with MVC. This can be accomplished by adding the following lines to our Global.asax.</p>
+
+<pre><code>ViewEngines.Engines.Add(new MarkdownViewEngine());
+</code></pre>
+
+<p>This will tell MVC that we have an additional view engine to parse the request. Currently other ViewEngines will be checked first such as the razor or webforms view engines. If a handler can&rsquo;t be found it will then look at our new MarkdownViewEngine.</p>
+
+<p>Our folder structure for the Markdown files is the same as any other view engine. The only difference is that we have a new <strong>.md</strong> file instead of <strong>.cshtml</strong> or <strong>.aspx</strong>.</p>
+
+<p><img src="http://aws.buildstarted.com/markdownviewengine.png" alt="The MarkdownViewEngine folder structure" title="The MardownViewEngine folder structure" /></p>
+
+<h2>Final</h2>
+
+<p>Creating a custom view engine was fairly simple. I didn&rsquo;t deal with model in this particular instance as that would have seriously complexified the current goal. Especially since I would have to basically create a parser to figure out what is markdown and what would be code. I might save that for a later post though. Custom ViewEngines have other methods of access that don&rsquo;t necessarily have to rely on the file system for your views. I could have easily pulled the View from a database or even an embedded view in the project. There are quite a few possibilities. I hope you enjoyed this article and find it of use to you.</p>
+
+<h2>-Ben</h2>
+
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'buildstarted';
+        var disqus_url = "http://buildstarted.com/2010/11/22/making-your-own-viewengine-with-markdown/";
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content -->
+
+            <div id="secondary" class="widget-area" role="complementary">
+                <aside id="text-5" class="widget widget_text">
+                    <h1 class="widget-title">Follow</h1>
+                    <div class="textwidget">
+                        <a href="http://twitter.com/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://twitter.com']);">Twitter</a><br />
+                        <a href="http://stackoverflow.com/users/365526/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://stackoverflow.com']);">Stackoverflow.com</a><br />
+                        <a href="https://plus.google.com/118314403854065988234" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://plus.google.com']);">Google+</a><br />
+                        <a href="https://github.com/Buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://github.com']);">Github</a>
+                    </div>
+                </aside>
+                <aside id="text-8" class="widget widget_text">
+                    <h1 class="widget-title">Other sites</h1>
+                    <div class="textwidget">
+                        <a href="http://typescript.io/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://typescript.io']);">typescript.io</a><br />
+                        <a href="http://csharptube.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://csharptube.com']);">csharptube.com</a><br />
+                        <a href="http://thisisparrot.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://thisisparrot.com']);">Parrot</a><br />
+                    </div>
+                </aside>
+                <aside id="linkcat-6" class="widget widget_links">
+                    <h1 class="widget-title">Other Blogs</h1>
+                    <ul class='xoxo blogroll'>
+                        <li><a href="http://blog.andrewnurse.net/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://blog.andrewnurse.net/']);">Andrew Nurse @ Microsoft</a></li>
+                        <li><a href="http://weblogs.asp.net/jgalloway/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://weblogs.asp.net/jgalloway/']);">Jon Galloway @ Microsoft</a></li>
+                        <li><a href="http://msmvps.com/blogs/jon_skeet/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://msmvps.com/blogs/jon_skeet/']);">Jon Skeet</a></li>
+                        <li><a href="http://invalidcast.com" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://invalidcast.com']);">Martin Rue</a></li>
+                        <li><a href="http://haacked.com/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://haacked.com/']);">Phil Haack @ Github</a></li>
+
+                    </ul>
+                </aside>
+                <aside id="archives-4" class="widget widget_archive">
+                    <h1 class="widget-title">Archive</h1>
+                    
+                    
+
+                      <ul class="posts">
+                        
+                          
+                          <!-- May placeholder -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2015May'>May 2015</a></li>
+                          
+                        
+                          
+                          <!-- December May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014December'>December 2014</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- June December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014June'>June 2014</a></li>
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014May'>May 2014</a></li>
+                          
+                        
+                          
+                          <!-- January May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014January'>January 2014</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013December'>December 2013</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- June December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013June'>June 2013</a></li>
+                          
+                        
+                          
+                          <!-- June June -->
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013May'>May 2013</a></li>
+                          
+                        
+                          
+                          <!-- February May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013February'>February 2013</a></li>
+                          
+                        
+                          
+                          <!-- November February -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012November'>November 2012</a></li>
+                          
+                        
+                          
+                          <!-- September November -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012September'>September 2012</a></li>
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- August September -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012August'>August 2012</a></li>
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- July August -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012July'>July 2012</a></li>
+                          
+                        
+                          
+                          <!-- July July -->
+                          
+                        
+                          
+                          <!-- June July -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012June'>June 2012</a></li>
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012May'>May 2012</a></li>
+                          
+                        
+                          
+                          <!-- February May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012February'>February 2012</a></li>
+                          
+                        
+                          
+                          <!-- January February -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012January'>January 2012</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011December'>December 2011</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- October December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011October'>October 2011</a></li>
+                          
+                        
+                          
+                          <!-- August October -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011August'>August 2011</a></li>
+                          
+                        
+                          
+                          <!-- July August -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011July'>July 2011</a></li>
+                          
+                        
+                          
+                          <!-- July July -->
+                          
+                        
+                          
+                          <!-- June July -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011June'>June 2011</a></li>
+                          
+                        
+                          
+                          <!-- March June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011March'>March 2011</a></li>
+                          
+                        
+                          
+                          <!-- January March -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011January'>January 2011</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010December'>December 2010</a></li>
+                          
+                        
+                          
+                          <!-- November December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010November'>November 2010</a></li>
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- October November -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010October'>October 2010</a></li>
+                          
+                        
+                          
+                          <!-- October October -->
+                          
+                        
+                          
+                          <!-- September October -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010September'>September 2010</a></li>
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- August September -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010August'>August 2010</a></li>
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                      </ul>
+                </aside>
+            </div>
+            <!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="http://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='../../../../javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+</body>
+</html>

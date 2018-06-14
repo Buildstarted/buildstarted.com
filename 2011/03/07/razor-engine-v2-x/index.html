@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Razor engine v2.x &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="../../../../stylesheets/style.css" />
+</head>
+<body class="home blog">
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="../../../../index.html" title="BuildStarted.com" rel="home">
+                    <img src="http://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="../../../../index.html" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="index.html#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="../../../../about/index.html">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content">
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Razor engine v2.x</h1>
+
+    <h2>The RazorEngine</h2>
+
+<p>The <a href='http://razorengine.codeplex.com/'>RazorEngine</a> was developed primarily by Matthew Abbott at <a href='http://fidelitydesign.net'>fidelitydesign.net</a>. The project originally started <a href='../../../../2010/09/29/razor-view-engine-without-mvc-at-all/index.html'>here</a> but Matthew took it to a whole new level and made it full of awesome.</p>
+
+<p>With that little into I&rsquo;m going to get into what the Razor Engine can do for you.</p>
+
+<p>The Razor Engine is available from <a href='http://razorengine.codeplex.com/'>codeplex.com</a> or you can use <a href='http://nuget.org/Packages/Packages/Details/RazorEngine-2-1'>NuGet</a> (recommended because it&rsquo;s just awesome). There&rsquo;s only the one <strong>RazorEngine.dll</strong> and it requires <strong>System.Web.Razor</strong> for the default parser. Part of me thinks that the Razor Parser should be removed from the System.Web namespace since it has applications outside of the web but I gather its primary focus is that of an html/c# parser not a generic parser.</p>
+
+<h2>Quick Tutorial</h2>
+
+<p>For those of you unfamiliar with razor here&rsquo;s a quick sample that will hopefully help you to understand why it rocks.</p>
+
+<pre><code>&lt;ul&gt;
+    @foreach(Author author in Model.CoolAuthors) {
+        &lt;li&gt;@author.Name&lt;/li&gt;
+    }
+&lt;/ul&gt;
+</code></pre>
+
+<p>The output generated would be simply</p>
+
+<pre><code>&lt;ul&gt;
+    &lt;li&gt;David Brin&lt;/li&gt;
+    &lt;li&gt;William Gibson&lt;/li&gt;
+    &lt;li&gt;Gene Wolfe&lt;/li&gt;
+    &lt;li&gt;C. J. Cherryh&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<p>This makes authoring xml/html a million times cleaner than the old <span style='background-color:yellow; font-weight:bold;'>&lt;% %&gt;</span> method. You&rsquo;ll notice that the parser figured out that the <strong>@</strong> symbol was a transition between html and c#. You&rsquo;ll notice I don&rsquo;t have an <strong>@</strong> symbol in front of my last } there. Since the parser knows c# pretty well it&rsquo;s able to figure out when the code ends and html begins again.</p>
+
+<p><a href='http://weblogs.asp.net/scottgu/archive/2010/12/15/asp-net-mvc-3-razor-s-and-lt-text-gt-syntax.aspx'>Scott Guthrie</a> has a good set of posts about razor if you&rsquo;d like to learn more.</p>
+
+<h2>Sample RazorEngine Implementation</h2>
+
+<p>The Razor Engine was designed to be as simple as can be to call in your application. One call and the base template can handle most of your needs.</p>
+
+<pre><code>string template = "Hello @Model.Name! Welcome to Razor!"
+string result = Razor.Parse(template, new { Name = "World" });
+</code></pre>
+
+<p>In the above template you&rsquo;re passing in your template - which can be pulled from anywhere - and an object that will represent your model. In this case, an anonymous type with the Name property.</p>
+
+<p>All RazorEngine derived objects inherit from <strong>TemplateBase</strong>. This class has only one property that you need to worry about and that is <strong>Model</strong>. This is the object that will contain the object you pass in to the template. As in the above example it was the Anonymous type. You may, however, wish to add your own methods. One example provided by the codeplex documentation is a <strong>ToUpperCase</strong> function. To implement this you would inherit <strong>TemplateBase&lt;T&t;</strong></p>
+
+<pre><code>public abstract class MyCustomTemplateBase&lt;T&gt; : TemplateBase&lt;T&gt; {
+    public string ToUpperCase(string name) {
+        return name.ToUpperCase();
+    }
+}
+</code></pre>
+
+<p>To utilize your new TemplateBase you must initialize it within the RazorEngine. <code>Razor.SetTemplateBase(typeof(MyCustomTemplateBase&lt;&gt;));</code> This <strong>must</strong> be the first call you make. Usually within <strong>Application_Start</strong> or <strong>main</strong> or some other initialization method. This is a static method and as such this affects <strong>all</strong> calls to the RazorEngine.</p>
+
+<p>To call your new method within your razor files:</p>
+
+<pre><code>string template = "My name in UPPER CASE is: @ToUpperCase(Model.Name)";
+string result = Razor.Parse(template, new { Name = "Ben" });
+</code></pre>
+
+<h2>Configuration</h2>
+
+<p>Please read the <a href='http://razorengine.codeplex.com/wikipage?title=Using%20Configuration&amp;referringTitle=Documentation'>documenation</a> available on codeplex.com as it is very complex and would require a blog post on it&rsquo;s own.</p>
+
+<h2>Medium Trust</h2>
+
+<p>Last, but not least, Matthew Abbott has worked very hard to get it to work in Medium Trust. This only works for web applications as it utilizes the built in asp.net buildprovider. To add support for medium trust you&rsquo;ll need to download the <a href='http://nuget.org/Packages/Packages/Details/RazorEngine-Web-2-1'>RazorEngine.Web</a> reference to your project and <a href='http://razorengine.codeplex.com/wikipage?title=Configuring%20RazorEngine%20for%20ASP.NET%20Medium%20Trust&amp;referringTitle=Documentation'>configure</a> it as well</p>
+
+<h2>Issues you may come across</h2>
+
+<p>The Razor Engine is the same parser technology used with the MVC Razor Parser, however, the MVC parser has added functionality to it as a result of using a the <strong>System.Web.Mvc.ViewPage</strong> base class which adds a bunch of helper methods such as <strong>Html.</strong> and <strong>Url.</strong>. So keep this in mind when utilizing the Razor Engine as you will not have those methods available to you - unless you use a different base template other than <strong>TemplateBase</strong>.</p>
+
+<p>Currently the Razor Engine does not support inline delegates such as</p>
+
+<pre><code>@List.ForEach(i =&gt; { @* Some Complex stuff *@ });
+</code></pre>
+
+<p>Which is a shame, but I&rsquo;ve been told by Andrew Nurse that it&rsquo;s in the works.</p>
+
+<h2>Conclusion</h2>
+
+<p>The RazorEngine is a really nice template engine that I currently use in my day-to-day work environment. Adding features as I go to the engine for personal use. Sometimes those features make it into the real engine. Sometimes they don&rsquo;t. Just depends on how useful they are and whether or not they make sense for the overall project. I hope you get as much use out of it as I do.</p>
+
+<h3>- Ben Dornis</h3>
+
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'buildstarted';
+        var disqus_url = "http://buildstarted.com/2011/03/07/razor-engine-v2-x/";
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content -->
+
+            <div id="secondary" class="widget-area" role="complementary">
+                <aside id="text-5" class="widget widget_text">
+                    <h1 class="widget-title">Follow</h1>
+                    <div class="textwidget">
+                        <a href="http://twitter.com/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://twitter.com']);">Twitter</a><br />
+                        <a href="http://stackoverflow.com/users/365526/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://stackoverflow.com']);">Stackoverflow.com</a><br />
+                        <a href="https://plus.google.com/118314403854065988234" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://plus.google.com']);">Google+</a><br />
+                        <a href="https://github.com/Buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://github.com']);">Github</a>
+                    </div>
+                </aside>
+                <aside id="text-8" class="widget widget_text">
+                    <h1 class="widget-title">Other sites</h1>
+                    <div class="textwidget">
+                        <a href="http://typescript.io/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://typescript.io']);">typescript.io</a><br />
+                        <a href="http://csharptube.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://csharptube.com']);">csharptube.com</a><br />
+                        <a href="http://thisisparrot.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://thisisparrot.com']);">Parrot</a><br />
+                    </div>
+                </aside>
+                <aside id="linkcat-6" class="widget widget_links">
+                    <h1 class="widget-title">Other Blogs</h1>
+                    <ul class='xoxo blogroll'>
+                        <li><a href="http://blog.andrewnurse.net/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://blog.andrewnurse.net/']);">Andrew Nurse @ Microsoft</a></li>
+                        <li><a href="http://weblogs.asp.net/jgalloway/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://weblogs.asp.net/jgalloway/']);">Jon Galloway @ Microsoft</a></li>
+                        <li><a href="http://msmvps.com/blogs/jon_skeet/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://msmvps.com/blogs/jon_skeet/']);">Jon Skeet</a></li>
+                        <li><a href="http://invalidcast.com" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://invalidcast.com']);">Martin Rue</a></li>
+                        <li><a href="http://haacked.com/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://haacked.com/']);">Phil Haack @ Github</a></li>
+
+                    </ul>
+                </aside>
+                <aside id="archives-4" class="widget widget_archive">
+                    <h1 class="widget-title">Archive</h1>
+                    
+                    
+
+                      <ul class="posts">
+                        
+                          
+                          <!-- May placeholder -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2015May'>May 2015</a></li>
+                          
+                        
+                          
+                          <!-- December May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014December'>December 2014</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- June December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014June'>June 2014</a></li>
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014May'>May 2014</a></li>
+                          
+                        
+                          
+                          <!-- January May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014January'>January 2014</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013December'>December 2013</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- June December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013June'>June 2013</a></li>
+                          
+                        
+                          
+                          <!-- June June -->
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013May'>May 2013</a></li>
+                          
+                        
+                          
+                          <!-- February May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013February'>February 2013</a></li>
+                          
+                        
+                          
+                          <!-- November February -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012November'>November 2012</a></li>
+                          
+                        
+                          
+                          <!-- September November -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012September'>September 2012</a></li>
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- August September -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012August'>August 2012</a></li>
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- July August -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012July'>July 2012</a></li>
+                          
+                        
+                          
+                          <!-- July July -->
+                          
+                        
+                          
+                          <!-- June July -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012June'>June 2012</a></li>
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012May'>May 2012</a></li>
+                          
+                        
+                          
+                          <!-- February May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012February'>February 2012</a></li>
+                          
+                        
+                          
+                          <!-- January February -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012January'>January 2012</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011December'>December 2011</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- October December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011October'>October 2011</a></li>
+                          
+                        
+                          
+                          <!-- August October -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011August'>August 2011</a></li>
+                          
+                        
+                          
+                          <!-- July August -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011July'>July 2011</a></li>
+                          
+                        
+                          
+                          <!-- July July -->
+                          
+                        
+                          
+                          <!-- June July -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011June'>June 2011</a></li>
+                          
+                        
+                          
+                          <!-- March June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011March'>March 2011</a></li>
+                          
+                        
+                          
+                          <!-- January March -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011January'>January 2011</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010December'>December 2010</a></li>
+                          
+                        
+                          
+                          <!-- November December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010November'>November 2010</a></li>
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- October November -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010October'>October 2010</a></li>
+                          
+                        
+                          
+                          <!-- October October -->
+                          
+                        
+                          
+                          <!-- September October -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010September'>September 2010</a></li>
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- August September -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010August'>August 2010</a></li>
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                      </ul>
+                </aside>
+            </div>
+            <!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="http://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='../../../../javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+</body>
+</html>

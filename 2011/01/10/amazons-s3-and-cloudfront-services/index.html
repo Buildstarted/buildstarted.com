@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Amazons s3 and cloudfront services &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="../../../../stylesheets/style.css" />
+</head>
+<body class="home blog">
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="../../../../index.html" title="BuildStarted.com" rel="home">
+                    <img src="http://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="../../../../index.html" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="index.html#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="../../../../about/index.html">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content">
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Amazons s3 and cloudfront services</h1>
+
+    <p>This is my company&rsquo;s busy season and the sudden outage of one of our T1 lines resulted in us scrambling for a solution to give our clients access to their downloads at a reasonable speed. 15Kbps is <em>not</em> acceptable! I happen to just start using Amazon&rsquo;s EC2 for personal reasons and was thus becoming familiar with the system. We needed to setup a remote host right away. Including our webserver. (Not just files) So, after a brief discussion, I offered to use my account for hosting so that we can get up and running right away. This was going to be my first Windows machine setup.</p>
+
+<p>Anyway, after we set this up we realized that we only really need file hosting and not full hosting. So we looked up <strong><a href='http://aws.amazon.com/s3/'>S3</a></strong> on Amazon. We could then put the files up on S3 while having our webserver just point to the new locations on our locally hosted site.</p>
+
+<h2>S3</h2>
+
+<p>S3 (which stands for Simple Storage Service) is a filehosting service offered by Amazon. It&rsquo;s not a webserver. It doesn&rsquo;t execute or parse scripts. It simply serves files. The pricing for the service seems to be on par with similar pricing for outbound data for EC2 so there really aren&rsquo;t going to be any surprises for this. Most people won&rsquo;t use more than 1TB unless you&rsquo;ve got a lot of data that a lot of people want. You&rsquo;re looking at $0.14 per GB which is a tad expensive. But you&rsquo;re taking advantage of Amazon&rsquo;s huge infrastructure to deliver these files&hellip;so it&rsquo;s up to you what you do.</p>
+
+<p>Pricing for their storage - and this is actual storage not bandwidth costs. This is an important distinction. Also, prices are <strong>Per Month</strong>.</p>
+
+
+
+
+
+<table id='s3'>
+    <thead>
+        <tr>
+            <th>Storage Amount</th>
+            <th>Standard pricing (Per Gigabyte)</th>
+            <th>Reduced Redundancy Storage (Per Gigabyte)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class='rowhighlight'>
+            <td>1TB</td>
+            <td>$0.140</td>
+            <td>$0.093</td>
+        </tr>
+        <tr>
+            <td>49TB</td>
+            <td>$0.125</td>
+            <td>$0.083</td>
+        </tr>
+        <tr>
+            <td>450TB</td>
+            <td>$0.110</td>
+            <td>$0.073</td>
+        </tr>
+        <tr>
+            <td>500TB</td>
+            <td>$0.095</td>
+            <td>$0.063</td>
+        </tr>
+        <tr>
+            <td>4000TB</td>
+            <td>$.080</td>
+            <td>$0.053</td>
+        </tr>
+        <tr>
+            <td>5000TB +</td>
+            <td>$0.055</td>
+            <td>$0.037</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<p>Data Transfer Costs:</p>
+
+<table id='s3'>
+    <thead>
+        <tr>
+            <th>Data Transfer Costs</th>
+            <th>Standard pricing</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class='highlight'>
+            <td>IN</td>
+            <td>$0.10</td>
+        </tr>
+        <tr>
+            <td>1GB</td>
+            <td>$0.00</td>
+        </tr>
+        <tr>
+            <td>10TB</td>
+            <td>$0.15</td>
+        </tr>
+        <tr>
+            <td>40TB</td>
+            <td>$0.11</td>
+        </tr>
+        <tr>
+            <td>100TB</td>
+            <td>$0.09</td>
+        </tr>
+        <tr>
+            <td>150TB +</td>
+            <td>$0.08</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<p>Request Costs:</p>
+
+<table id='s3'>
+    <thead>
+        <tr>
+            <th>Requests</th>
+            <th>Standard pricing</th>
+            <th>Number of Requests</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class='highlight'>
+            <td>PUT, COPY, POST, LIST</td>
+            <td>$0.01</td>
+            <td>1,000 requests</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>$0.01</td>
+            <td>10,000 requests</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<h3>Reduced Redundancy Storage</h3>
+
+<p>Couple things to note about RRS. It&rsquo;s cheaper, obviously, however it&rsquo;s not guaranteed to be available 24/7. You may experience a higher dataloss rate with RRS than you would with Standard. However, if the data you&rsquo;re hosting on RRS isn&rsquo;t critical and can easily be replaced then you&rsquo;re best bet is to host it there. RRS has a 99.99% durability guarantee while the Standard has a 99.999999999%. The durability guarantee is covered by Amazon&rsquo;s SLA with refunds when applicable.</p>
+
+<h3>Buckets</h3>
+
+<p>S3 starts with the concept of a Bucket.</p>
+
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/s3/bucketlist.png'><img src='http://aws.buildstarted.com/s3/bucketlist.png' /></a></div>
+
+
+<p>I currently have two buckets - the first one I&rsquo;ll explain later. The second one is just a personal bucket that I posted for testing. Bucket files can generally be accessed via a simple url <strong>https://s3.amazonaws.com/Bucket Name/File name.extension</strong>. You may also add folders to your bucket in the same way. One thing I&rsquo;m not sure about is whether or not Bucket Names must be unique across the board, given the url it seems necessary and I haven&rsquo;t come across any issues with it yet.</p>
+
+<p>So far, it seems, you can have any number of sub directories within your bucket as well as any number of files. I haven&rsquo;t really tested this thoroughly and I don&rsquo;t need to really since it serves my current purposes and I doubt I&rsquo;ll need more than a few hundred files per directory - let alone a few thousand.</p>
+
+<h3>Uploading Files</h3>
+
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/s3/uploadfiles.png'><img src='http://aws.buildstarted.com/s3/uploadfiles.png' style='width:100%;' /></a></div>
+
+
+<p>The file upload screen is just as standard as any other I&rsquo;m sure you&rsquo;ve worked with. The main thing to notice is the ability to select where your files will be hosted. Standard or Reduced Redundancy Storage.</p>
+
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/s3/uploadfilepermissions.png'><img src='http://aws.buildstarted.com/s3/uploadfilepermissions.png' style='width:100%;' /></a></div>
+
+
+<p>You can also set file permissions while uploading. This saves an extra few steps later as this can all be done on  one screen vs. going through all your files later. There are more fine-grained permissions that you could apply here as well but I haven&rsquo;t really gone through them well enough to post here.</p>
+
+<h3>Files</h3>
+
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/s3/s3filelist.png'><img src='http://aws.buildstarted.com/s3/s3filelist.png' style='width:100%;' /></a></div>
+
+
+<p>The Filelist is very much like any other file explorer you&rsquo;ve used so there doesn&rsquo;t seem to be any learning curve here.</p>
+
+<p>You can view file details such as size, and the Url of where the file is currently located. On the next tab you can see all the permissions. There really isn&rsquo;t much to do here really. Just nice to be able to modify it quickly and easily.</p>
+
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/s3/filedetails.png'><img src='http://aws.buildstarted.com/s3/filedetails.png' style='width:100%;' /></a></div>
+
+
+
+
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/s3/filepermissions.png'><img src='http://aws.buildstarted.com/s3/filepermissions.png' style='width:100%;' /></a></div>
+
+
+
+
+<div style='text-align:center;'><a href='http://aws.buildstarted.com/s3/filemetadata.png'><img src='http://aws.buildstarted.com/s3/filemetadata.png' style='width:100%;' /></a></div>
+
+
+<p>The metadata tab is a nice feature though Amazon has correctly guessed all the file-types I&rsquo;ve uploaded.</p>
+
+<h2>CloudFront</h2>
+
+<p>If you have a large audience, with locations around the globe, you may want to utilize Cloudfront to distribute your files. This has the advantage of low latency and high transfer speeds and makes you look better to your customers. It&rsquo;s a win-win.</p>
+
+<p>Costs:</p>
+
+<table id='s3'>
+    <thead>
+        <tr>
+            <th>Outbound Transfers</th>
+            <th>Pricing Per Gigabyte</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class='highlight'>
+            <td>First 10 TB</td>
+            <td>$0.15</td>
+        </tr>
+        <tr>
+            <td>Next 40TB</td>
+            <td>$0.10</td>
+        </tr>
+        <tr>
+            <td>Next 100TB</td>
+            <td>$0.08</td>
+        </tr>
+        <tr>
+            <td>Next 100TB</td>
+            <td>$0.07</td>
+        </tr>
+        <tr>
+            <td>Next 250TB</td>
+            <td>$0.06</td>
+        </tr>
+        <tr>
+            <td>Next 250TB</td>
+            <td>$0.05</td>
+        </tr>
+        <tr>
+            <td>Next 250TB</td>
+            <td>$0.04</td>
+        </tr>
+        <tr>
+            <td>Over 1000TB</td>
+            <td>$0.03</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<p>Requests:</p>
+
+<table id='s3'>
+    <thead>
+        <tr>
+            <th>Requests</th>
+            <th>Pricing Per 10,000 Requests</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>HTTP Requests</td>
+            <td>$0.0075</td>
+        </tr>
+        <tr>
+            <td>HTTPS</td>
+            <td>$0.01</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<p>The first step is to create a <strong>Distribution</strong>.</p>
+
+<div style='text-align:center;'><a href='http://cloudfront.buildstarted.com/cloudfront/cloudfrontdistribution.png'><img src='http://cloudfront.buildstarted.com/cloudfront/cloudfrontdistribution.png' /></a></div>
+
+
+<p>The Origin is where your files will be retrieved when the Cloudfront server doesn&rsquo;t have them already loaded. The files are cached and removed every 24 hours. You can change this on the Origin server by having your origin server alter the <em>cache-control</em> header to change it to a much larger timeout if your files don&rsquo;t need to be refreshed often.</p>
+
+<div style='text-align:center;'><a href='http://cloudfront.buildstarted.com/cloudfront/cache-control.png'><img src='http://cloudfront.buildstarted.com/cloudfront/cache-control.png' style='width:100%;' /></a></div>
+
+
+<p>You should leave CNAME blank for now since you can&rsquo;t do anything with it until <em>after</em> you get your randomly assigned domain name.</p>
+
+<p>For now you should make your Distribution disabled as it takes a while to actually deploy your new distribution. Then you&rsquo;ll see something like:</p>
+
+<p><a href='http://cloudfront.buildstarted.com/cloudfront/overview.png'><img src='http://cloudfront.buildstarted.com/cloudfront/overview.png' style='width:100%;' /></a></p>
+
+<p>When you&rsquo;re all ready and have setup everything go ahead and press &ldquo;Enable&rdquo; - it will take about 15 minutes to deploy your setup and you&rsquo;re all done.</p>
+
+<h2>CNAMEs</h2>
+
+<p>One of the great features of Amazon&rsquo;s services is the ability to CNAME their default domain.
+Cloudfront gives you a randomly assigned domain - such as mine: <strong>d1phkhug8d4y65.cloudfront.net</strong>. That&rsquo;s not very friendly to remember and looks horrible if you give that link to someone. So just go to your DNS provider and add a CNAME record and point it to your cloudfront domain or your S3 bucket name. For this example I&rsquo;ve chosen <strong>aws.buildstarted.com</strong> as my S3 CNAME and cloudfront.buildstarted.com as my Cloudfront domain. If you look, you&rsquo;ll see that I&rsquo;m using both of these new domains on this particular post. The Cloudfront images are hosted on my cloudfront domain, while the S3 images are hosted on my aws domain. One thing to note, while you have to tell Cloudfront what CNAMEs you&rsquo;ll be using S3 has no such feature. You have to specify your domain as your Bucket Name. That&rsquo;s why I named my S3 bucket <strong>aws.buildstarted.com</strong>. That&rsquo;s my CNAME domain. If you do not register your bucket name like that then CNAMEs will not work.</p>
+
+<h2>Final</h2>
+
+<p>I hope this gives everyone another small glimpse into what is possible with Amazon&rsquo;s services. I hope to post more of these in the coming month or so as I get more and more familiar with their product.</p>
+
+<h3>Ben</h3>
+
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'buildstarted';
+        var disqus_url = "http://buildstarted.com/2011/01/10/amazons-s3-and-cloudfront-services/";
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content -->
+
+            <div id="secondary" class="widget-area" role="complementary">
+                <aside id="text-5" class="widget widget_text">
+                    <h1 class="widget-title">Follow</h1>
+                    <div class="textwidget">
+                        <a href="http://twitter.com/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://twitter.com']);">Twitter</a><br />
+                        <a href="http://stackoverflow.com/users/365526/buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://stackoverflow.com']);">Stackoverflow.com</a><br />
+                        <a href="https://plus.google.com/118314403854065988234" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://plus.google.com']);">Google+</a><br />
+                        <a href="https://github.com/Buildstarted" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://github.com']);">Github</a>
+                    </div>
+                </aside>
+                <aside id="text-8" class="widget widget_text">
+                    <h1 class="widget-title">Other sites</h1>
+                    <div class="textwidget">
+                        <a href="http://typescript.io/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://typescript.io']);">typescript.io</a><br />
+                        <a href="http://csharptube.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://csharptube.com']);">csharptube.com</a><br />
+                        <a href="http://thisisparrot.com/" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://thisisparrot.com']);">Parrot</a><br />
+                    </div>
+                </aside>
+                <aside id="linkcat-6" class="widget widget_links">
+                    <h1 class="widget-title">Other Blogs</h1>
+                    <ul class='xoxo blogroll'>
+                        <li><a href="http://blog.andrewnurse.net/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://blog.andrewnurse.net/']);">Andrew Nurse @ Microsoft</a></li>
+                        <li><a href="http://weblogs.asp.net/jgalloway/" target="_top" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://weblogs.asp.net/jgalloway/']);">Jon Galloway @ Microsoft</a></li>
+                        <li><a href="http://msmvps.com/blogs/jon_skeet/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://msmvps.com/blogs/jon_skeet/']);">Jon Skeet</a></li>
+                        <li><a href="http://invalidcast.com" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://invalidcast.com']);">Martin Rue</a></li>
+                        <li><a href="http://haacked.com/" target="" onclick="javascript:_gaq.push(['_trackEvent','outbound-blogroll','http://haacked.com/']);">Phil Haack @ Github</a></li>
+
+                    </ul>
+                </aside>
+                <aside id="archives-4" class="widget widget_archive">
+                    <h1 class="widget-title">Archive</h1>
+                    
+                    
+
+                      <ul class="posts">
+                        
+                          
+                          <!-- May placeholder -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2015May'>May 2015</a></li>
+                          
+                        
+                          
+                          <!-- December May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014December'>December 2014</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- June December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014June'>June 2014</a></li>
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014May'>May 2014</a></li>
+                          
+                        
+                          
+                          <!-- January May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2014January'>January 2014</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013December'>December 2013</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- June December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013June'>June 2013</a></li>
+                          
+                        
+                          
+                          <!-- June June -->
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013May'>May 2013</a></li>
+                          
+                        
+                          
+                          <!-- February May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2013February'>February 2013</a></li>
+                          
+                        
+                          
+                          <!-- November February -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012November'>November 2012</a></li>
+                          
+                        
+                          
+                          <!-- September November -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012September'>September 2012</a></li>
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- August September -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012August'>August 2012</a></li>
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- July August -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012July'>July 2012</a></li>
+                          
+                        
+                          
+                          <!-- July July -->
+                          
+                        
+                          
+                          <!-- June July -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012June'>June 2012</a></li>
+                          
+                        
+                          
+                          <!-- May June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012May'>May 2012</a></li>
+                          
+                        
+                          
+                          <!-- February May -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012February'>February 2012</a></li>
+                          
+                        
+                          
+                          <!-- January February -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2012January'>January 2012</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011December'>December 2011</a></li>
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- December December -->
+                          
+                        
+                          
+                          <!-- October December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011October'>October 2011</a></li>
+                          
+                        
+                          
+                          <!-- August October -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011August'>August 2011</a></li>
+                          
+                        
+                          
+                          <!-- July August -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011July'>July 2011</a></li>
+                          
+                        
+                          
+                          <!-- July July -->
+                          
+                        
+                          
+                          <!-- June July -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011June'>June 2011</a></li>
+                          
+                        
+                          
+                          <!-- March June -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011March'>March 2011</a></li>
+                          
+                        
+                          
+                          <!-- January March -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2011January'>January 2011</a></li>
+                          
+                        
+                          
+                          <!-- January January -->
+                          
+                        
+                          
+                          <!-- December January -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010December'>December 2010</a></li>
+                          
+                        
+                          
+                          <!-- November December -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010November'>November 2010</a></li>
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- November November -->
+                          
+                        
+                          
+                          <!-- October November -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010October'>October 2010</a></li>
+                          
+                        
+                          
+                          <!-- October October -->
+                          
+                        
+                          
+                          <!-- September October -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010September'>September 2010</a></li>
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- September September -->
+                          
+                        
+                          
+                          <!-- August September -->
+                          
+                            
+                            <li><a href='../../../../archive.html#2010August'>August 2010</a></li>
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                          
+                          <!-- August August -->
+                          
+                        
+                      </ul>
+                </aside>
+            </div>
+            <!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="http://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='../../../../javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+</body>
+</html>
