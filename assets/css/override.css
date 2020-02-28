@@ -1,4 +1,4 @@
-@media screen and (max-width: 1281px) {
+@media screen and (min-width: 1281px) {
     #banner {
         padding: 5em 0 0 0;
     }
