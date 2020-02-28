@@ -1,10 +1,11 @@
-#banner {
-	padding: 5em 0 0 0;
+@media screen and (max-width: 1281px) {
+    #banner {
+        padding: 5em 0 0 0;
+    }
 }
 
-
-@media screen and (max-width: 736px) { 
-	#banner { 
-		padding: 3em 2em 1em 2em; 
-	}
+@media screen and (max-width: 736px) {
+    #banner {
+        padding: 3em 2em 1em 2em;
+    }
 }
