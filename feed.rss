@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+	<channel>
+		<title>buildstarted.com</title>
+		<link>http://buildstarted.com/</link>
+		<description>buildstarted.com</description>
+		<copyright>2020</copyright>
+		<pubDate>Fri, 28 Feb 2020 19:46:19 GMT</pubDate>
+		<lastBuildDate>Fri, 28 Feb 2020 19:46:19 GMT</lastBuildDate>
+		<item>
+			<title>New blog, who dis?</title>
+			<link>http://buildstarted.com/posts/newblog-who-dis</link>
+			<description>&lt;p&gt;I'm back! Sorta. I'll post when I feel like something interests me enough or I want to share
+a project I've been working on.&lt;/p&gt;</description>
+			<guid>http://buildstarted.com/posts/newblog-who-dis</guid>
+			<pubDate>Wed, 26 Feb 2020 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;I'm back! Sorta. I'll post when I feel like something interests me enough or I want to share
+a project I've been working on.&lt;/p&gt;
+&lt;h3 id="buildstarted"&gt;-Buildstarted&lt;/h3&gt;
+</content:encoded>
+		</item>
+	</channel>
+</rss>

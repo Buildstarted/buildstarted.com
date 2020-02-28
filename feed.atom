@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<id>http://buildstarted.com/</id>
+	<title>buildstarted.com</title>
+	<link rel="self" href="http://buildstarted.com/" />
+	<rights>2020</rights>
+	<updated>2020-02-28T19:46:19Z</updated>
+	<subtitle>buildstarted.com</subtitle>
+	<entry>
+		<id>http://buildstarted.com/posts/newblog-who-dis</id>
+		<title>New blog, who dis?</title>
+		<link href="http://buildstarted.com/posts/newblog-who-dis" />
+		<updated>2020-02-26T00:00:00Z</updated>
+		<content>&lt;p&gt;I'm back! Sorta. I'll post when I feel like something interests me enough or I want to share
+a project I've been working on.&lt;/p&gt;
+&lt;h3 id="buildstarted"&gt;-Buildstarted&lt;/h3&gt;
+</content>
+		<summary>&lt;p&gt;I'm back! Sorta. I'll post when I feel like something interests me enough or I want to share
+a project I've been working on.&lt;/p&gt;</summary>
+	</entry>
+</feed>
