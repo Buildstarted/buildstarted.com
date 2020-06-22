@@ -1079,3 +1079,22 @@ ul.posts {
 #post a {
 	font-size: inherit;
 }
+
+.devring {
+	background: #222;
+	color: #fff;
+}
+.devring-container {
+	padding: .25em;
+	max-width: 1024px; 
+	margin-left: auto; 
+	margin-right: auto; 
+	display: grid; 
+	grid-template-columns: .5fr 1fr 1fr 1fr; 
+	text-align: center;
+}
+
+.devring-container a {
+	color: #ccc;
+	text-decoration: none;
+}
