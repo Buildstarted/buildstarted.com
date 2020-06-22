@@ -15,6 +15,26 @@
 		<link rel="stylesheet" href="/assets/sass/main.css" />
 		<!--[if lte IE 9]><link rel="stylesheet" href="/assets/sass/ie9.css" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="/assets/sass/ie8.css" /><![endif]-->
+		<style type="text/css">
+			.devring {
+				background: #222;
+				color: #fff;
+			}
+			.devring-container {
+				padding: .25em;
+				max-width: 1024px; 
+				margin-left: auto; 
+				margin-right: auto; 
+				display: grid; 
+				grid-template-columns: .5fr 1fr 1fr 1fr; 
+				text-align: center;
+			}
+
+			.devring-container a {
+				color: #ccc;
+				text-decoration: none;
+			}
+		</style>
         <link rel="stylesheet" type="text/css" href="/assets/css/override.css" />
 <script async defer>
     _dna = window._dna || {};
@@ -32,7 +52,14 @@
 </script>
 	</head>
 	<body>
-
+    	<div class="devring">
+			<div class="devring-container">
+				<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+				<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+				<a href="https://devring.club/random" class="devring-random">Random</a>
+				<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+			</div>
+		</div>
 		<!-- Page Wrapper -->
 			<div id="page-wrapper">
 				
