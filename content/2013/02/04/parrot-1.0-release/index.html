@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Parrot 1.0 Release &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Parrot 1.0 Release</h1>
+
+    <p>I&rsquo;m proud to announce that Parrot is going 1.0 this week. It went through a lot of changes to get it here. Several major &ldquo;rewrites&rdquo; of portions of the system to handle usages I had not conceived of while writing.
+The more interesting change was the removal of the dependency resolver. Thanks to <a href="https://www.grumpydev.com/">GrumpyDev</a> for his help in that area.</p>
+
+<h3>Javascript</h3>
+
+<p>One of the more interesting releases is that of a javascript parrot parser. It can be used in webpages or possibly with nodejs once a wrapper is written.
+Including the required files and jQuery makes it as simple as</p>
+
+<pre><code>var html = $("#template").parrot();
+</code></pre>
+
+<p>You can then insert it in your webpage just like any html string.</p>
+
+<pre><code>$("body").html($("#homepage").parrot());
+</code></pre>
+
+<p><img src="/images/parrot-javascript.png" alt="Parrot in javascript" /></p>
+
+<p>Here&rsquo;s how it&rsquo;s used on the home page for <a href="https://thisisparrot.com/">Parrot</a>.</p>
+
+<h3>Nancy</h3>
+
+<p>Also with this release a version of the Parrot View Engine for the <a href="https://nancyfx.org/">NancyFx</a>. Porting Parrot over to Nancy was one of the ways I found everything that could be wrong with Parrot. This caused several rewrites as I realized I was really dependent on Asp.net.
+I think this has streamlined how it works.</p>
+
+<h3>Asp.Net</h3>
+
+<p>And of course, there&rsquo;s support for Asp.Net MVC.</p>
+
+<h3>Nuget</h3>
+
+<p>Installing parrot is easy with Nuget</p>
+
+<div class="nuget-badge"><p><code>PM&gt; Install-Package Parrot.AspNet</code></p></div>
+
+
+<div class="nuget-badge"><p><code>PM&gt; Install-Package Nancy.ViewEngines.Parrot</code></p></div>
+
+
+<h3>Live demo</h3>
+
+<p><img src="/images/thisisparrot.png" alt="This is parrot" /></p>
+
+<p>So checkout the website at <a href="https://thisisparrot.com/">https://thisisparrot.com/</a> and try Parrot out for yourself.</p>
+
+<p>-Ben Dornis</p>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Htmlhelper guide for mvc 3 part 1 &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Htmlhelper guide for mvc 3 part 1</h1>
+
+    <p>When you spend a lot of time, like I do, using the Razor View Engine in MVC 3 you&rsquo;ll find yourself constantly looking up helper parameters. I&rsquo;ve decided to put together this guide to help me, and others, to code more quickly and efficiently. This is part one of an n-part series involving all html helpers contained in MVC 3.</p>
+
+<h2>AntiForgeryToken</h2>
+
+<p>AntiForgeryToken adds a hidden input element to your output that can then be verified on the server to validate that the form was generated from the server. The token a serialized string that is composed of an optional salt and the authenticated user, if available.</p>
+
+<p>Validation occurs when the <strong>ValidateAntiForgeryToken</strong> attribute is attached to a class or action in a controller. It checks to make sure the input element <strong>and</strong> cookie are set, compares the two values, compares the salts contained in the value with the salt passed in the ValidateAntiForgeryToken and compares the username with the authenticated user. If any of these fails it throws a <strong>CreateValidationException</strong> which you can catch in the <strong>OnException</strong> override in the controller class.</p>
+
+<h3>ValidateAntiForgeryToken Usage</h3>
+
+<pre><code>[ValidateAntiForgeryToken]
+public class HomeController : Controller { }
+
+[ValidateAntiForgeryToken(Salt="somerandomsalt")]
+public class HomeController : Controller { }
+
+public class HomeController : Controller {
+
+    [ValidateAntiForgeryToken]
+    public ActionResult Edit(FormCollection postData) {
+    }
+}
+
+public class HomeController : Controller {
+
+    [ValidateAntiForgeryToken(Salt="somerandomsalt")]
+    public ActionResult Edit(FormCollection postData) {
+    }
+}
+</code></pre>
+
+<h3>Html.AntiForgeryTokenUsage</h3>
+
+<pre><code>@Html.AntiForgeryToken()
+@Html.AntiForgeryToken("somerandomsalt")
+@Html.AntiForgeryToken("somerandomsalt", "cookiedomain", "cookiepath")
+
+&lt;input name="&amp;#95;&amp;#95;RequestVerificationToken" type="hidden" value="DZ/jNEe1xi+vWLTnt384S+l+MR7bmo+39mtU6/q938vUdzBj9TJoTWC85LhyW2Sy" /&gt;
+&lt;input name="&amp;#95;&amp;#95;RequestVerificationToken" type="hidden" value="NCUSPV2a8oYmb9HybwSlm/4fITS+tVM3fnNVn8NC23iUTQSdcuFKC7Fc1b6BlM9RkfZg79Pofu18Tuautk271A==" /&gt;
+&lt;input name="&amp;#95;&amp;#95;RequestVerificationToken" type="hidden" value="NCUSPV2a8oYmb9HybwSlm/4fITS+tVM3fnNVn8NC23iUTQSdcuFKC7Fc1b6BlM9RkfZg79Pofu18Tuautk271A==" /&gt;
+</code></pre>
+
+<p>The output for the last two AntiForgeryToken calls result in the same values because the cookiedomain and cookiepath parameters only affect the HttpCookie and not the token itself.</p>
+
+<h2>AttributeEncode</h2>
+
+<p>This method converts an object or string into an Html-encoded string. AttributeEncode only encodes <strong>&amp;</strong>, <strong>&lsquo;</strong>, <strong>&lt;</strong> and <strong>&ldquo;</strong> into their equivalent <strong>&amp;amp;</strong> <strong>&amp;#39</strong> <strong>&amp;lt;</strong> <strong>&amp;quot;</strong></p>
+
+<h3>Usage</h3>
+
+<pre><code>@Html.AttributeEncode("This will convert &amp; \' &lt; \" into html escaped characters.")
+
+@Html.AttributeEncode(SomeRandomObject)
+</code></pre>
+
+<p>The object overload of AttributeEncode will use the <strong>Convert.ToString</strong> method to create an InvariantCulture string and then AttributeEncode that.</p>
+
+<h2>Encode</h2>
+
+<p>Encode is a more powerful version of AttributeEncode. It encodes all the same characters, however, it includes <strong>></strong> and quite a few international characters.</p>
+
+<h3>Usage</h3>
+
+<pre><code>@Html.Encode("This will convert a number of different characters into html escaped characters.")
+
+@Html.Encode(SomeRandomObject)
+</code></pre>
+
+<p>The object overload performs the same as AttributeEncode&rsquo;s object overload.</p>
+
+<h2>HttpMethodOverride</h2>
+
+<p>Html forms only support <strong>GET</strong> and <strong>POST</strong>. However, if you are writing your apps with REST in mind you&rsquo;d like to have an action method look like</p>
+
+<pre><code>[HttpDelete]
+public ActionResult DeleteEntry(int id)
+</code></pre>
+
+<p>You can still implement this in MVC by using HttpMethodOverride.</p>
+
+<h3>Usage</h3>
+
+<pre><code>@using (Html.BeginForm("Delete", "Home", new { method = "Delete" })) {
+    @Html.HttpMethodOverride(HttpVerbs.Delete)
+
+    &lt;input type="submit" value=" Delete " /&gt;
+}
+
+&lt;form action="/Home/DeleteEntry/53" method="post"&gt;
+    &lt;input name="X-HTTP-Method-Override" type="hidden" value="DELETE" /&gt;
+    &lt;input type="submit" value=" Delete "  /&gt;
+&lt;/form&gt;
+</code></pre>
+
+<p>The X-HTTP-Method-Override will inform MVC that this is actually a DELETE request and look for a method with the <strong>HttpDeleteAttribute</strong>.</p>
+
+<p>These are all the Html helper methods that are not extension methods. Extension methods will be covered in the next post</p>
+
+<h3>- Ben</h3>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

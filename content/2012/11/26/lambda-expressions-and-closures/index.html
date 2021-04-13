@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Lambda expressions and closures &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Lambda expressions and closures</h1>
+
+    <p>I&rsquo;ve been dealing a lot with anonymous methods lately I started getting interested in how they work, especially when dealing with closures. I was curious how these variables worked.</p>
+
+<pre><code>for(int i = 0; i &lt; 10; i++) 
+{
+    Task.Factory.StartNew(() =&gt; Console.WriteLine(i));
+}
+</code></pre>
+
+<p>One might think that this would output <code>0, 1, 2, 3, 4...9</code> however as the anonymous methods might not be run at the time they&rsquo;re defined and the loop may finish faster and set <code>i</code> to <code>10</code> before the anonymous methods are even executed (depending on the speed of your system). The output on my system results in 10 lines of <code>10</code>. The reason for this is how c# generates the code for this. I&rsquo;ve simplified it for brevity.</p>
+
+<pre><code>//original code
+class Program
+{
+    static void Main()
+    {
+        for (int i = 0; i &lt; 10; i++)
+        {
+            Task.Factory.StartNew(() =&gt; Console.WriteLine(i));
+        }
+    }
+}
+
+//after compilation
+//this code has been simplified
+//for readability
+class Program
+{
+    static void Main()
+    {
+        c__DisplayClass2 cDisplayClass2 = new c__DisplayClass2();
+        for (cDisplayClass2.i = 0; cDisplayClass2.i &lt; 10; cDisplayClass2.i++)
+        {
+            Task.Factory.StartNew((Action)(cDisplayClass2.b__0));
+        }
+    }
+}
+
+[CompilerGenerated]
+private sealed class c__DisplayClass2
+{
+    public int i;
+
+    public void b__0()
+    {
+        Console.WriteLine(this.i);
+    }
+}
+</code></pre>
+
+<p>Wow. The lambda expression sure does hide a lot of code. Let&rsquo;s see what&rsquo;s going on here. Notice a new class was created and it has a public property <code>i</code>. This replaces the local variable in the <code>for/loop</code>. This is how we can access the closure within the anonymous method. It no longer exists in the context of a local variable of the function but as a global field of the generated class. As the methods don&rsquo;t necessarily execute when called you must make sure to make a local copy of that variable. If not the member variable might change before execution.</p>
+
+<p>What if you&rsquo;re accessing a member field of the calling class?</p>
+
+<pre><code>//original
+class Program
+{
+    private string test = "test";
+
+    static void Main()
+    {
+        var p = new Program();
+        p.Run();
+    }
+
+    private void Run()
+    {
+        Task.Factory.StartNew(() =&gt; Console.WriteLine(test));
+    }
+}
+
+
+//after compilation
+//this code has been simplified
+//for readability
+class Program
+{
+    private string test = "test";
+
+    private static void Main(string[] args)
+    {
+        new Program().Run();
+    }
+
+    private void Run()
+    {
+        Task.Factory.StartNew((Action)(b__0));
+    }
+
+    [CompilerGenerated]
+    private void b__0()
+    {
+        Console.WriteLine(this.test);
+    }
+}
+</code></pre>
+
+<p>As we can see, this time, the <code>CompilerGenerated</code> method resides in the same class. This is required because it needs to access the same field of the calling class. However, if you need both, access to a local variable and one to a member variable it creates a second class with a references to the caller.</p>
+
+<pre><code>//after compilation
+//this code has been simplified
+//for readability
+class Program
+{
+    private string test = "test1";
+
+    private void Run()
+    {
+        c__DisplayClass1 cDisplayClass1 = new c__DisplayClass1();
+        cDisplayClass1.__this = this;
+        Task.Factory.StartNew((Action)(b__0));
+    }
+
+    [CompilerGenerated]
+    private sealed class c__DisplayClass1
+    {
+      public string test1;
+      public Program __this;
+
+      public void b__0()
+      {
+          Console.WriteLine(this.__this.test + this.test1);
+      }
+    }
+}
+</code></pre>
+
+<p>Knowing how the compiler acts on your code is important. Hopefully this will give you some insight as to how some of the magic with anonymous methods/functions happens.</p>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

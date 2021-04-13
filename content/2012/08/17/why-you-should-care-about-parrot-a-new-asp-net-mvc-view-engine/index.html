@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Why you should care about Parrot a new Asp.net mvc view engine &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Why you should care about Parrot a new Asp.net mvc view engine</h1>
+
+    <p>This post highlights some of the main features of what Parrot is with a little detail thrown in.</p>
+
+<h3>Test drive</h3>
+
+<p>I have a <a href="https://testdrive.thisisparrot.com/">test drive</a> page that allows you to try out Parrot from your browser. Note that the test drive actually uses the alpha bits available for download from Nuget to render pages. It&rsquo;s a work in progress (standard Works On My Machine disclaimer) but it really helps demonstrate how Parrot works.</p>
+
+<p><a href="https://testdrive.thisisparrot.com/"><img src="https://a248.e.akamai.net/camo.github.com/7dded2d4f58f34f104ab8a1c1d34410162fea184/687474703a2f2f6177732e6275696c64737461727465642e636f6d2f746573742d64726976652e706e67" alt="Parrot's Test Drive" title="&quot;Parrot's Test Drive&quot;" style="max-width:100%;"></a></p>
+
+<h2>Simplicity</h2>
+
+<p>Creating a clean view is very simple. Much of the fluff has been removed and you&rsquo;re left with only what you need to define the document. Html can be verbose and an attempt has been made to minimize the amount of text needed to define a document to what is necessary. To that end I&rsquo;ve decided to use the css selector syntaxes. I&rsquo;m going to show you a sample of html then Parrot and then a short-hand Parrot (that works only for divs)</p>
+
+<pre><code>&lt;div id="some-id"&gt;&lt;/div&gt;
+
+div#some-id
+
+#some-id
+</code></pre>
+
+<p>They all produce the same output. Notice the cleaner syntax of Parrot. I think it allows more of a focus on the structure of the html and how models interact.</p>
+
+<h2>Model support</h2>
+
+<p>The default html renderers that ship with Parrot.Mvc have great model support. Automatically scoped variables as well as support for IEnumerables.</p>
+
+<h3>Scoped variables</h3>
+
+<p>By default variables are scoped based on their nearest parent with a parameter (defaults to the passed in model). As you traverse down the children the model values are automatically mapped to a property of the parent model parameter</p>
+
+<pre><code>var model = new 
+{
+    User = new 
+    {
+        Name = "Buildstarted",
+        Location = "Los Angeles"
+    }
+};
+
+div(User)
+{
+    label&gt; "Name"
+    span(Name)
+    label &gt; "Location"
+    span(Location)
+}
+</code></pre>
+
+<p>You can see in the above code that we didn&rsquo;t have to tell the span  style=&ldquo;display:inline;&rdquo;>Model.User.Name when we wanted to output the value. We just had to tell it name. When a model value is resolved it looks for a property on the parent that matches and will output that. Likewise the default model for all elements is <code>this</code> which is the same as <code>Model</code></p>
+
+<h3>IEnumerable support</h3>
+
+<p>IEnumerable support was something I wanted to include as a default thing in Parrot. Any time an element definition includes an IEnumerable as the first parameter and has children it will automatically loop over the parameter and create the child definition passing current element as a parameter to it. This is great for <code>ul</code>, <code>ol</code>, <code>tbody</code> and so forth. To illustrate this let&rsquo;s take a <code>List&lt;string&gt;</code> and pass it into a ul element.</p>
+
+<pre><code>var model = new 
+{
+    Authors = new List&lt;string&gt;
+    {
+        "Ray Bradbury", 
+        "Harry Harrison", 
+        "Douglas Adams",
+        "Isaac Asimov", 
+        "Arthur C. Clarke" 
+    }
+};
+
+ul(Authors) {
+    li(this)
+}
+
+&lt;ul&gt;
+    &lt;li&gt;Ray Bradbury&lt;/li&gt;
+    &lt;li&gt;Harry Harrison&lt;/li&gt;
+    &lt;li&gt;Douglas Adams&lt;/li&gt;
+    &lt;li&gt;Isaac Asimov&lt;/li&gt;
+    &lt;li&gt;Arthur C. Clarke&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<p>Note the parameter for <code>li</code> is <code>this</code> because the element we want to output is the current item in the list. If this were a property we wanted to output like <code>Name</code> we would just use <code>li(Name)</code> or <code>li &gt; :Name</code>. By default all html elements support IEnumerable parameters. Some, such as any self closing element, will ignore the parameter.</p>
+
+<h2>Renderers</h2>
+
+<p>Renderers are the heart and soul of Parrot. The grammar is just a vehicle to the renderers. Every single element and any custom element can have it&rsquo;s own renderer leading to a lot of control over the output. This also allows for a lot of flexibility. Model support, in addition, is entirely a function of the renderers. You could technically have renderers that require fully qualified model properties.</p>
+
+<p>Bottom line: Parrot view engine is built from renderers, and you can easily write your own renderers to add keywords that extend the language however you&rsquo;d like.</p>
+
+<p>Creating a new renderer is as easy as implementing an interface and adding your new class to a <code>RendererFactory</code>. Any time the renderer comes across an element it will query the RenderFactory for it&rsquo;s renderer and use it to parse the block.</p>
+
+<p>There are currently several custom renderers including a renderer that supports a <code>layout</code> view, <code>foreach</code> and <code>doctype</code>.</p>
+
+<pre><code>//child view
+layout("viewname") {
+    ...content goes here...
+}
+
+//layout view
+html &gt; body {
+    content
+}
+</code></pre>
+
+<p>Renderers can also override the default element for short-cut statements. For instance the following will not output the <code>div</code> but will instead output <code>li</code></p>
+
+<pre><code>ul(Authors) &gt; .item(this)
+&lt;ul&gt;
+    &lt;li class="item"&gt;Ray Bradbury&lt;/li&gt;
+    ...
+&lt;/ul&gt;
+</code></pre>
+
+<h3>Future posts</h3>
+
+<p>I&rsquo;m going to go into more detail about the grammar in a future blog post as well as go into details about creating a custom renderer and how the rendererfactory works.</p>
+
+<h3>Nuget</h3>
+
+<p>I&rsquo;ll try to go into detail on each feature of Parrot as questions come in. But in the mean time you can try out Parrot for yourself. The alpha bits are available on <a href="https://nuget.org/packages?q=Parrot">Nuget</a>. You can ask questions on <a href="https://jabbr.net">Jabbr</a> in the <a href="https://jabbr.net/#rooms/parrot">Parrot</a> room. I&rsquo;ll answer them when I can. You can always bug me on <a href="https://twitter.com/Buildstarted">Twitter</a>.</p>
+
+<p><strong>-Ben Dornis</strong></p>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

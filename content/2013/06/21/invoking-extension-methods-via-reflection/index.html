@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Invoking extension methods via reflection &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Invoking extension methods via reflection</h1>
+
+    <p>As part of a small project I&rsquo;m working on I created a dynamic wrapper around a class that was almost exclusively used with extension methods. You can&rsquo;t just do the following.</p>
+
+<pre><code>_someClass.GetType().GetMethod("ExtensionMethod").Invoke(_someClass, null);
+</code></pre>
+
+<p>Extension methods are just some compiler trickery. They don&rsquo;t exist on the class but separately in a static class elsewhere. To do it properly you&rsquo;ll need to invoke the method on the static class.</p>
+
+<pre><code>typeof(ExtensionMethodClass)
+    .GetMethod("SomeMethod")
+    .Invoke(null, new [] { _someClass });
+</code></pre>
+
+<p>We&rsquo;re required to pass an instance of <code>_someClass</code> since that is the first parameter on all extension methods.</p>
+
+<p>This has the minor downside of knowing the extention method class that contains the method we&rsquo;re looking for. That&rsquo;s not always readily apparent with someone else&rsquo;s library and there could be any number of available classes that extend your object.</p>
+
+<p><strong>-Ben Dornis</strong></p>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

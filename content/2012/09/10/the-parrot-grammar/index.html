@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>The Parrot Grammar &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>The Parrot Grammar</h1>
+
+    <h1>Creating an element</h1>
+
+<p>Creating an html element is really simple - just type a word.</p>
+
+<pre><code>div
+a
+ul
+some-random-name
+</code></pre>
+
+<p>These will create an html element (using the default html renderer) with the word as the tag.</p>
+
+<pre><code>&lt;div&gt;&lt;/div&gt;
+&lt;a&gt;&lt;/a&gt;
+&lt;ul&gt;&lt;/ul&gt;
+&lt;some-random-name&gt;&lt;/some-random-name&gt;
+</code></pre>
+
+<h1>Adding an id or class to your new element</h1>
+
+<p>There are two ways to add an id or class declaration to your elements. We&rsquo;ll focus on the simple way in this example.</p>
+
+<pre><code>div#sample-id
+</code></pre>
+
+<p>This will simply create an html element with the id tag set to &ldquo;sample-id&rdquo;.</p>
+
+<pre><code>&lt;div id="sample-id"&gt;&lt;/div&gt;
+</code></pre>
+
+<p>The same method is used for classes but with a . instead.</p>
+
+<pre><code>div.sample-class
+&lt;div class="sample-class"&gt;&lt;/div&gt;
+</code></pre>
+
+<p>You may combine these two in one declaration. An element may only have <em>one</em> id tag but can have as many class declarations you&rsquo;d like.</p>
+
+<pre><code>div#sample-id.sample-class.other.info
+&lt;div class="sample-class other info" id="sample-id"&gt;&lt;/div&gt;
+</code></pre>
+
+<h1>Adding other attributes</h1>
+
+<p>Ids and classes aren&rsquo;t the only attributes you&rsquo;ll want to add. Adding additional attributes is simple. wrap a simple key/value pair with brackets. Multiple attributes can be added with a space in between. You can also add the id/class attributes here as well but it&rsquo;s not recommended.</p>
+
+<pre><code>div[name="value"]
+div[name="firstname" data-val-id="something"]
+
+&lt;div name="value"&gt;&lt;/div&gt;
+&lt;div name="firstname" data-val-id="something"&gt;&lt;/div&gt;
+</code></pre>
+
+<h1>Adding children</h1>
+
+<p>There are two ways to add children. To add multiple children you&rsquo;ll usually want to wrap them in a parent using curly braces. To add a single child you can append it using the <code>&gt;</code> syntax.</p>
+
+<pre><code>ul {
+    li
+    li
+    li
+    li
+}
+
+div &gt; a &gt; span
+
+&lt;ul&gt;
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div&gt;&lt;a&gt;&lt;span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;
+</code></pre>
+
+<h1>Adding siblings</h1>
+
+<p>Sometimes you don&rsquo;t need or want to wrap multiple children in curly braces. You can add siblings to an element by using the <code>+</code> selector syntax.</p>
+
+<pre><code>ul &gt; li + li + li + li
+
+&lt;ul&gt;
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<h1>Model parameters</h1>
+
+<p>To bind an element to a model you just add it to the element declaration surrounded by parenthesis <code>()</code>.</p>
+
+<pre><code>div(User)
+</code></pre>
+
+<p>This element is now bound to the User property of your model. This affects children properties as well and allows for simplified nesting.</p>
+
+<pre><code>div(User) &gt; span(FirstName) + span(LastName)
+</code></pre>
+
+<h1>String literals</h1>
+
+<p>There are several ways to output a string literal.</p>
+
+<pre><code>span &gt; | String that reads until newline character
+
+"String wrapped in quotes"
+
+@"String which doesn't
+  care about newlines"
+
+'String wrapped in single quotes'
+
+@'Multiline string wrapped
+    in single quotes'
+</code></pre>
+
+<h1>Variable outputs</h1>
+
+<p>There are two shortcuts to output a variable. If you pass in a variable to a block element and do not provide any children the variable with be added to the dom as with <code>ToString()</code> applied and added as the first child to that element. You can also encode output using <code>@</code> or raw output using <code>=</code>. (PageTitle = &ldquo;Parrot&rdquo;)</p>
+
+<pre><code>title(PageTitle)
+title &gt; :PageTitle
+title &gt; =PageTitle
+
+&lt;title&gt;Parrot&lt;/title&gt;
+</code></pre>
+
+<h1>Shortcuts</h1>
+
+<p>You can shortcut divs by leaving div out when using #sample-id or .sample-class.</p>
+
+<pre><code>#sample-id
+&lt;div id="sample-id"&gt;&lt;/div&gt;
+</code></pre>
+
+<p>Some elements can override the default tag name such as a ul or ol. The default for these elements (as children) are li.</p>
+
+<pre><code>ul &gt; #sample-id
+&lt;ul&gt;&lt;li id="sample-id"&gt;&lt;/li&gt;&lt;/ul&gt;
+</code></pre>
+
+<p>You can shortcut common attributes such as <code>type</code> as well. For instance when adding an input element you can specify it&rsquo;s type by adding a <code>:</code> followed by type.</p>
+
+<pre><code>input:text
+input:radio
+
+&lt;input type="text" /&gt;
+&lt;input type="radio" /&gt;
+</code></pre>
+
+<h1>Parser</h1>
+
+<p>This is a very brief overview of the grammar for parrot. I don&rsquo;t anticipate any near-future changes. I am currently working on an alternative parser for the language to avoid a reference to GoldParser. I hope to have it released in the next couple weeks.</p>
+
+<p><strong>-Ben Dornis</strong></p>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

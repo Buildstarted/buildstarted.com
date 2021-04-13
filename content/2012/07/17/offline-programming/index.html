@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Offline programming &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Offline programming</h1>
+
+    <p>This is the first in an n-series of posts about programming while offline. I&rsquo;ll be posting about issues and solutions to these issues that I come across.</p>
+
+<h4>Why?</h4>
+
+<p>I recently bought a house but it&rsquo;s not quite ready to move into yet. My wife and I also expecting our first child and since we&rsquo;ve already gone through the process of finding a doctor and hospital and what not to have the baby at we&rsquo;re just not ready to move. However, we go there just about every weekend. Little things that need to be done such as the lawn. Receiving furniture. Minor remodeling.</p>
+
+<p>With the length of time I spend there I don&rsquo;t feel justified in paying for internet access just yet.</p>
+
+<p>This has led to a small conundrum. I am unable to develop the same there as I do at my apt.</p>
+
+<p>Almost every project I have relies on access to Nuget. CDN hosted js files such as jQuery. Most of my public projects are hosted on Github.</p>
+
+<h4>Simple solutions</h4>
+
+<p>Nuget is easy enough to replace by downloading all of the packages that I use onto a removable drive. Access is generally slower than Nuget.org because it has no index to search.</p>
+
+<p>CDN hosted files could be hosted locally as well but with changes to how I&rsquo;m pointing to them.</p>
+
+<p>Github hosted projects are probably the easiest because git makes this nice and easy. I can push all of my commits at a later time, however it does mean I need to pull my repos to a removable drive.</p>
+
+<h4>Other issues</h4>
+
+<p>A lot of my projects also revolve around Amazon&rsquo;s AWS. It&rsquo;s what we use at work. I love trying out new things related to their offerings but there&rsquo;s no <em>emulation</em> mode available to do offline testing.</p>
+
+<p>I also love to read about technologies that I don&rsquo;t know about or would like to learn more about. I&rsquo;ve been reading about Redis and Memcached and other similar libraries/services. Harder to read about them offline.</p>
+
+<p>I also tend to chat a lot with other devs about issues I might be having with some code. I don&rsquo;t have internet on my phone and find phone keyboards to be too awkward anyway to chat on anyway so that&rsquo;s a non-issue. This will make collaboration a bit harder.</p>
+
+<h4>However</h4>
+
+<p>Sometimes you need a break from all the distractions. The latest Youtube video viraling out of control on the internet or funny cat pictures won&rsquo;t consume some of my precious time. No email from work.</p>
+
+<p>Twitter won&rsquo;t interrupt me with the latest technology or blog post written by one of my peers. Every weekend I miss out on all the interesting stuff that may have happened. I&rsquo;ve made it a rule to just ignore it. I don&rsquo;t go back and browse the history of what I might have missed. (Unless it was directed at me specifically)</p>
+
+<h4>Final</h4>
+
+<p>So far offline development hasn&rsquo;t been a picnic. Lots of downsides with a few upsides. I&rsquo;ll be going over these in more detail when/if I find better ways around them.</p>
+
+<p><strong>-Ben Dornis</strong></p>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

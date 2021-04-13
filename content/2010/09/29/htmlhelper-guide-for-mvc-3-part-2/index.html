@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Htmlhelper guide for mvc 3 part 2 &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Htmlhelper guide for mvc 3 part 2</h1>
+
+    <h2>Action</h2>
+
+<p>This method calls an action method and returns the result as a string.</p>
+
+<h3>Usage</h3>
+
+<pre><code>@Html.Action("actionName")
+@Html.Action("actionName", new { controller = "Home", id="value" })
+@Html.Action("actionName", "controllerName")
+@Html.Action("actionName", new RouteValueDictionary(new { controller="Home", id="value"}))
+@Html.Action("actionName", "controllerName", new { id= "value" })
+@Html.Action("actionName", "controllerName", new RouteValueDictionary(new {id="value"}))
+</code></pre>
+
+<p>Each Action call executes the appropriate action and returns a string. The actual output is dependent on the view.</p>
+
+<h2>Render Action</h2>
+
+<p>This method calls an action method and outputs the result inline with the parent</p>
+
+<pre><code>@{ Html.RenderAction("actionName"); }
+@{ Html.RenderAction("actionName", new { controller = "Home", id="value" }); }
+@{ Html.RenderAction("actionName", "controllerName"); }
+@{ Html.RenderAction("actionName", new RouteValueDictionary(new { controller="Home", id="value"})); }
+@{ Html.RenderAction("actionName", "controllerName", new { id= "value" }); }
+@{ Html.RenderAction("actionName", "controllerName", new RouteValueDictionary(new {id="value"})); }
+</code></pre>
+
+<p>Each RenderAction call executes the appropriate action and outputs the resulting view directly to the response inline with the existing view. As these are void methods you must put the calls within a @{ } codeblock rather than just @.</p>
+
+<h2>Display</h2>
+
+<p>This method returns and html representation of an object value.</p>
+
+<h3>Usage</h3>
+
+<pre><code>@Html.Display("ModelObject")
+@Html.Display("ModelObject", new { Value="Test" })
+</code></pre>
+
+<h2>DisplayFor</h2>
+
+<p>Renders objects as html. This is overridable by providing your own templates.</p>
+
+<h3>Usage</h3>
+
+<pre><code>@Html.DisplayFor(model =&gt; model)
+@Html.DisplayFor(model =&gt; model.property)
+@Html.DisplayFor(model =&gt; model.property, new { id = "some value" })
+@Html.DisplayFor(model =&gt; model.property, "AlternateTemplateName")
+@Html.DisplayFor(model =&gt; model.property, "AlternateTemplateName", new { id = "some value" })
+@Html.DisplayFor(model =&gt; model.property, "AlternateTemplateName", "htmlFieldName")
+@Html.DisplayFor(model =&gt; model.property, "AlternateTemplateName", "htmlFieldName", new { id = "some value" })
+</code></pre>
+
+<h3>Results</h3>
+
+<p>Results depend on the templates for the particular model you&rsquo;ve passed in. &ldquo;AlternateTemplateName&rdquo; is a template you create for your particular model. HtmlFieldName is for when you are using a template for a single field you can specify an alternate name.</p>
+
+<p><a href='https://buildstarted.com/2010/09/10/overriding-displayfor-and-editorfor-to-create-custom-outputs-for-mvc/'>More Detail</a> about custom templates in my previous post.</p>
+
+<h2>DisplayForModel</h2>
+
+<p>Same as DisplayFor but focuses on the model itself and does not accept any parameters for individual elements for a model.</p>
+
+<h3>Usage</h3>
+
+<pre><code>@Html.DisplayForModel()
+@Html.DisplayForModel(new { id = "some value" })
+@Html.DisplayForModel("AlternateTemplateName", new { id = "some value" })
+@Html.DisplayForModel("AlternateTemplateName", "htmlFieldName")
+@Html.DisplayForModel("AlternateTemplateName", "htmlFieldName", new { id = "some value" }))
+</code></pre>
+
+<h3>Results</h3>
+
+<p>Results, again, depend on the template you design for them unless you&rsquo;re using one of the built in templates provided by MVC</p>
+
+<p><a href='https://buildstarted.com/2010/09/10/overriding-displayfor-and-editorfor-to-create-custom-outputs-for-mvc/'>More Detail</a> about custom templates in my previous post.</p>
+
+<h2>DisplayText</h2>
+
+<p>DisplayText outputs the property name of a particular property.</p>
+
+<h3>Usage</h3>
+
+<pre><code>@Html.DisplayText("Title")
+</code></pre>
+
+<h3>Results</h3>
+
+<p>This particular call will output the title of the page.</p>
+
+<h2>DisplayTextFor</h2>
+
+<p>DisplayTextFor will output the title of a model property. This particular method will also look at any DataAnnotations you have applied to a property such as &ldquo;Display&rdquo; or &ldquo;DisplayName&rdquo;</p>
+
+<h3>Usage</h3>
+
+<pre><code>public class SomeModel {
+    [DisplayName("First name")]
+    [Display("First name")]
+    public string FirstName { get; set; }
+}
+
+@Html.DisplayTextFor(model =&gt; model.FirstName)
+</code></pre>
+
+<h3>Results</h3>
+
+<p>This will output &ldquo;First name&rdquo; (without quotes) using the data annotations. Otherwise it would output &ldquo;FirstName&rdquo; as it is the name of the property.</p>
+
+<p>This can further be modified by overriding the ModelmetaData.</p>
+
+<h2>Editor</h2>
+
+<p>This method returns and html input element representation of an object value.</p>
+
+<h3>Usage</h3>
+
+<pre><code>@Html.Editor("ModelObject")
+@Html.Display("ModelObject", new { Value="Test" })
+</code></pre>
+
+<h2>EditorFor</h2>
+
+<p>Renders objects as input elements. This is overridable by providing your own templates.</p>
+
+<h3>Usage</h3>
+
+<pre><code>@Html.EditorFor(model =&gt; model)
+@Html.EditorFor(model =&gt; model.property)
+@Html.EditorFor(model =&gt; model.property, new { id = "some value" })
+@Html.EditorFor(model =&gt; model.property, "AlternateTemplateName")
+@Html.EditorFor(model =&gt; model.property, "AlternateTemplateName", new { id = "some value" })
+@Html.EditorFor(model =&gt; model.property, "AlternateTemplateName", "htmlFieldName")
+@Html.EditorFor(model =&gt; model.property, "AlternateTemplateName", "htmlFieldName", new { id = "some value" })
+</code></pre>
+
+<h3>Results</h3>
+
+<p>Results depend on the templates for the particular model you&rsquo;ve passed in. &ldquo;AlternateTemplateName&rdquo; is a template you create for your particular model. HtmlFieldName is for when you are using a template for a single field you can specify an alternate name.</p>
+
+<p><a href='https://buildstarted.com/2010/09/10/overriding-displayfor-and-editorfor-to-create-custom-outputs-for-mvc/'>More Detail</a> about custom templates in my previous post.</p>
+
+<h2>EditorForModel</h2>
+
+<p>Same as EditorFor but focuses on the model itself and does not accept any parameters for individual elements for a model.</p>
+
+<h3>Usage</h3>
+
+<pre><code>@Html.EditorForModel()
+@Html.EditorForModel(new { id = "some value" })
+@Html.EditorForModel("AlternateTemplateName", new { id = "some value" })
+@Html.EditorForModel("AlternateTemplateName", "htmlFieldName")
+@Html.EditorForModel("AlternateTemplateName", "htmlFieldName", new { id = "some value" }))
+</code></pre>
+
+<h3>Results</h3>
+
+<p>Results, again, depend on the template you design for them unless you&rsquo;re using one of the built in templates provided by MVC</p>
+
+<p><a href='https://buildstarted.com/2010/09/10/overriding-displayfor-and-editorfor-to-create-custom-outputs-for-mvc/'>More Detail</a> about custom templates in my previous post.</p>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

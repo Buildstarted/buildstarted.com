@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Razor view engine without mvc at all &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Razor view engine without mvc at all</h1>
+
+    <p>Update: <a href='https://buildstarted.com/2010/11/02/razor-without-mvc-part-ii/'>Razor without MVC part II</a> contains anonymous types</p>
+
+<p>Please visit: <a href='https://www.fidelitydesign.net/?p=208'>Here</a> to find a great rewrite of this article with a very well written project that includes a VB compiler!</p>
+
+<p>In my <a href='https://buildstarted.com/2010/09/28/mvc-3-razor-view-engine-without-a-controller/'>previous post</a> I discuss using the Razor View Engine to create views from string templates using a simple call.</p>
+
+<pre><code>string Template = "Hello, @Model.Name";
+Models.User user = new Models.User() { Name = "Billy Boy" };
+RazorViewEngineRender view = new RazorViewEngineRender(Template);
+string Results = view.Render(user); //pass in your model
+</code></pre>
+
+<p>Not happy with relying on so much MVC I&rsquo;ve decided to redo this and use only what is necessary to produce results.</p>
+
+<h2>BaseWriter</h2>
+
+<p>First I needed to find out the basic requirements for using Razor. I found that Razor Code Generator creates a class with a single method called <strong>Execute</strong> that overrides some base class. Other methods that are called are <strong>WriteLiteral</strong> and <strong>Write</strong>. So i created a BaseWriter class that contains these methods</p>
+
+<pre><code>public class BaseWriter {
+    StringBuilder sb;
+
+    public BaseWriter() {
+        sb = new StringBuilder();
+    }
+
+    public string Output {
+        get {
+            return this.sb.ToString();
+        }
+    }
+
+    public void WriteLiteral(string literal) {
+        sb.Append(literal);
+    }
+
+    public void Write(object obj) {
+        sb.Append(obj);
+    }
+
+    public virtual void Execute() { }
+}
+</code></pre>
+
+<p>Internally I just write to a StringBuilder, just simpler for now.</p>
+
+<h2>Model support</h2>
+
+<p>Next I needed to add model support to the BaseWriter class. Simple enough to use generics.</p>
+
+<pre><code>public class BaseWriter&lt;T&gt; : BaseWriter {
+    T Model;
+
+    public void SetModel(T Model) {
+        this.Model = Model;
+    }
+}
+</code></pre>
+
+<h2>The compiler</h2>
+
+<p>Next I needed to take the template and convert it to an assembly. Thanks goes to <a href='https://blog.andrewnurse.net/CommentView,guid,6acc0b07-0db5-4353-b375-fbe60a209bb1.aspx'>Andrew Nurse</a> for his base example. We pass in the object we&rsquo;re going to use as the model for statements like @Model.Name We then alter our baseClass to add the model generic if it&rsquo;s not null. The rest of the code is just a basic dynamic code compiler and it returns a <strong>CompilerResult</strong>.</p>
+
+<pre><code>private CompilerResults Compile(object Model) {
+    string baseClass = "Razor.Compiler.BaseWriter" + (Model == null ? "" : "&amp;lt;" + Model.GetType().FullName + "&amp;gt;");
+
+    CodeLanguageService languageService = CodeLanguageService.GetServiceByExtension(".cshtml");
+    System.CodeDom.Compiler.CodeDomProvider provider = new CSharpCodeProvider();
+    InlinePageParser parser = new InlinePageParser(languageService.CreateCodeParser(), new HtmlMarkupParser());
+    Microsoft.WebPages.Compilation.CodeGenerator codeGenerator = languageService.CreateCodeGeneratorParserListener(ClassName, "RazorBlade.Dynamic", "object", ClassName + ".cs", baseClass);
+
+    using (StreamReader reader = new StreamReader(new System.IO.MemoryStream(System.Text.ASCIIEncoding.ASCII.GetBytes(Template)))) {
+        parser.Parse(reader, codeGenerator);
+    }
+
+    codeGenerator.GeneratedCode.Namespaces[0].Types[0].Members.RemoveAt(0);
+    codeGenerator.GeneratedCode.Namespaces[0].Imports.Clear();
+
+    System.Text.StringBuilder sb = new StringBuilder();
+    using (StringWriter writer = new StringWriter(sb)) {
+        provider.GenerateCodeFromCompileUnit(codeGenerator.GeneratedCode, writer, new System.CodeDom.Compiler.CodeGeneratorOptions());
+    }
+
+    CompilerParameters @params = new CompilerParameters();
+    foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()) {
+        @params.ReferencedAssemblies.Add(assembly.Location);
+    }
+
+    @params.GenerateInMemory = true;
+    @params.IncludeDebugInformation = false;
+    @params.GenerateExecutable = false;
+    @params.CompilerOptions = "/target:library /optimize";
+
+    return new CSharpCodeProvider().CompileAssemblyFromSource(@params, new string[] { sb.ToString() });
+}
+</code></pre>
+
+<h2>The generated code</h2>
+
+<p>Here&rsquo;s a sample of the generated code. It&rsquo;s very basic and only includes the method Execute(); The template for this particular set of code</p>
+
+<pre><code>string Template = "Hello @Model";
+
+namespace RazorBlade.Dynamic {
+    public class bcbcebecbcff : Razor.Compiler.BaseWriter {
+
+        public override void Execute() {
+            this.WriteLiteral("Hello ");
+            this.WriteLiteral(Model);
+        }
+
+    }
+}
+</code></pre>
+
+<h2>Execute</h2>
+
+<p>This method calls the compiler and based on the result throwing an exception on any errors. We then create an instance of our newly generated class. If we&rsquo;ve passed in a model let&rsquo;s call our SetModel method and then we execute and grab the output.</p>
+
+<pre><code>public string Execute(object Model) {
+    CompilerResults results = Compile(Model);
+
+    if (results.Errors.HasErrors) {
+        string console = "";
+        foreach (CompilerError error in results.Errors) { console += error.ErrorText + "\r\n"; }
+
+        throw new Exception(console);
+    }
+
+    object reference = results.CompiledAssembly.CreateInstance("RazorBlade.Dynamic." + ClassName);
+    if (Model != null)
+        reference.GetType().InvokeMember("SetModel",
+            System.Reflection.BindingFlags.Public |
+            System.Reflection.BindingFlags.InvokeMethod |
+            System.Reflection.BindingFlags.FlattenHierarchy |
+            System.Reflection.BindingFlags.Instance |
+            System.Reflection.BindingFlags.IgnoreCase, null, reference, new object[] { Model });
+
+    reference.GetType().InvokeMember("Execute",
+        System.Reflection.BindingFlags.Public |
+        System.Reflection.BindingFlags.InvokeMethod |
+        System.Reflection.BindingFlags.FlattenHierarchy |
+        System.Reflection.BindingFlags.Instance |
+        System.Reflection.BindingFlags.IgnoreCase, null, reference, null);
+
+    var value = reference.GetType().InvokeMember("Output",
+        System.Reflection.BindingFlags.Public |
+        System.Reflection.BindingFlags.FlattenHierarchy |
+        System.Reflection.BindingFlags.GetProperty |
+        System.Reflection.BindingFlags.Instance |
+        System.Reflection.BindingFlags.IgnoreCase, null, reference, null);
+
+    this.Output = value.ToString();
+
+    return this.Output;
+}
+</code></pre>
+
+<h2>Final code call</h2>
+
+<pre><code>string Template = "Hello @Model";
+
+Razor.Compiler.RazorBlade blade = new Razor.Compiler.RazorBlade(Template);
+var results = blade.Execute("World");
+</code></pre>
+
+<p>This is very simple and produces good results with more complex templates. It doesn&rsquo;t support any of the @parameters such as @inherits or @using. However I don&rsquo;t think it&rsquo;s really necessary.</p>
+
+<h2>Conclusion</h2>
+
+<p>The only additional reference this project requires is <strong>Microsoft.WebPages.Compilation.dll</strong>
+This is a fairly simple class for what I initially thought would be much more complicated. The razor parser is really well done.</p>
+
+<p>You probably shouldn&rsquo;t use this code anywhere as I haven&rsquo;t gone though and looked for any obvious errors or glaring code issues or memory-leaks.</p>
+
+<p>I hope someone takes this code to the next level.</p>
+
+<h2>Update</h2>
+
+<p>By request I&rsquo;ve created a really quick sample project. You can download it <a href='https://buildstarted.com/wp-content/uploads/2010/09/Razor.Compiler.zip'>here</a>.</p>
+
+<h3>- Ben</h3>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

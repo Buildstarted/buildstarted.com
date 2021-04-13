@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Creating a settings table that can handle almost any type of value &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Creating a settings table that can handle almost any type of value</h1>
+
+    <p><strong>Update: <a href='https://buildstarted.com/2010/08/13/update-settings-table-with-extension-methods/'>Updated article here</a>.</strong></p>
+
+<p>Today I wanted to be able to have a table store any type of value as a way to store some settings for an application.
+The table needed to be able to store basically a name/value pair.</p>
+
+<p>I designed the object using a code-first approach</p>
+
+<h2>Initial Idea</h2>
+
+<pre><code>public class Setting {
+    [Key]
+    public string Name { get; set; }
+    public object Value { get; set; }
+    public string Type { get; set; }
+}
+</code></pre>
+
+<p>Simple and to the point.</p>
+
+<p>Here is a snippet from my DataContext</p>
+
+<pre><code>public class DataContext : DbContext, IDataContext {
+    public DbSet&lt;Setting&gt; Settings { get; set; }
+}
+</code></pre>
+
+<p>To access the data I would simply cast Value to whatever type I expected it to be.</p>
+
+<pre><code>var x = (string)Settings.Single(s =&gt; s.Name == "sitename").Value;
+</code></pre>
+
+<h2>Problems</h2>
+
+<p>However, with EF and probably Linq (I didn&rsquo;t test that) the Value was <em>always</em> null after I called <em>SaveChanges</em>.
+At first I couldn&rsquo;t understand why but then it hit me. There&rsquo;s no direct relationship between object and SQL. So I switched the Value to a byte[]. Here is my new class.</p>
+
+<pre><code>public class Setting {
+    [Key]
+    public string Name { get; set; }
+    public byte[] Value { get; set; }
+    public string Type { get; set; }
+}
+</code></pre>
+
+<p>This caused a few problems with the first method since it&rsquo;s not possible to typecast from a byte[] to a DateTime, int, string&hellip;and so on. So I added a few helper methods to my DataContext.</p>
+
+<h2>Solution</h2>
+
+<pre><code>public T Setting&lt;T&gt;(string Name) {
+    //grab the the setting if it exists otherwise
+    var value = Settings.SingleOrDefault(s =&gt; s.Name == Name);
+
+    //return the default value for typeof(T)
+    if (value == null) return default(T);
+
+    //If they're trying to cast to a different type we should throw an error
+    //They can to another type conversion after grabbing the value
+    if (Type != typeof(T).FullName)
+        throw new InvalidCastException(
+            string.Format("Unable to cast: {0} to {1}",
+                typeof(T).FullName, Type));
+
+    //Using the BinaryFormatter, return a typecast value
+    return (T)(
+        new BinaryFormatter()
+            .Deserialize(
+                new System.IO.MemoryStream(value.Value)));
+}
+
+public void Setting&lt;T&gt;(string Name, T Value) {
+    //check for an existing value
+    var setting = Settings.SingleOrDefault(s =&gt; s.Name == Name);
+
+    //serialize the new value
+    System.IO.MemoryStream ms = new System.IO.MemoryStream();
+    new BinaryFormatter().Serialize(ms, Value);
+
+    if (setting != null) {
+        //for consistency let's make sure we're assigning the same type
+        if (Type != typeof(T).FullName)
+            throw new InvalidCastException(
+            string.Format("Unable to cast: {0} to {1}", 
+                typeof(T).FullName, Type));
+        setting.Value = ms.ToArray();
+    } else {
+        //add a new value to the database
+        value = new Models.Setting() {
+            Name = Name,
+            Type = typeof(T).Fullname,
+            Value = ms.ToArray()
+        };
+        Settings.Add(value);
+    }
+}
+</code></pre>
+
+<p>Now instead of calling the above cast we can now use the following</p>
+
+<pre><code>var x = DataContext.Setting&lt;string&gt;("sitename"); //get
+DataContext.Setting&lt;string&gt;("sitename", "buildstarted.com"); //set
+</code></pre>
+
+<p>Hope this is helpful and inspires someone. Please comment if you have a better method. I&rsquo;m not too keen on serializing all the time but it&rsquo;s the best method I&rsquo;ve come up with so far.</p>
+
+<p>One of the problems with having values stored in byte[] form is lack of searchability of values. However, you&rsquo;re unlikely to select all settings with values of &ldquo;true&rdquo;.</p>
+
+<h2>-Ben</h2>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

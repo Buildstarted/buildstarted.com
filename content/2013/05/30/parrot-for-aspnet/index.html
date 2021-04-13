@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Parrot for AspNet &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Parrot for AspNet</h1>
+
+    <p>Install the nuget package using the following command.</p>
+
+<div class="nuget-badge"><p><code>PM&gt; Install-Package Parrot.AspNet</code></p></div>
+
+
+<p>New to Parrot? See my introductory article on Parrot <a href="https://buildstarted.com/2012/08/17/why-you-should-care-about-parrot-a-new-asp-net-mvc-view-engine/">here</a>.</p>
+
+<h1>How is Parrot different from Razor?</h1>
+
+<p>Views are meant to be dumb. They shouldn&rsquo;t contain any (or hardly any) code and just output the view with data from the model. Razor&rsquo;s focus was to give a cleaner separation of code and html, Parrot strives to remove code from your views.</p>
+
+<p>Here is a sample razor template converted to parrot.</p>
+
+<h3>Razor sample</h3>
+
+<pre><code>&lt;h3&gt;Welcome, @Model.Name&lt;/h3&gt;
+
+&lt;ul id="cart"&gt;
+  @foreach(var item in Model.ShoppingCart) {
+        &lt;li class="item"&gt;@item.Name - @item.Price&lt;/li&gt;
+    }
+&lt;/ul&gt;
+</code></pre>
+
+<h3>Parrot sample</h3>
+
+<pre><code>h3 | Welcome, @Name
+
+ul#cart(ShoppingCart) &gt; li.item | @Name - @Price
+</code></pre>
+
+<p>It&rsquo;s just a basic sample but you can already see some major differences. First note that the Model keyword isn&rsquo;t necessary. By default the page is scoped to the Model property of the page.
+You&rsquo;re not limited to that though. If your view has other objects you want to access, such as HttpContext.Request or ViewContext you can easily do so by specifying the property name instead, @Request.Url (or something similar). If there&rsquo;s a conflict the Model wins. (I think I need to change this or provide a way to force)</p>
+
+<p>There&rsquo;s no need for a foreach in Parrot as well. Tags are smart enough to know if the property applied to them is an array or IEnumerable to loop over the items and apply them to the children.
+Notice there&rsquo;s no variable name declaration for the child tag. By default the tag is scoped to the iterator item.</p>
+
+<h1>Layouts and Partials</h1>
+
+<p>Layouts are slightly different in Parrot. In Razor you can define a layout file by setting a variable in either the page or in _ViewStart.cshtml. In Parrot you just wrap your content. The content tag in your layout page
+Tells Parrot where to output. &lsquo;filename&rsquo; should be a path to the layout file.</p>
+
+<pre><code>layout('filename') {
+    h1 |We're in a layout!
+}
+
+html &gt; body &gt; content
+</code></pre>
+
+<p>Partials are just as simple</p>
+
+<pre><code>html &gt; body &gt; partial('filename')
+</code></pre>
+
+<h1>Extensibility</h1>
+
+<p>Parrot was designed for extensibility. You can easily add new tag renderers.</p>
+
+<p>If a tag is specified in code but no renderers exist for that particular tag then it will default to a standard html renderer and output <code>&lt;tag&gt;...contents...&lt;/tag&gt;</code>.</p>
+
+<p>Suppose we needed an <code>if</code> tag that would output it&rsquo;s children if the object passed in is true. Something like this.</p>
+
+<pre><code>if(SomeModelValue) |It's true!
+</code></pre>
+
+<p>It wouldn&rsquo;t make sense to output <code>&lt;if&gt;It's true!&lt;/if&gt;</code> so the custom renderer not only outputs if the value is true but also only outputs the children.</p>
+
+<p>A lot of renderers exist for common tags that behave differently than standard html <code>&lt;tag&gt;&lt;/tag&gt;</code>. The <code>ul/ol</code> tags, for example. I&rsquo;ve created a renderer specifically for those two as they&rsquo;re lists. If you pass in an <code>IEnumerable</code> object as a parameter it will loop over the items and render the children each time.</p>
+
+<p>I&rsquo;ll be working on the documentation on how to create these as well as documenting the features of some of the custom ones in a future blog post.</p>
+
+<h3>Sample If renderer</h3>
+
+<script src="https://gist.github.com/Buildstarted/5676078.js"></script>
+
+
+<h1>Final Thoughts</h1>
+
+<p>Parrot is a very new project. There are going to be some rough edges to be smoothed out. Help is <strong>very</strong> welcome. Visit <a href="https://thisisparrot.com/">This is parrot</a> for more info on the Nancy, Javascript and Asp.Net libraries.</p>
+
+<p><strong>- Ben Dornis</strong></p>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Introducing Nugit &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Introducing Nugit</h1>
+
+    <h1>Introducing Nugit</h1>
+
+<p>I&rsquo;d like to introduce you to a new site called <a href="https://nugit.org">Nugit</a>. I&rsquo;ve been working on this for several weeks and have gone through many different rewrites of the core as well as the basic idea of what the site is. I&rsquo;m opening the site up to get public opinion and to find any bugs that I am not able to find myself and to see what direction I could take this site.</p>
+
+<h2>What is it?</h2>
+
+<p>The basic premise is to make creating <a href="https://nuget.org">Nuget</a> packages simple and easy by integrating with your source control provider. Github repos are monitored through webhooks and any commits are automatically downloaded by the site and packaged. This site started off with the idea that codesnippets could easily be integrated to your projects through the use of Nuget and Github gists. From there and through the counsel of Jon Galloway it has grown to include entire repos.</p>
+
+<h2>Package configuration</h2>
+
+<p>Most settings for the package are controlled through the repository. Properties like <strong>Description</strong> and <strong>License</strong> and others are taken care of straight from the repo files themselves. Packages can configured through a special <strong>nugit.config</strong> file that can be included in your Github repo. This places control of the settings to your source control provider without having to go to the site every time. You can set your icon, what files to include, and other settings in the future through this config file.</p>
+
+<h2>Support</h2>
+
+<p>Currently only <a href="https://github.com">Github</a> is supported but we have plans to support others. We have a <a href="https://groups.google.com/group/nugit">Google Group</a> set up for discussion and <a href="https://nugit.uservoice.com">Uservoice</a> for bug tracking and feature requests.</p>
+
+<p>I welcome all <a href="https://groups.google.com/group/nugit">feedback</a>, both positive <strong>and</strong> negative.</p>
+
+<h3>- Ben Dornis</h3>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

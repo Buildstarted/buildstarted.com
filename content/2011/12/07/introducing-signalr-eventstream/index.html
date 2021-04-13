@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Introducing signalr eventstream &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Introducing signalr eventstream</h1>
+
+    <h2>SignalR.EventStream</h2>
+
+<p>Introducing a new favorite <a href="https://nuget.org">Nuget</a> package: <a href="https://nuget.org/packages/SignalR.EventStream">SignalR.EventStream</a>.</p>
+
+<div style="background-color: #202020; border: 4px solid #C0C0C0;border-radius: 5px 5px 5px 5px;box-shadow: 2px 2px 3px #6E6E6E;color: #E2E2E2;display: block;font: 1.5em 'andale mono','lucida console',monospace; overflow: auto; padding:15px; margin-bottom: 1.5em;"><p style="margin-bottom:0;">PM&gt; Install-Package SignalR.EventStream</p></div>
+
+
+<p>This is a live feed of the visitors to this site. Leave this page open and watch the live feed. <em>Previous visitors will show up in a few seconds.</em></p>
+
+<p><em>Sample no longer available</em></p>
+
+<h2>SignalR.EventStream</h2>
+
+<p>SignalR.EventStream allows users to monitor events happening on the server, live. A single call can be made on the server and propagated to any number of clients. This library leverages the power of <a href="https://nuget.org/packages/SignalR">SignalR</a> to make the client interface simple.</p>
+
+<p>Born out of a desire to see when new users signed up on <a href='https://csharptube.com/'>https://csharptube.com/</a> without refreshing the user list and my familiarity with <a href="https://jabbr.net">Jabbr</a>.</p>
+
+<h2>What can it be used for?</h2>
+
+<p>Some events you might be interested in viewing live.</p>
+
+<ol>
+<li>User signups</li>
+<li>Error notifications</li>
+<li>Live user mapping (see above)</li>
+<li>User notices such as when badges are awarded</li>
+<li>Notice when customer makes a purchase</li>
+<li>Update a page when a new comment is added</li>
+<li>Update a vote count for rankings</li>
+<li>Clearly the list is endless&hellip;</li>
+</ol>
+
+
+<h2>That&rsquo;s all great but what is SignalR?</h2>
+
+<p>SignalR is a library developed by <a href="https://weblogs.asp.net/davidfowler/">David Fowler</a> and <a href="https://damianedwards.wordpress.com/">Damian Edwards</a> that allows asynchronous connections in ASP.Net that allows you to build real-time multi-user web applications. This basically means that you can <strong>execute server-side code directly from a client or execute javascript on the client directly from the server</strong>. It uses the best connection your browser can support. <a href='https://en.wikipedia.org/wiki/WebSocket'>WebSockets</a> and <a href='https://en.wikipedia.org/wiki/Push_technology#Long_polling'>LongPolling</a> with support for more coming soon.</p>
+
+<p><img src="https://aws.buildstarted.com/signalr-traffic.png" alt="Firebug showing the long polling requests" title="Firefox with long polling in firebug" /></p>
+
+<h2>Authorize users to view events</h2>
+
+<p>There are two methods for streaming. One is <strong>Send(..)</strong> which sends an event to the &ldquo;authorized&rdquo; general group. The second method is <strong>SendTo(..)</strong> which sends an Event to a specific group of people.</p>
+
+<h2>EventStream.Send</h2>
+
+<p>The heart of this is that you should be able to send <strong>any</strong> data to the client and parse it via json. To enable this I&rsquo;m using <a href="https://nuget.org/packages/Newtonsoft.Json">Newtonsoft.Json</a> to convert objects passed into a Json string which is then sent to the client. This allows for a lot of flexibility since the client can now handle anything we want. The event type is determined from the type of object passed in - except for anonymous types. You must pass in a specific event type in order to utilize it. Normal string events are typed as &ldquo;event&rdquo;.</p>
+
+<pre><code>public interface IEventStream
+{
+    void Send(string @event);
+    void Send(string type, object @event); //mainly used for anonymous types
+    void Send(object @event);
+
+    void SendTo(string group, string @event);
+    void SendTo(string group, object @event);
+    void SendTo(string group, string type, object @event);
+}
+</code></pre>
+
+<p>I throw an exception on anonymous types without a specified string type. One of the interesting gotcha&rsquo;s in c# is that there&rsquo;s no built in way to determine if a type is an anonymous one. Borrowing from another project I helped with, (<a href="https://github.com/Antaris/RazorEngine">RazorEngine</a>) I&rsquo;ve pulled in the IsAnonymousType method.</p>
+
+<pre><code>public static bool IsAnonymousType(Type type)
+{
+    if (type == null)
+        throw new ArgumentNullException("type");
+
+    return (type.IsClass
+            &amp;&amp; type.IsSealed
+            &amp;&amp; type.BaseType == typeof(object)
+            &amp;&amp; type.Name.StartsWith("&lt;&gt;", StringComparison.Ordinal)
+            &amp;&amp; type.IsDefined(typeof(CompilerGeneratedAttribute), true));
+}
+</code></pre>
+
+<p>This has been a very reliable way of checking whether or not a particular type is an anonymous type.</p>
+
+<h2>Usage</h2>
+
+<p>To send an event to the &ldquo;authorized&rdquo; group you simply make the following call.</p>
+
+<pre><code>IEventStream EventStream = new EventStream();
+EventStream.Send("A simple string message");
+</code></pre>
+
+<p>You can easily handle this in javascript.</p>
+
+<pre><code>(function() {
+    var eventStream = new EventStream().connect();
+    eventStream.eventReceived = function(type, data) {
+        console.log(data);
+    });
+})();
+</code></pre>
+
+<p>To send an event to a particular group you simply pass in the group you wish to send it to.</p>
+
+<pre><code>IEventStream EventStream = new EventStream();
+EventStream.SendTo("message-group", "A simple string message");
+</code></pre>
+
+<p>If you just wait on this page all events will be captured and alerted. For more complex data, however.</p>
+
+<pre><code>IEventStream EventStream = new EventStream();
+EventStream.Send(new UserSignup {
+    Username = "Buildstarted",
+    Realname = "Ben Dornis",
+    BlogUrl = "https://buildstarted.com"
+});
+</code></pre>
+
+<p>SignalR.EventStream automatically builds a Json string and passes it to the clients.</p>
+
+<pre><code>(function() {
+    var eventStream = new EventStream().connect();
+    eventStream.eventReceived = function(type, data) {
+        /* Handle this more complex object */
+    });
+})();
+</code></pre>
+
+<h2>Page specific sends</h2>
+
+<p>To make things easier to update pages I&rsquo;ve added a <strong>PageStream()</strong> type in the eventStream.js. This uses the current pathname of the url as the group. You can then send events to any client currently viewing that page. This makes it really easy to add new comments or modify the rankings for a page.</p>
+
+<pre><code>(function() {
+   var pageStream = new PageStream().connect();
+   pageStream.eventReceived = function(type, data) {
+       //update the vote count!
+   };
+});
+
+var path = new UrlHelper(ControllerContext.RequestContext).Action("index");
+new EventStream().SendTo(path, "this is a page update");
+</code></pre>
+
+<p><em>I&rsquo;m looking at how to create a path from the current request easier than that and externally to a Controller. (update forthcoming).</em></p>
+
+<p>You can use any simple javascript templating engine that handles json to automatically build an html object and insert it into the dom.</p>
+
+<p>You can find the source for SignalR.EventStream on <a href="https://github.com/Buildstarted/SignalR.EventStream">Github</a>.</p>
+
+<p>&ndash;&ldquo;[SignalR.EventStream] makes me want to look at SignalR&rdquo;</p>
+
+<p><strong>-Ben Dornis</strong></p>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

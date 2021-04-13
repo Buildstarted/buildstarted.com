@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Mvc 3 razor view engine without a controller &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Mvc 3 razor view engine without a controller</h1>
+
+    <p>A question posted on stackoverflow caught my attention the other day that asked about using the Razor View Engine outside of MVC that would return a string value from a string template rather than a view&hellip;The code example was provided.</p>
+
+<pre><code>string  myTemplate = "Hello @Name,  How are you today?";
+ViewModel.Name = "Billy Boy";
+string output = RazorViewEngineRender( myTemplate, ViewModel );
+</code></pre>
+
+<p>This particular solution didn&rsquo;t require the engine to exist outside of MVC so I relied on MVC to do a lot of the dirty work.</p>
+
+<p><strong>This is some ugly ugly code that was hacked together without testing it other than getting it to work properly.</strong></p>
+
+<h2>VirtualPathProvider</h2>
+
+<p>Since we&rsquo;re not dealing with actual views on the server we have to add our own path provider to tell MVC where to get our dynamically generated templates. There should be more tests like checking the strings Dictionary to see if the view has been added.</p>
+
+<pre><code>public class StringPathProvider : VirtualPathProvider {
+    public StringPathProvider()
+        : base() {
+    }
+
+    public override CacheDependency GetCacheDependency(string virtualPath, IEnumerable     virtualPathDependencies, DateTime utcStart) {
+        return null;
+    }
+
+    public override bool FileExists(string virtualPath) {
+        if (virtualPath.StartsWith("/stringviews") || virtualPath.StartsWith("~/stringviews"))
+            return true;
+
+        return base.FileExists(virtualPath);
+    }
+
+    public override VirtualFile GetFile(string virtualPath) {
+        if (virtualPath.StartsWith("/stringviews") || virtualPath.StartsWith("~/stringviews"))
+            return new StringVirtualFile(virtualPath);
+
+        return base.GetFile(virtualPath);
+    }
+
+    public class StringVirtualFile : System.Web.Hosting.VirtualFile {
+        string path;
+        public StringVirtualFile(string path)
+            : base(path) {
+            //deal with this later
+                this.path = path;
+        }
+
+        public override System.IO.Stream Open() {
+            return new System.IO.MemoryStream(System.Text.ASCIIEncoding.ASCII.GetBytes(RazorViewEngineRender.strings[System.IO.Path.GetFileName(path)]));
+        }
+    }
+}
+</code></pre>
+
+<h2>Render Class</h2>
+
+<p>This class takes your template as a constructor parameter and adds it to a static Dictionary that is then read by the VirtualPathProvider above. You then call Render and you can optionally pass in a model. This will add the fully qualified model type to the @inherits and prepend that to the file contents.</p>
+
+<pre><code>public class RazorViewEngineRender {
+    internal static Dictionary&amp;lt;string, string&amp;gt; strings { get; set; }
+
+    string guid;
+
+    static RazorViewEngineRender() {
+        strings = new Dictionary&amp;lt;string, string&amp;gt;();
+    }
+
+    public RazorViewEngineRender(string Template) {
+        guid = Guid.NewGuid().ToString() + ".cshtml";
+        strings.Add(guid, Template);
+    }
+
+    public string Render(object ViewModel) {
+        //Register model type
+        if (ViewModel == null) {
+            strings[guid] = "@inherits System.Web.Mvc.WebViewPage\r\n" + strings[guid];
+        } else {
+            strings[guid] = "@inherits System.Web.Mvc.WebViewPage&amp;lt;" + ViewModel.GetType().FullName + "&amp;gt;\r\n" + strings[guid];
+        }
+
+        CshtmlView view = new CshtmlView("/stringviews/" + guid);
+
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        System.IO.TextWriter tw = new System.IO.StringWriter(sb);
+
+        ControllerContext controller = new ControllerContext();
+
+        ViewDataDictionary ViewData = new ViewDataDictionary();
+        ViewData.Model = ViewModel;
+
+        view.Render(new ViewContext(controller, view, ViewData, new TempDataDictionary(), tw), tw);
+        //view.ExecutePageHierarchy();
+
+        strings.Remove(guid);
+
+        return sb.ToString();
+
+    }
+}
+</code></pre>
+
+<h2>Global.asax</h2>
+
+<pre><code>System.Web.Hosting.HostingEnvironment.RegisterVirtualPathProvider(
+    new Controllers.StringPathProvider());
+</code></pre>
+
+<h2>Calling the code</h2>
+
+<pre><code>string Template = "Hello, @Model.Name";
+Models.User user = new Models.User() { Name = "Billy Boy" };
+RazorViewEngineRender view = new RazorViewEngineRender(Template);
+string Results = view.Render(user); //pass in your model
+</code></pre>
+
+<h2>Notes</h2>
+
+<p>This only works with typed Models. I attempted to pass in a new { Name = &ldquo;Billy Boy&rdquo; } and it&rsquo;s throwing errors. I&rsquo;m not sure why and didn&rsquo;t really look too deeply into it. Before any of you ask, I did try to use the <strong><dynamic></strong> type. However it didn&rsquo;t seem to reflect properly.</p>
+
+<p>Anyway, this was a lot of fun. I&rsquo;m definitely sure there are much better ways of doing this. Andrew Nurse has a nice blog post about using Razor outside of MVC entirely and I might revisit this in a later post and use that method.</p>
+
+<h3>- Ben</h3>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

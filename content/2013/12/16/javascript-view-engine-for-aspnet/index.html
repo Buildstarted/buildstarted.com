@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Javascript View Engine for Asp.Net &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Javascript View Engine for Asp.Net</h1>
+
+    <p>I was chatting with a friend the other day and was remarking about <a href="https://thisisparrot.com">Parrot</a> when I made an offhand comment that I should build a <strong>view engine</strong> that can execute Javascript.</p>
+
+<p>I hate when that happens. I started thinking that there are so many great view engines out there written in Javascript that instead of writing a new one I should just use what&rsquo;s already out there. A few hours later I found myself writing such a view engine.</p>
+
+<p>First I had to find a nice vm for javascript that I could execute within .Net. I found some promising ones after a lot of searching, <a href="https://v8sharp.codeplex.com/">v8sharp</a> and <a href="https://github.com/chillitom/Javascript.Net">Javascript.Net</a>. I first played around with js.net but ran into some issues and since this was just a test I wasn&rsquo;t interested in figuring out what&rsquo;s wrong and went with v8sharp instead. Dev went well and I got the basics of the engine working. Eventually I settled on <a href="https://clearscript.codeplex.com/">ClearScript</a>. It had the most feature complete implementation that had excellent host side capabilities and is in active development. I could execute a <a href="https://github.com/janl/mustache.js">Mustache</a> template without any issues.</p>
+
+<p>After I got the core library working I started thinking about ways to enhance it. It needed support for the plethora of templating engines already out there available for javascript. Rather than write a separate .Net class for each engine I just had the view engine itself search for specific types of javascript files in the project that it could then load. This has the advantage of being easily upgraded with new engines by just adding new .js files to the project or updating existing .js files.</p>
+
+<p>The view engine itself is fairly basic and isn&rsquo;t much different from any other view engine. The main difference is how the views are rendered. We build up our Javascript file run it through ClearScript and return the results. It&rsquo;s fairly simple and was a quickly put together project.</p>
+
+<p>To get started one just needs to add the view engine to the list of available view engines to an MVC project.</p>
+
+<pre><code>protected void Application_Start()
+{
+    AreaRegistration.RegisterAllAreas();
+
+    WebApiConfig.Register(GlobalConfiguration.Configuration);
+    FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+    RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+    ViewEngines.Engines.Add(new JavascriptViewEngine());
+    //ViewEngines.Engines.Add(new JavascriptViewEngine(AlternateEngineDefinitionLocation, new [] { "~/AlternateViewLocationDirectories" }));
+}
+</code></pre>
+
+<p>Next you&rsquo;ll need to tell the JavascriptViewEngine the location of your engines script. The default path is <code>~/scripts/Javascript.ViewEngines.js</code>.</p>
+
+<p>Register your templating engine with the engine like the following.</p>
+
+<pre><code>JsViewEngines.add({
+    name: "Mustache",
+    extensions: ["mustache"],
+    template: new Template(function (template, model) {
+        return Mustache.render(template, model);
+    }),
+    requires: ["mustache.js"]
+});
+</code></pre>
+
+<p>We have a little bit of meta data here. Most are fairly obvious. Extensions is an array of view filename extensions to look for. <code>includes</code> is an array of javascript files required to execute this engine against templates. <code>template</code> is the actual javascript rendering call. It&rsquo;s different for each engine. You must wrap the template function with the <code>new Template</code> constructor. This will tell the view engine how to execute the view.</p>
+
+<p>One &ldquo;gotcha&rdquo; is that these are run <strong>on the server</strong>. As such you don&rsquo;t have the ability to manipulate the dom or output to the console or any other things you can do on a client/browser templating engine.</p>
+
+<p>You can view a live sample at <a href="https://jsve.buildstarted.com/">https://jsve.buildstarted.com/</a> It has several engines already added. The templates are really simple for now.</p>
+
+<p>You can check out the code on my github repo at <a href="https://github.com/Buildstarted/Javascript.ViewEngines">https://github.com/Buildstarted/Javascript.ViewEngines</a>. I&rsquo;ll be creating a <a href="https://nuget.org">Nuget</a> package soon as there are some issues between x86 and x64.</p>
+
+<p>-Ben Dornis</p>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

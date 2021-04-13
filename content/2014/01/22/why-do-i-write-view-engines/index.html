@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Why do I waste time with View Engines? &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Why do I waste time with View Engines?</h1>
+
+    <p>A few people recently asked me why I bother writing View Engines like <a href="https://thisisparrot.com">Parrot</a> when it&rsquo;s very likely that nobody will ever use them.</p>
+
+<p>It&rsquo;s not about usage or even getting a popular library out there. It&rsquo;s all about the experience and growing as a developer.</p>
+
+<p>One of my first large projects was a clone of text-based game. The game had the ability to add additional functionality via extensions. I wanted to support that as well but in order to do so (I was 13 at the time) I needed to get a way to put this extension in the game. The only way I knew how was to write my own language.</p>
+
+<p>I called it &ldquo;Dark Tempest Scripting Language&rdquo; or &ldquo;DTSL&rdquo; for short. It was a very strange language and very lousy.</p>
+
+<pre><code>saysomething:
+    var gold
+    var level
+    var str
+    var hp
+    var weapon
+    hp ~ gethp ()
+    str ~ getstr ()
+    charm ~ getcharm ()
+    level ~ getlevel ()
+    gold ~ getgold ()
+    gem ~ getgem ()
+    weapon ~ getweapon ()
+    println "print something"
+end
+</code></pre>
+
+<p>That was a function. There were no parameters allowed. I didn&rsquo;t even think I could figure that out at the time. The functions you do see are built into the language itself. The parser was very simple. It expected things to look a certain way - if it wasn&rsquo;t formatted properly it would break. This was unacceptable but I didn&rsquo;t know any better at the time.</p>
+
+<p>Fast forward 20 years&hellip;wow, has it really been that long? I finally got around to wanting to write another language. But why? What would it do? I&rsquo;ve been playing with view engines a lot recently and decided I was going to make my own view engine with a custom language to boot.</p>
+
+<p>This was one heck of a learning experience. I learned about parsers and state machines. Mostly from a friend of mine, Roy.</p>
+
+<p>It doesn&rsquo;t matter if nobody uses it. I enjoyed the entire process and it&rsquo;ll definitely help me in the future when I come across similar issues that I ran into while building this.</p>
+
+<h3>-Ben Dornis</h3>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

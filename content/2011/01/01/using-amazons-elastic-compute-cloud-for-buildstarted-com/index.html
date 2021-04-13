@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Using amazons elastic compute cloud for buildstarted com &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Using amazons elastic compute cloud for buildstarted com</h1>
+
+    
+
+<p>After a few outages of my previous host I&rsquo;ve decided to move my server to Amazon&rsquo;s <a href='https://aws.amazon.com/ec2/'>EC2</a> services. I have to tell you it was <strong>not</strong> an easy transition. I was more than confused with the array of options on Amazon&rsquo;s services.</p>
+
+<p>I&rsquo;m going to go over exactly the choices I&rsquo;ve made and what I did to get it working.</p>
+
+<h2>Type of machine</h2>
+
+<p>This site isn&rsquo;t the most popular on the internet so I don&rsquo;t need anything really powerful. Here are the systems available for websites:</p>
+
+<table id='instances' style='width:100%;' cellpadding='3' cellspacing='0'>
+<thead><th>Type</th><th>Ram</th><th>Processors</th><th>Storage</th><th>Platform</th></tr></thead>
+<tbody>
+<tr class='micro'><td>Micro</td><td>613MB</td><td>Up to 2 ECUs (for short periodic bursts)</td><td>EBS only</td><td>32 or 64 bit</td></tr>
+<tr><td>Small</td><td>1.7 GB</td><td>1 ECU (1 Virtual core with 1 EC2 Compute Unit)</td><td>160 GB local storage</td><td>32 or 64 bit</td></tr>
+<tr><td>Large</td><td>7.5 GB</td><td>4 ECUs (2 virtual cores with 2 EC2 Compute Units each)</td><td>850 GB local storage</td><td>64 bit</td></tr>
+<tr><td>Extra Large</td><td>15 GB</td><td>8 ECUs (4 virtual cores with 2 EC2 Compute Units each)</td><td>1690 GB local storage</td><td>64 bit</td></tr>
+</tbody>
+</table>
+
+
+<p>I&rsquo;ve decided to go with the <strong>Micro</strong> server. It&rsquo;s cheap (currently free for one year) and it fits my needs. I haven&rsquo;t had another asp.net referral for a while though (<em>hint</em>, <em>hint</em>) so I might need to upgrade to a small server when that time comes. Incidentally that&rsquo;s one of the great things about Amazon&rsquo;s service: I can change the server type at a whim <strong>without</strong> reconfiguring the system.</p>
+
+<h2>AMI&rsquo;s</h2>
+
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancelist.png'><img src='https://aws.buildstarted.com/instancelist.png' style='width:100%;' /></a></div>
+
+
+<p>AMI&rsquo;s or Amazon Instance Machines are the bases for any system you wish to start up on EC2. There are a wide range of over 6000 different systems available on the Community AMI list from Windows to Linux and even OpenSolaris to custom server types like a default wordpress and joomla setups. I chose a blank Ubuntu setup as that is what I&rsquo;m familiar with and I know what I&rsquo;m getting since I&rsquo;ll be forced to install everything myself.</p>
+
+<h3>Setting up your new machine</h3>
+
+<p>The first step in setting up your new machine is to choose what type of instance you want.</p>
+
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancetype.png'><img src='https://aws.buildstarted.com/instancetype.png' style='width:100%;' /></a></div>
+
+
+<p>You have a selection, based on your chosen ami, of what type of machine you want. This is really powerful as a single AMI can be any type of system you want. So if your site is small - like this one - but it gets really popular you can either add new instances of the same type for load balancing <em>or</em> you can just change the type of machine your instance runs on. I can&rsquo;t figure out how the hell they do this but it&rsquo;s damn awesome.</p>
+
+<h4>Kernel/Ram</h4>
+
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancedetails.png'><img src='https://aws.buildstarted.com/instancedetails.png' style='width:100%;' /></a></div>
+
+
+<p>I have no clue exactly what this is. I just use the default Kernel and RAM Disks. Here you can enable CloudWatch which allows you to see detailed information on disk/ram/network usage while your machine is running.</p>
+
+<h4>Machine Tags</h4>
+
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancekeys.png'><img src='https://aws.buildstarted.com/instancekeys.png' style='width:100%;' /></a></div>
+
+
+<p>Here you can add some tags. The default one of Name always works well. Tags are really only useful if you have a lot of different instances in your list and you want to quickly find instances based on a particular attribute.</p>
+
+<h4>Key pairs</h4>
+
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancekeypair.png'><img src='https://aws.buildstarted.com/instancekeypair.png' style='width:100%;' /></a></div>
+
+
+<p>Here you can create a key pair for remote access to your system. This doesn&rsquo;t require you to remember a username or password - which, as we&rsquo;ve seen with the recent <a href='https://www.codinghorror.com/blog/2010/12/the-dirty-truth-about-web-passwords.html'>Gawker incident</a>, is never a good idea. Store your keypairs in a safe place. When you ssh with a client such as PuTTY you&rsquo;ll set your auth to your keypair you&rsquo;ve created here.</p>
+
+<h4>Firewall</h4>
+
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancefirewall.png'><img src='https://aws.buildstarted.com/instancefirewall.png' style='width:100%;' /></a></div>
+
+
+<p>Setting up your instance firewall allows you to open ports to your instance and make it available to the internet or a select ip range. I&rsquo;ve opened up HTTP and SSH here as all I would need is a cheap web server and nothing more. Though I&rsquo;ve selected <strong>All Internet</strong> for both options I would recommend you only use a port range for something like SSH. But for testing, who cares? :)</p>
+
+<h4>Launch</h4>
+
+<div style='text-align:center;'><a href='https://aws.buildstarted.com/instancereview.png'><img src='https://aws.buildstarted.com/instancereview.png' style='width:100%;' /></a></div>
+
+
+<p>This page is just a review of what you&rsquo;ve selected on the previous pages with the option to go back and make changes if you screwed up somehow. If everything is good you just need to click <strong>Launch</strong>.</p>
+
+<h3>EBS Storage</h3>
+
+<p>All <strong>Micro</strong> Instances must be stored using EBS. I didn&rsquo;t know what this meant at first but I understand now. I did a lot of extra stuff after I setup my server such as backing up my wordpress database once a day and restoring the database on boot. I found that this isn&rsquo;t necessary as EBS instances are more permanent and store stuff on your EBS storage. This does introduce possible other costs but this website exists mostly in cache so it&rsquo;s not really an issue. For instance-only storage for some AMI&rsquo;s any changes to the filesystem do <em>not</em> persist when the machine is shut down. This is a very important distinction. Since you can use Instances for stuff other than hosting, like data processing, it may or may-not be necessary.</p>
+
+<h2>Costs</h2>
+
+<table id='instances' style='width:100%;' cellpadding='3' cellspacing='0'>
+<tr><th>Costs</th><th>Linux Hour</th><th>Windows Hour</th><th>Linux Year</th><th>Windows Year</th></tr>
+<tr><td>Micro</td><td>$.02</td><td>$.03</td><td>$175.20</td><td>$262.80</td></tr>
+<tr><td>Small</td><td>$.085</td><td>$.12</td><td>$744.60</td><td>$1051.20</td></tr>
+<tr><td>Large</td><td>$.34</td><td>$.48</td><td>$2978.40</td><td>$4204.80</td></tr>
+<tr><td>Extra Large</td><td>$.68</td><td>$.96</td><td>$5956.80</td><td>$5956.80</td></tr>
+</table>
+
+
+<p>The above costs are for instances that haven&rsquo;t been reserved. Windows costs are all slightly more per hour than Linux.</p>
+
+<table id='instances' style='width:100%;' cellpadding='3' cellspacing='0'>
+<tr><th>Reserved Costs</th><th>1 Year</th><th>3 Years</th><th>Linux</th><th>Windows</th><th>Linux Year</th><th>Windows Year</th></tr>
+<tr><td>Micro</td><td>$54.00</td><td>$82.00</td><td>$.007</td><td>$.013</td><td>$61.32</td><td>$113.88</td></tr>
+<tr><td>Small</td><td>$227.50</td><td>$350.00</td><td>$.03</td><td>$.05</td><td>$262.80</td><td>$438.00</td></tr>
+<tr><td>Large</td><td>$910.00</td><td>$1400.00</td><td>$.12</td><td>$.20</td><td>$1051.20</td><td>$1752.00</td></tr>
+<tr><td>Extra Large</td><td>$1820.00</td><td>$1820.00</td><td>$.24</td><td>$.40</td><td>$2102.40</td><td>$3504.00</td></tr>
+</table>
+
+
+<p>The above costs are for reserved instances. You can purchase an instance ahead of time, such as a small, for a one time fee. In return you get a discount price per hour for the length of your purchase. Windows prices may fluctuate over the course of your contract, however. I was thinking about reserving a Micro instance as the savings is quite significant over the course of 3 years at a savings of over 50%. However, thinking about it more and more&hellip;if this site gets more popular over time I may need to change from Micro to Small - in which case my reserved instance is no longer the savings machine it was. Just something to think about. I doubt I&rsquo;ll need anything more than my Micro but you never know&hellip;it&rsquo;s up to the community to <strong>make</strong> me upgrade. However, doing the math, even if I needed to upgrade the server from Micro to Small in 6 months I would still save money by reserving an instance.</p>
+
+<p>I won&rsquo;t do that though - the Micro is currently free to new subscribers to Amazon&rsquo;s EC2 service</p>
+
+<h2>Final</h2>
+
+<p>As I learn more about this process I will post more. This whole setup has brought up some questions that I&rsquo;m sure I&rsquo;ll find the answers for over time (I&rsquo;ll probably head over to <a href='https://www.serverfault.com/'>serverfault.com</a> and ask them!) I&rsquo;m currently finalizing another site that I intend to host on Amazon&rsquo;s EC2 service that will be much more popular. (I hope) So I should have a chance to test stuff like upgrading the server to a more powerful machine and what not to see how that works.</p>
+
+<h3>Ben</h3>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>

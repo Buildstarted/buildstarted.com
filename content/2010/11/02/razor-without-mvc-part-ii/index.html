@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Razor without mvc part ii &#8211; BuildStarted.com</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
+</head>
+<body class="home blog">
+    	<div class="devring">
+		<div class="devring-container">
+			<span class="devring-title"><a href="https://devring.club/">devring.club</a></span>
+			<a href="https://devring.club/sites/3/prev" class="devring-previous">Previous</a>
+			<a href="https://devring.club/random" class="devring-random">Random</a>
+			<a href="https://devring.club/sites/3/next" class="devring-next">Next</a>
+		</div>
+	</div>
+    <div id="page" class="hfeed site">
+        <header id="masthead" class="site-header" role="banner">
+            <hgroup>
+                <a class="site-logo" href="https://buildstarted.com/" title="BuildStarted.com" rel="home">
+                    <img src="https://gravatar.com/avatar/b94abfe0e3e68e2d739c606ee6f2b7b4/?s=100&#038;d=mm" alt="BuildStarted.com" width="100" height="100" class="no-grav"></a>
+                <h1 class="site-title"><a href="https://buildstarted.com/" title="BuildStarted.com" rel="home">BuildStarted.com</a></h1>
+                <h2 class="site-description">Newly minted father. C# dev that enjoys playing around with random ideas.</h2>
+            </hgroup>
+            <nav role="navigation" class="site-navigation main-navigation">
+                <h1 class="assistive-text">Menu</h1>
+                <div class="assistive-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+                <div class="menu">
+                    <ul>
+                        <li class="page_item page-item-2"><a href="https://buildstarted.com/about/">About</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div id="main">
+            <div id="primary" class="site-content"><p style="text-align: center;font-size: 1.5em;color: red;">This blog post is archived. I consider it outdated and not very useful anymore but since there are many who still visit these pages I've decided to keep them up.</p>
+                <div id="content" role="main">
+                    <div id="post">
+    <h1>Razor without mvc part ii</h1>
+
+    <p>After the wonderful blog post by Matt at <a href='https://www.fidelitydesign.net/'>https://www.fidelitydesign.net/</a> (which is based on my previous post <a href='https://buildstarted.com/2010/09/29/razor-view-engine-without-mvc-at-all/'>here</a>.) I looked into adding anonymous types to the compiler. Rather than start with my version of the compiler I&rsquo;ve used his version. It was written much better than my thrown together example. (You can download the original <a href='https://www.fidelitydesign.net/?p=208'>here</a>.)</p>
+
+<h3>Original code</h3>
+
+<p>To call the razor parser is simple. We create our template as a string, create our model (if necessary) and call Razor.Parse.</p>
+
+<pre><code>string template = "Hello @Model.Name!";
+User user = new User { Name = "Matt" };
+
+result = Razor.Parse(template, user, "test");
+</code></pre>
+
+<p>What I&rsquo;d like to be able to do, however, is make a call like</p>
+
+<pre><code>result = Razor.Parse(template, new { Name = "Ben" });
+</code></pre>
+
+<p>Due to limitations in c# it doesn&rsquo;t just work that way. We&rsquo;ll need to modify our classes.</p>
+
+<h3>ITemplate</h3>
+
+<p>First we need to create a new interface template. We&rsquo;re going to use the ITemplate interface Matt created is his version of the project to create a new ITemplateDynamic.</p>
+
+<pre><code>public interface ITemplateDynamic : ITemplate {
+    dynamic Model { get; set; }
+}
+</code></pre>
+
+<p>Here we&rsquo;re defining a new ITemplateDynamic with a dynamic model instead of a generic model. We need to then create a class that inherits from TemplateBase and implements our new interface.</p>
+
+<pre><code>public abstract class TemplateBaseDynamic : TemplateBase, ITemplateDynamic {
+
+    dynamic model;
+
+    public dynamic Model {
+        get { return model; }
+        set { model = new RazorDynamicObject() { Model = value }; }
+    }
+
+    class RazorDynamicObject : DynamicObject {
+        internal object Model { get; set; }
+
+        public override bool TryGetMember(GetMemberBinder binder, out object result) {
+            result = Model.GetType().InvokeMember(binder.Name,
+                System.Reflection.BindingFlags.GetProperty | 
+                    System.Reflection.BindingFlags.Instance | 
+                    System.Reflection.BindingFlags.Public | 
+                    System.Reflection.BindingFlags.NonPublic,
+                null,
+                Model,
+                null);
+
+            return true;
+        }
+    }
+
+}
+</code></pre>
+
+<p>Using the DynamicObject type in a similar method as I did in a <a href='https://buildstarted.com/2010/08/23/fun-with-dynamicobject-dynamic-and-the-settings-table/'>previous post</a> we can override the actual anonymous type model with this and, using reflection, return appropriate values per call.</p>
+
+<h3>Compiling</h3>
+
+<p>Next we&rsquo;ll need to modify the Compile method in RazorCompiler.cs. We need to determine the new basetype from our model. This gets a bit difficult as there&rsquo;s no .IsAnonymousType method to call.</p>
+
+<p>The original method to determine type was simple</p>
+
+<pre><code>Type baseType = (modelType == null)
+    ? typeof(TemplateBase)
+    : typeof(TemplateBase&lt;&gt;).MakeGenericType(modelType);
+</code></pre>
+
+<p>However we now need to test for 3 different types: null, generic and anonymous. The following, with the help of the wonderful Jon Skeet, is the simplest way I&rsquo;ve come up with.</p>
+
+<pre><code>bool anonymousType = 
+    (modelType.IsClass &amp;&amp; 
+     modelType.IsSealed &amp;&amp; 
+     modelType.BaseType == typeof(object) &amp;&amp; 
+     modelType.Name.StartsWith("&lt;&gt;") &amp;&amp; 
+     modelType.GetCustomAttributes(
+         typeof(CompilerGeneratedAttribute), true) != null;
+</code></pre>
+
+<p>With this information we can just to a nested conditional operator</p>
+
+<pre><code>Type baseType = (modelType == null)
+    ? typeof(TemplateBase)
+    : (anonymousType
+        ? typeof(TemplateBaseDynamic)
+        : typeof(TemplateBase&lt;&gt;).MakeGenericType(modelType));
+</code></pre>
+
+<p>Awesome. Now we inherit from the proper base type for our different model types.</p>
+
+<p>Now that we&rsquo;re in the home stretch, one last change to make.</p>
+
+<p>After we get the new template object in our Parse method in Razor.cs we then need to assign the model to the new ITemplateDynamic.</p>
+
+<pre><code>if (instance is ITemplate&lt;T&gt;)
+    ((ITemplate&lt;T&gt;)instance).Model = model;
+else if (instance is ITemplateDynamic)
+    ((ITemplateDynamic)instance).Model = model;
+</code></pre>
+
+<h3>And now we&rsquo;re done.</h3>
+
+<p>To call the Razor.Parse with the new anonymous type is simple.</p>
+
+<pre><code>string template = "Hello @Model.Name!";
+
+result = Razor.Parse(template, new { Name = "Matt" }, "test");
+</code></pre>
+
+<p>I don&rsquo;t think it can get any easier. Thanks Matt from fidelitydesign for taking my code and making it more awesome than anything I could have done. Please visit his <a href='https://www.fidelitydesign.net/'>blog</a>.</p>
+
+<p>Download the code for today&rsquo;s post: <a href='https://buildstarted.com/wp-content/uploads/2010/11/Razor.zip'>Razor Compiler</a></p>
+
+<h3>-Ben</h3>
+
+
+    
+</div>
+                </div>
+                <!-- #content -->
+            </div>
+            <!-- #primary .site-content --><!-- #secondary .widget-area -->
+
+
+        </div>
+        <!-- #main -->
+
+        <footer id="colophon" class="site-footer" role="contentinfo">
+            <div class="site-info">
+                Powered by <a href="https://github.com/" rel="generator">Github</a><span class="sep"> | </span>Theme: Publish by <a href="https://kovshenin.com/" rel="designer">Konstantin Kovshenin</a>.	
+            </div>
+            <!-- .site-info -->
+        </footer>
+        <!-- #colophon .site-footer -->
+    </div>
+    <!-- #page .hfeed .site -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src='/javascripts/prettify.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+        $(function () {
+            $("pre code").parent().each(function () {
+                if (!$(this).hasClass("prettyprint")) {
+                    $(this).addClass("prettyprint");
+                    a = true
+                }
+            });
+
+            prettyPrint();
+        });
+    </script>
+<script>_dna = window._dna || {};_dna.siteId = 'buildstarted.com';_dna.outlink = true;(function () {let dna = document.createElement('script');dna.type = 'text/javascript';dna.async = true;dna.src = '//dna.buildstarted.com/t.js';let s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(dna, s);})();</script>
+</body>
+</html>
