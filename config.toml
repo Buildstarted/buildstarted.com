@@ -1,4 +1,4 @@
-baseURL = "https://blog.dornis.me"
+#baseURL = "https://blog.dornis.me"
 languageCode = "en-us"
 title = "Buildstarted's ramblings"
 theme = "anubis"
